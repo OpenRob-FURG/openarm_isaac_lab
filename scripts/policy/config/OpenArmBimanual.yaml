@@ -1,0 +1,61 @@
+robot_type: OpenArm-Bimanual
+default_task: OpenDoor
+task_description: open the microwave door
+features:
+  observation.images.top:
+    dtype: video
+    shape: [256, 256, 3]
+    names: ["height", "width", "channel"]
+    video_info:
+      video.fps: 30.0
+      video.codec: h264
+      video.pix_fmt: yuv420p
+      video.is_depth_map: false
+      has_audio: false
+  observation.state:
+    dtype: float32
+    shape: (16,)
+    names:
+      - left_px
+      - left_py
+      - left_pz
+      - left_qw
+      - left_qx
+      - left_qy
+      - left_qz
+      - left_gripper
+      - right_px
+      - right_py
+      - right_pz
+      - right_qw
+      - right_qx
+      - right_qy
+      - right_qz
+      - right_gripper
+  action:
+    dtype: float32
+    shape: (7,)
+    names:
+      - right_x
+      - right_y
+      - right_z
+      - right_roll
+      - right_pitch
+      - right_yaw
+      - right_gripper
+  episode_index:
+    dtype: int64
+    shape: [1]
+    names: null
+  frame_index:
+    dtype: int64
+    shape: [1]
+    names: null
+  index:
+    dtype: int64
+    shape: [1]
+    names: null
+  task_index:
+    dtype: int64
+    shape: [1]
+    names: null
