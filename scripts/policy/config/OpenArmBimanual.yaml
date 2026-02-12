@@ -36,6 +36,13 @@ features:
     dtype: float32
     shape: (7,)
     names:
+      #- left_x
+      #- left_y
+      #- left_z
+      #- left_roll
+      #- left_pitch
+      #- left_yaw
+      #- left_gripper
       - right_x
       - right_y
       - right_z

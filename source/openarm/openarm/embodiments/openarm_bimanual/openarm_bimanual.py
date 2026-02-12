@@ -41,7 +41,8 @@ class OpenArmBimanualSceneCfg:
         init_state=ArticulationCfg.InitialStateCfg(
             joint_pos=dict(
                 #openarm_left_joint4=torch.pi/2,
-                openarm_right_joint4=torch.pi/2
+                #openarm_right_joint4=torch.pi/2,
+                #openarm_right_finger_joint1=0.043
             )
         )
     )
@@ -77,13 +78,13 @@ class OpenArmBimanualSceneCfg:
 
 @configclass
 class OpenArmBimanualActionsCfg:
-    '''left_arm_action: ActionTermCfg = mdp.DifferentialInverseKinematicsActionCfg(
+    left_arm_action: ActionTermCfg = mdp.DifferentialInverseKinematicsActionCfg(
         asset_name="robot",
         joint_names=["openarm_left_joint.*"],
         body_name="openarm_left_ee_tcp",
         controller=mdp.DifferentialIKControllerCfg(
             command_type="pose",
-            use_relative_mode=True,
+            use_relative_mode=False,
             ik_method="dls"
         )
     )
@@ -97,7 +98,7 @@ class OpenArmBimanualActionsCfg:
         close_command_expr=dict(
             openarm_left_finger_joint1=0.0
         )
-    )'''
+    )
 
     right_arm_action: ActionTermCfg = mdp.DifferentialInverseKinematicsActionCfg(
         asset_name="robot",
@@ -105,7 +106,7 @@ class OpenArmBimanualActionsCfg:
         body_name="openarm_right_ee_tcp",
         controller=mdp.DifferentialIKControllerCfg(
             command_type="pose",
-            use_relative_mode=True,
+            use_relative_mode=False,
             ik_method="dls"
         )
     )

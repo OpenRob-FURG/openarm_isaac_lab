@@ -10,32 +10,38 @@ import isaaclab.envs.mdp as mdp_isaac_lab
 from isaaclab.envs.common import ViewerCfg
 from isaaclab.envs.mimic_env_cfg import MimicEnvCfg, SubTaskConfig
 from isaaclab.managers import EventTermCfg, SceneEntityCfg, TerminationTermCfg
+from isaaclab.sensors.contact_sensor.contact_sensor_cfg import ContactSensorCfg
 from isaaclab.utils import configclass
 
-from isaaclab_arena.affordances.openable import Openable
-from isaaclab_arena.metrics.door_moved_rate import DoorMovedRateMetric
+from isaaclab_arena.assets.asset import Asset
 from isaaclab_arena.metrics.metric_base import MetricBase
+from isaaclab_arena.metrics.object_moved import ObjectMovedRateMetric
 from isaaclab_arena.metrics.success_rate import SuccessRateMetric
 from isaaclab_arena.tasks.task_base import TaskBase
+from isaaclab_arena.tasks.terminations import object_on_destination
 from isaaclab_arena.terms.events import set_object_pose
 from isaaclab_arena.utils.cameras import get_viewer_cfg_look_at_object
 
 
-class OpenDoorTask(TaskBase):
+class PickAndPlaceTask(TaskBase):
+
     def __init__(
         self,
-        openable_object: Openable,
-        openness_threshold: float | None = None,
-        reset_openness: float | None = None,
+        pick_up_object: Asset,
+        destination_location: Asset,
+        background_scene: Asset,
         episode_length_s: float | None = None,
     ):
         super().__init__(episode_length_s=episode_length_s)
-        assert isinstance(openable_object, Openable), "Openable object must be an instance of Openable"
-        self.openable_object = openable_object
-        self.openness_threshold = openness_threshold
-        self.reset_openness = reset_openness
-        self.scene_config = None
-        self.events_cfg = OpenDoorEventCfg(self.openable_object, reset_openness=self.reset_openness)
+        self.pick_up_object = pick_up_object
+        self.background_scene = background_scene
+        self.destination_location = destination_location
+        self.scene_config = SceneCfg(
+            pick_up_object_contact_sensor=self.pick_up_object.get_contact_sensor_cfg(
+                contact_against_prim_paths=[self.destination_location.get_prim_path()],
+            ),
+        )
+        self.events_cfg = EventsCfg(pick_up_object=self.pick_up_object)
         self.termination_cfg = self.make_termination_cfg()
 
     def get_scene_cfg(self):
@@ -45,110 +51,111 @@ class OpenDoorTask(TaskBase):
         return self.termination_cfg
 
     def make_termination_cfg(self):
-        params = {}
-        if self.openness_threshold is not None:
-            params["threshold"] = self.openness_threshold
         success = TerminationTermCfg(
-            func=self.openable_object.is_open,
-            params=params,
+            func=object_on_destination,
+            params={
+                "object_cfg": SceneEntityCfg(self.pick_up_object.name),
+                "contact_sensor_cfg": SceneEntityCfg("pick_up_object_contact_sensor"),
+                "force_threshold": 1.0,
+                "velocity_threshold": 0.1,
+            },
         )
-        return TerminationsCfg(success=success)
+        object_dropped = TerminationTermCfg(
+            func=mdp_isaac_lab.root_height_below_minimum,
+            params={
+                "minimum_height": self.background_scene.object_min_z,
+                "asset_cfg": SceneEntityCfg(self.pick_up_object.name),
+            },
+        )
+        return TerminationsCfg(
+            success=success,
+            object_dropped=object_dropped,
+        )
 
     def get_events_cfg(self):
         return self.events_cfg
 
     def get_prompt(self):
-        return f"open the {self.openable_object.name} door"
+        raise NotImplementedError("Function not implemented yet.")
 
     def get_mimic_env_cfg(self, embodiment_name: str):
-        return OpenDoorMimicEnvCfg(
+        return PickPlaceMimicEnvCfg(
             embodiment_name=embodiment_name,
-            openable_object_name=self.openable_object.name,
+            pick_up_object_name=self.pick_up_object.name,
+            destination_location_name=self.destination_location.name,
         )
 
     def get_metrics(self) -> list[MetricBase]:
-        return [
-            SuccessRateMetric(),
-            DoorMovedRateMetric(
-                self.openable_object,
-                reset_openness=self.reset_openness,
-            ),
-        ]
+        return [SuccessRateMetric(), ObjectMovedRateMetric(self.pick_up_object)]
 
     def get_viewer_cfg(self) -> ViewerCfg:
-        return get_viewer_cfg_look_at_object(lookat_object=self.openable_object, offset=np.array([-1.3, -1.3, 1.3]))
+        return get_viewer_cfg_look_at_object(
+            lookat_object=self.pick_up_object,
+            offset=np.array([-1.5, -1.5, 1.5]),
+        )
+
+
+@configclass
+class SceneCfg:
+    """Scene configuration for the pick and place task."""
+
+    pick_up_object_contact_sensor: ContactSensorCfg = MISSING
 
 
 @configclass
 class TerminationsCfg:
     """Termination terms for the MDP."""
 
-    time_out: TerminationTermCfg = TerminationTermCfg(func=mdp_isaac_lab.time_out, time_out=True)
+    time_out: TerminationTermCfg = TerminationTermCfg(func=mdp_isaac_lab.time_out)
 
-    # Dependent on the openable object, so this is passed in from the task at
-    # construction time.
     success: TerminationTermCfg = MISSING
+
+    object_dropped: TerminationTermCfg = MISSING
 
 
 @configclass
-class OpenDoorEventCfg:
-    """Configuration for Open Door."""
+class EventsCfg:
+    """Configuration for Pick and Place."""
 
-    reset_door_state: EventTermCfg = MISSING
+    reset_pick_up_object_pose: EventTermCfg = MISSING
 
-    reset_openable_object_pose: EventTermCfg = MISSING
-
-    randomize_openable_object_pose: EventTermCfg = MISSING
-
-    def __init__(self, openable_object: Openable, reset_openness: float | None):
-        assert isinstance(openable_object, Openable), "Object pose must be an instance of Openable"
-        params = {}
-        if reset_openness is not None:
-            params["percentage"] = reset_openness
-        self.reset_door_state = EventTermCfg(
-            func=openable_object.close,
-            mode="reset",
-            params=params,
-        )
-        initial_pose = openable_object.get_initial_pose()
+    def __init__(self, pick_up_object: Asset):
+        initial_pose = pick_up_object.get_initial_pose()
         if initial_pose is not None:
-            self.reset_openable_object_pose = EventTermCfg(
+            self.reset_pick_up_object_pose = EventTermCfg(
                 func=set_object_pose,
                 mode="reset",
                 params={
                     "pose": initial_pose,
-                    "asset_cfg": SceneEntityCfg(openable_object.name),
+                    "asset_cfg": SceneEntityCfg(pick_up_object.name),
                 },
             )
-            self.randomize_openable_object_pose = EventTermCfg(
-                func=mdp_isaac_lab.reset_root_state_uniform,
-                mode="reset",
-                params={
-                    "pose_range": {
-                        "y": (-0.01, 0.01)
-                    },
-                    "velocity_range": {},
-                    "asset_cfg": SceneEntityCfg(openable_object.name)
-                }
+        else:
+            print(
+                f"Pick up object {pick_up_object.name} has no initial pose. Not setting reset pick up object pose"
+                " event."
             )
+            self.reset_pick_up_object_pose = None
 
 
 @configclass
-class OpenDoorMimicEnvCfg(MimicEnvCfg):
+class PickPlaceMimicEnvCfg(MimicEnvCfg):
     """
-    Isaac Lab Mimic environment config class for Open Door env.
+    Isaac Lab Mimic environment config class for Pick and Place env.
     """
 
     embodiment_name: str = "franka"
 
-    openable_object_name: str = "openable_object"
+    pick_up_object_name: str = "pick_up_object"
+
+    destination_location_name: str = "destination_location"
 
     def __post_init__(self):
         # post init of parents
         super().__post_init__()
 
         # Override the existing values
-        self.datagen_config.name = "demo_src_opendoor_isaac_lab_task_D0"
+        self.datagen_config.name = "demo_src_pickplace_isaac_lab_task_D0"
         self.datagen_config.generation_guarantee = True
         self.datagen_config.generation_keep_failed = False
         self.datagen_config.generation_num_trials = 100
@@ -166,10 +173,10 @@ class OpenDoorMimicEnvCfg(MimicEnvCfg):
         subtask_configs.append(
             SubTaskConfig(
                 # Each subtask involves manipulation with respect to a single object frame.
-                object_ref=self.openable_object_name,
+                object_ref=self.pick_up_object_name,
                 # This key corresponds to the binary indicator in "datagen_info" that signals
                 # when this subtask is finished (e.g., on a 0 to 1 edge).
-                subtask_term_signal="move_to_door",
+                subtask_term_signal="grasp_1",
                 # Specifies time offsets for data generation when splitting a trajectory into
                 # subtask segments. Random offsets are added to the termination boundary.
                 subtask_term_offset_range=(10, 20),
@@ -193,7 +200,7 @@ class OpenDoorMimicEnvCfg(MimicEnvCfg):
                 # TODO(alexmillane, 2025.09.02): This is currently broken. FIX.
                 # We need a way to pass in a reference to an object that exists in the
                 # scene.
-                object_ref=self.openable_object_name,
+                object_ref=self.destination_location_name,
                 # End of final subtask does not need to be detected
                 subtask_term_signal=None,
                 # No time offsets for the final subtask
@@ -212,19 +219,17 @@ class OpenDoorMimicEnvCfg(MimicEnvCfg):
                 apply_noise_during_interpolation=False,
             )
         )
-        if self.embodiment_name == "openarm_bimanual":
-            self.subtask_configs["robot"] = subtask_configs
-        elif self.embodiment_name == "franka":
+        if self.embodiment_name == "franka":
             self.subtask_configs["robot"] = subtask_configs
         # We need to add the left and right subtasks for GR1.
-        elif self.embodiment_name == "gr1_pink":
+        elif self.embodiment_name == "gr1_pink" or self.embodiment_name == "openarm_bimanual":
             self.subtask_configs["right"] = subtask_configs
             # EEF on opposite side (arm is static)
             subtask_configs = []
             subtask_configs.append(
                 SubTaskConfig(
                     # Each subtask involves manipulation with respect to a single object frame.
-                    object_ref=self.openable_object_name,
+                    object_ref=self.pick_up_object_name,
                     # Corresponding key for the binary indicator in "datagen_info" for completion
                     subtask_term_signal=None,
                     # Time offsets for data generation when splitting a trajectory

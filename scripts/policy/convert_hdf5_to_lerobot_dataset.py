@@ -25,6 +25,7 @@ import tqdm
 
 from lerobot.datasets.lerobot_dataset import LeRobotDataset
 
+from threading import Thread
 #from lw_benchhub.utils.math_utils.transform_utils.numpy_impl import compute_delta_pose, pose_left_multiply
 
 
@@ -50,6 +51,8 @@ def convert_isaaclab_to_lerobot(args, config):
     failed = 0
     failed_list = []
 
+    threads = []
+
     for i, dataset_file in enumerate(dataset_files):
         try:
             process_hdf5(dataset, dataset_file, args.select_cameras, config["task_description"])
@@ -67,6 +70,7 @@ def process_hdf5(dataset, hdf5_path, cam_names, task):
     with h5py.File(hdf5_path, "r") as f:
         demo_names = list(f["data"].keys())
         episode_count = len(demo_names)
+        #episode_count = 50
         print(f"Found {len(demo_names)} demos: {demo_names}")
         demo_names.sort(key=lambda x: int(x.split("_")[-1]))
 
@@ -74,23 +78,33 @@ def process_hdf5(dataset, hdf5_path, cam_names, task):
             demo_name = demo_names[i]
             demo_group = f["data"][demo_name]
 
+            if "actions" not in demo_group.keys():
+                continue
+
             actions = demo_group["actions"]
-            states = np.concatenate([
-                demo_group["obs"]["left_eef_pos"],
-                demo_group["obs"]["left_eef_quat"],
-                demo_group["obs"]["left_gripper_pos"],
-                demo_group["obs"]["right_eef_pos"],
-                demo_group["obs"]["right_eef_quat"],
-                demo_group["obs"]["right_gripper_pos"],
-            ], axis=-1)
+            
+            if hasattr(demo_group["obs"], "keys"):
+                states = np.concatenate([
+                    demo_group["obs"]["left_eef_pos"],
+                    demo_group["obs"]["left_eef_quat"],
+                    demo_group["obs"]["left_gripper_pos"],
+                    demo_group["obs"]["right_eef_pos"],
+                    demo_group["obs"]["right_eef_quat"],
+                    demo_group["obs"]["right_gripper_pos"],
+                ], axis=-1)
+            else:
+                states = demo_group["obs"]
             camera_top = demo_group["camera_obs"]
             T = actions.shape[0]
 
-            for i in tqdm.trange(T):
+            for j in tqdm.trange(T):
+                if False and j > 20 and np.allclose(actions[j, :6], np.zeros(shape=(6,)), rtol=0.03, atol=0.03):# and actions[j, 6] > 0.5:
+                    print('no ops action detected!')
+                    continue
                 frame = {
-                    "observation.state": states[i],
-                    "action": actions[i],
-                    "observation.images.top": camera_top[i],
+                    "observation.state": states[j],
+                    "action": actions[j],
+                    "observation.images.top": camera_top[j],
                     "task": task
                 }
                 dataset.add_frame(frame)
