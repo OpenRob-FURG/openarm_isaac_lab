@@ -84,6 +84,23 @@ class ObjectTableSceneCfg(InteractiveSceneCfg):
         spawn=sim_utils.DomeLightCfg(color=(0.75, 0.75, 0.75), intensity=3000.0),
     )
 
+    ee_frame_left = FrameTransformerCfg(
+        prim_path="{ENV_REGEX_NS}/Robot/openarm_left_hand",
+        target_frames=[
+            FrameTransformerCfg.FrameCfg(
+                prim_path="{ENV_REGEX_NS}/Robot/openarm_body_link"
+            )
+        ],
+    )
+
+    ee_frame_right = FrameTransformerCfg(
+        prim_path="{ENV_REGEX_NS}/Robot/openarm_right_hand",
+        target_frames=[
+            FrameTransformerCfg.FrameCfg(
+                prim_path="{ENV_REGEX_NS}/Robot/openarm_body_link"
+            )
+        ],
+    )
 
 ##
 # MDP settings
@@ -151,6 +168,8 @@ class ObservationsCfg:
         # target_object_position = ObsTerm(
         #     func=mdp.generated_commands, params={"command_name": "object_pose"}
         # )
+        ee_left = ObsTerm(func=mdp.ee_left_position_in_robot_root_frame)
+        ee_right = ObsTerm(func=mdp.ee_right_position_in_robot_root_frame)
         actions = ObsTerm(func=mdp.last_action)
 
         def __post_init__(self):
@@ -215,6 +234,16 @@ class RewardsCfg:
             )
         },
     )
+    bimanual_alignment = RewTerm(
+        func=mdp.bimanual_line_midpoint_alignment,
+        params={
+            "distance_std": 0.08,
+            "arms_proximity_threshold": 0.06,
+            "arms_distance_std": 0.05,
+            "object_size": 0.06,
+        },
+        weight=6.0,
+    )
 
 
 @configclass
@@ -254,7 +283,7 @@ class LiftEnvCfg(ManagerBasedRLEnvCfg):
     """Configuration for the lifting environment."""
 
     # Scene settings
-    scene: ObjectTableSceneCfg = ObjectTableSceneCfg(num_envs=4, env_spacing=2.5)
+    scene: ObjectTableSceneCfg = ObjectTableSceneCfg(num_envs=4096, env_spacing=2.5)
     # Basic settings
     observations: ObservationsCfg = ObservationsCfg()
     actions: ActionsCfg = ActionsCfg()

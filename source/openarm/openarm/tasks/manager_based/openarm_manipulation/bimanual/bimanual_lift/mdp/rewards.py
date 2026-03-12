@@ -25,6 +25,12 @@ from isaaclab.utils.math import combine_frame_transforms
 if TYPE_CHECKING:
     from isaaclab.envs import ManagerBasedRLEnv
 
+from .observations import (
+    object_position_in_robot_root_frame,
+    ee_left_position_in_robot_root_frame,
+    ee_right_position_in_robot_root_frame,
+    object_position_world_frame,
+)
 
 def object_is_lifted(
     env: ManagerBasedRLEnv,
@@ -80,3 +86,51 @@ def object_goal_distance(
     return (object.data.root_pos_w[:, 2] > minimal_height) * (
         1 - torch.tanh(distance / std)
     )
+
+
+def bimanual_line_midpoint_alignment(
+    env: ManagerBasedRLEnv,
+    distance_std: float,
+    arms_proximity_threshold: float,
+    arms_distance_std: float,
+    object_size: float,
+):
+    """
+    Reward for aligning the midpoint between the two grippers with the object
+    and positioning the grippers around the object for a grasp.
+    """
+
+    # posições no frame do robô
+    obj_pos = object_position_in_robot_root_frame(env)
+    ee_left = ee_left_position_in_robot_root_frame(env)
+    ee_right = ee_right_position_in_robot_root_frame(env)
+
+    # midpoint entre os grippers
+    midpoint_pos = (ee_left + ee_right) / 2.0
+
+    # distância midpoint → objeto
+    distance_to_center = torch.norm(midpoint_pos - obj_pos, dim=1)
+
+    alignment_reward = 1 - torch.tanh(distance_to_center / distance_std)
+
+    # distância entre os dois braços
+    arms_distance = torch.norm(ee_left - ee_right, dim=1)
+
+    arms_distance_error = torch.relu(arms_distance - object_size)
+
+    # só ativa reward de grasp quando perto do objeto
+    is_close_to_center = (distance_to_center < arms_proximity_threshold).float()
+
+    arm_proximity_reward = is_close_to_center * (
+        1 - torch.tanh(arms_distance_error / arms_distance_std)
+    )
+
+    # bonus para levantar o objeto
+    obj_pos_w = object_position_world_frame(env)
+    height = obj_pos_w[:, 2]
+
+    lift_bonus = torch.clamp(height - 0.04, min=0.0)
+
+    total_reward = alignment_reward + arm_proximity_reward + 4.0 * lift_bonus
+
+    return total_reward
