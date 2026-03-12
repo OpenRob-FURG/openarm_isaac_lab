@@ -23,55 +23,26 @@ from isaaclab_arena.tasks.terminations import object_on_destination
 from isaaclab_arena.terms.events import set_object_pose
 from isaaclab_arena.utils.cameras import get_viewer_cfg_look_at_object
 from openarm.arena_tasks.mdp.rewards import arm_near_object_goal, object_near_pos_goal
+from openarm.arena_tasks.mdp.terminations import root_height_above_maximum
 
 from scene_synthesizer.assets import USDAsset
 from trimesh.transformations import quaternion_from_matrix
 
-class PickAndPlaceTask(TaskBase):
+class PickTask(TaskBase):
 
     def __init__(
         self,
         pick_up_object: Asset,
-        destination_location: Asset,
         background_scene: Asset,
         episode_length_s: float | None = None,
     ):
         super().__init__(episode_length_s=episode_length_s)
         self.pick_up_object = pick_up_object
         self.background_scene = background_scene
-        self.destination_location = destination_location
-        self.scene_config = SceneCfg(
-            pick_up_object_contact_sensor=self.pick_up_object.get_contact_sensor_cfg(
-                contact_against_prim_paths=[self.destination_location.get_prim_path()],
-            ),
-        )
+        self.scene_config = SceneCfg()
         self.events_cfg = EventsCfg(pick_up_object=self.pick_up_object)
         self.termination_cfg = self.make_termination_cfg()
         self.rewards_cfg = RewardsCfg()
-        self.rewards_cfg.left_arm_near_object.params['goal_object'] = self.pick_up_object.name
-        self.rewards_cfg.right_arm_near_object.params['goal_object'] = self.pick_up_object.name
-        self.rewards_cfg.object_near_goal.params['object_name'] = self.pick_up_object.name
-        self.rewards_cfg.object_near_goal.params['target_pos'] = self.destination_location.initial_pose_relative_to_parent.position_xyz
-        self.rewards_cfg.object_dropped.params['minimum_height'] = self.background_scene.object_min_z
-        self.rewards_cfg.object_dropped.params['asset_cfg'] = SceneEntityCfg(name=self.pick_up_object.name)
-        self.update_frame_transformer_frames()
-
-    def update_frame_transformer_frames(self):
-        self.scene_config.object_frame_transformer.prim_path = self.pick_up_object.get_prim_path() + "/Geometry/sm_gtc_sorting_exhaust_pipe_a01_01"
-        interaction_poses = self.pick_up_object.get_interaction_poses()
-        for pose_name in interaction_poses.keys():
-            pose_pos = interaction_poses[pose_name]['pos']
-            pose_quat = interaction_poses[pose_name]['quat']
-            frame_cfg = FrameTransformerCfg.FrameCfg(
-                prim_path=self.scene_config.object_frame_transformer.prim_path,
-                name=pose_name,
-                offset=OffsetCfg(
-                    pos=pose_pos,
-                    rot=pose_quat
-                )
-            )
-            self.scene_config.object_frame_transformer.target_frames.append(frame_cfg)
-
 
     def get_rewards_cfg(self):
         return self.rewards_cfg
@@ -84,12 +55,10 @@ class PickAndPlaceTask(TaskBase):
 
     def make_termination_cfg(self):
         success = TerminationTermCfg(
-            func=object_on_destination,
+            func=root_height_above_maximum,
             params={
                 "object_cfg": SceneEntityCfg(self.pick_up_object.name),
-                "contact_sensor_cfg": SceneEntityCfg("pick_up_object_contact_sensor"),
-                "force_threshold": 1.0,
-                "velocity_threshold": 0.1,
+                "height": self.pick_up_object.get_initial_pose().position_xyz[2] + 0.2
             },
         )
         object_dropped = TerminationTermCfg(
@@ -108,13 +77,12 @@ class PickAndPlaceTask(TaskBase):
         return self.events_cfg
 
     def get_prompt(self):
-        return f"pick the {self.pick_up_object.name} with the left arm, transfer it to the right arm, and place it on the {self.destination_location.name} with the right arm."
+        return f"pick the {self.pick_up_object.name} with the left arm."
 
     def get_mimic_env_cfg(self, embodiment_name: str):
-        return PickPlaceMimicEnvCfg(
+        return PickMimicEnvCfg(
             embodiment_name=embodiment_name,
             pick_up_object_name=self.pick_up_object.name,
-            destination_location_name=self.destination_location.name,
         )
 
     def get_metrics(self) -> list[MetricBase]:
@@ -131,20 +99,14 @@ class PickAndPlaceTask(TaskBase):
 class SceneCfg:
     """Scene configuration for the pick and place task."""
 
-    pick_up_object_contact_sensor: ContactSensorCfg = MISSING
-
-    object_frame_transformer: FrameTransformerCfg = FrameTransformerCfg(
-        prim_path=MISSING,
-        debug_vis=True,
-        target_frames=[]
-    )
+    pass
 
 
 @configclass
 class TerminationsCfg:
     """Termination terms for the MDP."""
 
-    time_out: TerminationTermCfg = TerminationTermCfg(func=mdp_isaac_lab.time_out)
+    time_out: TerminationTermCfg = TerminationTermCfg(func=mdp_isaac_lab.time_out, time_out=True)
 
     success: TerminationTermCfg = MISSING
 
@@ -157,6 +119,8 @@ class EventsCfg:
 
     reset_pick_up_object_pose: EventTermCfg = MISSING
 
+    randomize_pick_up_object_pose: EventTermCfg = MISSING
+
     def __init__(self, pick_up_object: Asset):
         initial_pose = pick_up_object.get_initial_pose()
         if initial_pose is not None:
@@ -168,6 +132,18 @@ class EventsCfg:
                     "asset_cfg": SceneEntityCfg(pick_up_object.name),
                 },
             )
+            self.randomize_pick_up_object_pose = EventTermCfg(
+                func=mdp_isaac_lab.reset_root_state_uniform,
+                mode="reset",
+                params={
+                    "pose_range": {
+                        "x": (-0.00, 0.00),
+                        "y": (-0.00, 0.00)
+                    },
+                    "velocity_range": {},
+                    "asset_cfg": SceneEntityCfg(pick_up_object.name)
+                }
+            )
         else:
             print(
                 f"Pick up object {pick_up_object.name} has no initial pose. Not setting reset pick up object pose"
@@ -177,41 +153,10 @@ class EventsCfg:
 
 @configclass
 class RewardsCfg:
-    left_arm_near_object = RewardTermCfg(
-        func=arm_near_object_goal,
-        params=dict(
-            arm="left",
-            goal_object=MISSING
-        ),
-        weight=1.0
-    )
-    right_arm_near_object = RewardTermCfg(
-        func=arm_near_object_goal,
-        params=dict(
-            arm="right",
-            goal_object=MISSING
-        ),
-        weight=1.0
-    )
-    object_near_goal = RewardTermCfg(
-        func=object_near_pos_goal,
-        params=dict(
-            object_name=MISSING,
-            target_pos=MISSING
-        ),
-        weight=100.0
-    )
-    object_dropped = RewardTermCfg(
-        func=mdp_isaac_lab.root_height_below_minimum,
-        params={
-            "minimum_height": MISSING,
-            "asset_cfg": MISSING,
-        },
-        weight=-1000.0
-    )
+    pass
 
 @configclass
-class PickPlaceMimicEnvCfg(MimicEnvCfg):
+class PickMimicEnvCfg(MimicEnvCfg):
     """
     Isaac Lab Mimic environment config class for Pick and Place env.
     """
@@ -220,7 +165,7 @@ class PickPlaceMimicEnvCfg(MimicEnvCfg):
 
     pick_up_object_name: str = "pick_up_object"
 
-    destination_location_name: str = "destination_location"
+    single_arm: bool = True
 
     def __post_init__(self):
         # post init of parents
@@ -251,15 +196,15 @@ class PickPlaceMimicEnvCfg(MimicEnvCfg):
                 subtask_term_signal="grasp_1",
                 # Specifies time offsets for data generation when splitting a trajectory into
                 # subtask segments. Random offsets are added to the termination boundary.
-                subtask_term_offset_range=(10, 20),
+                subtask_term_offset_range=(0, 0),
                 # Selection strategy for the source subtask segment during data generation
                 selection_strategy="nearest_neighbor_object",
                 # Optional parameters for the selection strategy function
                 selection_strategy_kwargs={"nn_k": 3},
                 # Amount of action noise to apply during this subtask
-                action_noise=0.005,
+                action_noise=0.003,
                 # Number of interpolation steps to bridge to this subtask segment
-                num_interpolation_steps=5,
+                num_interpolation_steps=20,
                 # Additional fixed steps for the robot to reach the necessary pose
                 num_fixed_steps=0,
                 # If True, apply action noise during the interpolation phase and execution
@@ -272,7 +217,7 @@ class PickPlaceMimicEnvCfg(MimicEnvCfg):
                 # TODO(alexmillane, 2025.09.02): This is currently broken. FIX.
                 # We need a way to pass in a reference to an object that exists in the
                 # scene.
-                object_ref=self.destination_location_name,
+                object_ref=self.pick_up_object_name,
                 # End of final subtask does not need to be detected
                 subtask_term_signal=None,
                 # No time offsets for the final subtask
@@ -282,16 +227,16 @@ class PickPlaceMimicEnvCfg(MimicEnvCfg):
                 # Optional parameters for the selection strategy function
                 selection_strategy_kwargs={"nn_k": 3},
                 # Amount of action noise to apply during this subtask
-                action_noise=0.005,
+                action_noise=0.003,
                 # Number of interpolation steps to bridge to this subtask segment
-                num_interpolation_steps=5,
+                num_interpolation_steps=20,
                 # Additional fixed steps for the robot to reach the necessary pose
                 num_fixed_steps=0,
                 # If True, apply action noise during the interpolation phase and execution
                 apply_noise_during_interpolation=False,
             )
         )
-        if self.embodiment_name == "franka":
+        if self.embodiment_name == "franka" or self.single_arm == True:
             self.subtask_configs["robot"] = subtask_configs
         # We need to add the left and right subtasks for GR1.
         elif self.embodiment_name == "gr1_pink" or self.embodiment_name == "openarm_bimanual":
@@ -309,7 +254,7 @@ class PickPlaceMimicEnvCfg(MimicEnvCfg):
                     # Selection strategy for source subtask segment
                     selection_strategy="nearest_neighbor_object",
                     # Optional parameters for the selection strategy function
-                    selection_strategy_kwargs={"nn_k": 3},
+                    selection_strategy_kwargs={"nn_k": 1},
                     # Amount of action noise to apply during this subtask
                     action_noise=0.005,
                     # Number of interpolation steps to bridge to this subtask segment

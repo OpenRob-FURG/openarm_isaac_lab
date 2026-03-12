@@ -94,11 +94,12 @@ def process_hdf5(dataset, hdf5_path, cam_names, task):
                 ], axis=-1)
             else:
                 states = demo_group["obs"]
-            camera_top = demo_group["camera_obs"]
+            #camera_top = demo_group["camera_obs"]
+            camera_top = demo_group["obs"]["top_camera_rgb"]
             T = actions.shape[0]
 
             for j in tqdm.trange(T):
-                if False and j > 20 and np.allclose(actions[j, :6], np.zeros(shape=(6,)), rtol=0.03, atol=0.03):# and actions[j, 6] > 0.5:
+                if np.allclose(actions[j, :6], np.zeros(shape=(6,)), rtol=0.005, atol=0.005) and actions[j, 6] > 0.5:
                     print('no ops action detected!')
                     continue
                 frame = {

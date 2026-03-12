@@ -19,10 +19,16 @@ class OpenArmBimanualEmbodiment(EmbodimentBase):
 
     name = "openarm_bimanual"
 
-    def __init__(self, enable_cameras = False, initial_pose = None):
+    def __init__(self, enable_cameras = False, initial_pose = None, single_arm=False, relative_action=False):
         super().__init__(enable_cameras, initial_pose)
         self.scene_config = OpenArmBimanualSceneCfg()
         self.action_config = OpenArmBimanualActionsCfg()
+        self.action_config.left_arm_action.controller.use_relative_mode = relative_action
+        self.action_config.right_arm_action.controller.use_relative_mode = relative_action
+        if single_arm == True:
+            self.action_config.right_arm_action = None
+            self.action_config.right_hand_action = None
+            self.scene_config.robot.init_state.joint_pos['openarm_right_joint4'] = 0.0
         self.observation_config = OpenArmBimanualObservationsCfg()
         self.event_config = OpenArmBimanualEventsCfg()
         self.mimic_env = OpenArmBimanualMimicEnv
@@ -32,6 +38,7 @@ class OpenArmBimanualEmbodiment(EmbodimentBase):
             self.observation_config.policy.top_camera_rgb = None
         else:
             self.observation_config.policy.body_poses = None
+            self.observation_config.policy.concatenate_terms = False
 
 
 @configclass
@@ -40,9 +47,10 @@ class OpenArmBimanualSceneCfg:
         prim_path="{ENV_REGEX_NS}/Robot",
         init_state=ArticulationCfg.InitialStateCfg(
             joint_pos=dict(
-                #openarm_left_joint4=torch.pi/2,
-                #openarm_right_joint4=torch.pi/2,
-                #openarm_right_finger_joint1=0.043
+                openarm_left_joint4=torch.pi/2,
+                openarm_right_joint4=torch.pi/2,
+                openarm_left_finger_joint1=0.043,
+                openarm_right_finger_joint1=0.043
             )
         )
     )
@@ -84,7 +92,7 @@ class OpenArmBimanualActionsCfg:
         body_name="openarm_left_ee_tcp",
         controller=mdp.DifferentialIKControllerCfg(
             command_type="pose",
-            use_relative_mode=False,
+            use_relative_mode=True,
             ik_method="dls"
         )
     )
@@ -106,7 +114,7 @@ class OpenArmBimanualActionsCfg:
         body_name="openarm_right_ee_tcp",
         controller=mdp.DifferentialIKControllerCfg(
             command_type="pose",
-            use_relative_mode=False,
+            use_relative_mode=True,
             ik_method="dls"
         )
     )
@@ -163,8 +171,17 @@ class OpenArmBimanualObservationsCfg:
                 arm="right"
             )
         )
-        '''body_poses = ObservationTermCfg(
+        body_poses = ObservationTermCfg(
             func=all_poses_w
+        )
+        joint_pos = ObservationTermCfg(
+            func=mdp.joint_pos
+        )
+        joint_vel = ObservationTermCfg(
+            func=mdp.joint_vel
+        )
+        last_action = ObservationTermCfg(
+            func=mdp.last_action
         )
 
         top_camera_rgb = ObservationTermCfg(
@@ -173,7 +190,7 @@ class OpenArmBimanualObservationsCfg:
                 normalize=False,
                 sensor_cfg=SceneEntityCfg(name="camera_top")
             )
-        )'''
+        )
 
     @configclass
     class ImageCfg(ObservationGroupCfg):
@@ -191,7 +208,7 @@ class OpenArmBimanualObservationsCfg:
             func=all_poses_w
         )
 
-    policy = PolicyCfg(concatenate_terms=True)
+    policy = PolicyCfg(concatenate_terms=False)
     camera_obs = ImageCfg(concatenate_terms=True)
     #critic = CriticCfg(concatenate_terms=True)
 
@@ -215,7 +232,7 @@ class OpenArmBimanualMimicEnv(ManagerBasedRLMimicEnv):
             A torch.Tensor eef pose matrix. Shape is (len(env_ids), 4, 4)
         """
         if eef_name == "robot":
-            eef_name = "right"
+            eef_name = "left"
         if env_ids is None:
             env_ids = slice(None)
 
@@ -255,33 +272,54 @@ class OpenArmBimanualMimicEnv(ManagerBasedRLMimicEnv):
         eef_actions = []
 
         for eef_name in eef_names:
+            if self.single_action_space.shape[0] == 14 or self.single_action_space.shape[0] == 7:
+                # target position and rotation
+                target_eef_pose = target_eef_pose_dict[eef_name]
+                target_pos, target_rot = PoseUtils.unmake_pose(target_eef_pose)
 
-            # target position and rotation
-            target_eef_pose = target_eef_pose_dict[eef_name]
-            target_pos, target_rot = PoseUtils.unmake_pose(target_eef_pose)
+                # current position and rotation
+                curr_pose = self.get_robot_eef_pose(eef_name, env_ids=[env_id])[0]
+                curr_pos, curr_rot = PoseUtils.unmake_pose(curr_pose)
 
-            # current position and rotation
-            curr_pose = self.get_robot_eef_pose(eef_name, env_ids=[env_id])[0]
-            curr_pos, curr_rot = PoseUtils.unmake_pose(curr_pose)
+                # normalized delta position action
+                delta_position = target_pos - curr_pos
 
-            # normalized delta position action
-            delta_position = target_pos - curr_pos
+                # normalized delta rotation action
+                delta_rot_mat = target_rot.matmul(curr_rot.transpose(-1, -2))
+                delta_quat = PoseUtils.quat_from_matrix(delta_rot_mat)
+                delta_rotation = PoseUtils.axis_angle_from_quat(delta_quat)
 
-            # normalized delta rotation action
-            delta_rot_mat = target_rot.matmul(curr_rot.transpose(-1, -2))
-            delta_quat = PoseUtils.quat_from_matrix(delta_rot_mat)
-            delta_rotation = PoseUtils.axis_angle_from_quat(delta_quat)
+                # get gripper action for single eef
+                gripper_action = gripper_action_dict[eef_name]
 
-            # get gripper action for single eef
-            gripper_action = gripper_action_dict[eef_name]
+                # add noise to action
+                pose_action = torch.cat([delta_position, delta_rotation], dim=0)
+                if action_noise_dict is not None:
+                    noise = action_noise_dict[eef_name] * torch.randn_like(pose_action)
+                    pose_action += noise
+                    pose_action = torch.clamp(pose_action, -1.0, 1.0)
+                eef_actions.append(torch.cat([pose_action, gripper_action], dim=0))
+            
+            elif self.single_action_space.shape[0] == 16:
+                # target position and rotation
+                target_eef_pose = target_eef_pose_dict[eef_name]
+                target_pos, target_rot = PoseUtils.unmake_pose(target_eef_pose)
 
-            # add noise to action
-            pose_action = torch.cat([delta_position, delta_rotation], dim=0)
-            if action_noise_dict is not None:
-                noise = action_noise_dict[eef_name] * torch.randn_like(pose_action)
-                pose_action += noise
-                pose_action = torch.clamp(pose_action, -1.0, 1.0)
-            eef_actions.append(torch.cat([pose_action, gripper_action], dim=0))
+                # normalized delta position action
+                position = target_pos
+
+                quat = PoseUtils.quat_from_matrix(target_rot)
+
+                # get gripper action for single eef
+                gripper_action = gripper_action_dict[eef_name]
+
+                # add noise to action
+                pose_action = torch.cat([position, quat], dim=0)
+                if action_noise_dict is not None:
+                    noise = action_noise_dict[eef_name] * torch.randn_like(pose_action)
+                    pose_action += noise
+                    pose_action = torch.clamp(pose_action, -1.0, 1.0)
+                eef_actions.append(torch.cat([pose_action, gripper_action], dim=0))
         return torch.cat(eef_actions, dim=0)
 
     def action_to_target_eef_pose(self, action: torch.Tensor) -> dict[str, torch.Tensor]:
@@ -345,6 +383,12 @@ class OpenArmBimanualMimicEnv(ManagerBasedRLMimicEnv):
             return dict(
                 robot=actions[:, [6]]
             )
+        if self.single_action_space.shape[0] == 16:
+            # last dimension is gripper action
+            return dict(
+                left=actions[:, [7]],
+                right=actions[:, [15]]
+            )    
         # last dimension is gripper action
         return dict(
             left=actions[:, [6]],
@@ -365,7 +409,7 @@ class OpenArmBimanualMimicEnv(ManagerBasedRLMimicEnv):
         state = self.scene.get_state(is_relative=True)
 
         object_pose_matrix = get_rigid_and_articulated_object_poses(state, env_ids)
-        for k in object_pose_matrix.keys():
-            object_pose_matrix[k][..., 2, 3] -= object_pose_matrix['robot'][..., 2, 3]
-            object_pose_matrix[k][..., 0, 3] -= object_pose_matrix['robot'][..., 0, 3]
+        #for k in object_pose_matrix.keys():
+        #    object_pose_matrix[k][..., 2, 3] -= object_pose_matrix['robot'][..., 2, 3]
+        #    object_pose_matrix[k][..., 0, 3] -= object_pose_matrix['robot'][..., 0, 3]
         return object_pose_matrix

@@ -92,6 +92,9 @@ if args_cli.enable_pinocchio:
 import isaaclab_tasks  # noqa: F401
 from isaaclab_mimic.datagen.generation import env_loop, setup_async_generation, setup_env_config, run_data_generator, DataGenInfoPool, DataGenerator
 from isaaclab_mimic.datagen.utils import setup_output_paths
+from isaaclab_mimic.motion_planners.curobo.curobo_planner_cfg import CuroboPlannerCfg
+from isaaclab_mimic.motion_planners.curobo.curobo_planner import CuroboPlanner
+import curobo
 
 class PreStepFlatCameraObservationsRecorder(RecorderTerm):
     """Recorder term that records the camera observations in each step."""

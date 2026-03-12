@@ -1,6 +1,6 @@
 robot_type: OpenArm-Bimanual
 default_task: OpenDoor
-task_description: open the microwave door
+task_description: pick the exhaust pipe with the left arm
 features:
   observation.images.top:
     dtype: video
@@ -36,20 +36,20 @@ features:
     dtype: float32
     shape: (7,)
     names:
-      #- left_x
-      #- left_y
-      #- left_z
-      #- left_roll
-      #- left_pitch
-      #- left_yaw
-      #- left_gripper
-      - right_x
-      - right_y
-      - right_z
-      - right_roll
-      - right_pitch
-      - right_yaw
-      - right_gripper
+      - left_x
+      - left_y
+      - left_z
+      - left_roll
+      - left_pitch
+      - left_yaw
+      - left_gripper
+      #- right_x
+      #- right_y
+      #- right_z
+      #- right_roll
+      #- right_pitch
+      #- right_yaw
+      #- right_gripper
   episode_index:
     dtype: int64
     shape: [1]
