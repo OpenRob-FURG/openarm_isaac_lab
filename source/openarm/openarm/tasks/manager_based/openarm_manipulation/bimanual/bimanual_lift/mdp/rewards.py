@@ -108,29 +108,45 @@ def bimanual_line_midpoint_alignment(
     # midpoint entre os grippers
     midpoint_pos = (ee_left + ee_right) / 2.0
 
-    # distância midpoint → objeto
+    # -------------------------------
+    # 1. alinhamento com objeto
+    # -------------------------------
     distance_to_center = torch.norm(midpoint_pos - obj_pos, dim=1)
+    alignment_reward = torch.exp(-distance_to_center / distance_std)
 
-    alignment_reward = 1 - torch.tanh(distance_to_center / distance_std)
-
-    # distância entre os dois braços
+    # -------------------------------
+    # 2. distância ideal entre braços
+    # -------------------------------
     arms_distance = torch.norm(ee_left - ee_right, dim=1)
 
-    arms_distance_error = torch.relu(arms_distance - object_size)
+    # queremos que arms_distance ≈ object_size
+    distance_error = torch.abs(arms_distance - object_size)
 
-    # só ativa reward de grasp quando perto do objeto
-    is_close_to_center = (distance_to_center < arms_proximity_threshold).float()
+    arm_distance_reward = torch.exp(-distance_error / arms_distance_std)
 
-    arm_proximity_reward = is_close_to_center * (
-        1 - torch.tanh(arms_distance_error / arms_distance_std)
-    )
+    # -------------------------------
+    # 3. proximidade ao objeto (suave)
+    # -------------------------------
+    proximity_reward = torch.exp(-distance_to_center / arms_proximity_threshold)
 
-    # bonus para levantar o objeto
+    # combina com peso contínuo (sem gate duro)
+    grasp_shape_reward = proximity_reward * arm_distance_reward
+
+    # -------------------------------
+    # 4. levantar objeto
+    # -------------------------------
     obj_pos_w = object_position_world_frame(env)
     height = obj_pos_w[:, 2]
 
     lift_bonus = torch.clamp(height - 0.04, min=0.0)
 
-    total_reward = alignment_reward + arm_proximity_reward + 4.0 * lift_bonus
+    # -------------------------------
+    # reward final
+    # -------------------------------
+    total_reward = (
+        1.5 * alignment_reward
+        + 2.0 * grasp_shape_reward
+        + 4.0 * lift_bonus
+    )
 
     return total_reward
