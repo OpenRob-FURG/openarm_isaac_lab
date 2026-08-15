@@ -1,7 +1,7 @@
 # OpenArm Isaac Lab
 
-[![IsaacSim](https://img.shields.io/badge/IsaacSim-5.1.0-silver.svg)](https://docs.isaacsim.omniverse.nvidia.com/5.1.0/index.html)
-[![Isaac Lab](https://img.shields.io/badge/IsaacLab-2.3.0-silver)](https://isaac-sim.github.io/IsaacLab)
+[![IsaacSim](https://img.shields.io/badge/IsaacSim-6.0.0-silver.svg)](https://docs.isaacsim.omniverse.nvidia.com/6.0.0/index.html)
+[![Isaac Lab](https://img.shields.io/badge/IsaacLab-3.0.0-silver)](https://isaac-sim.github.io/IsaacLab)
 [![Python](https://img.shields.io/badge/python-3.11-blue.svg)](https://docs.python.org/3/whatsnew/3.11.html)
 [![Linux platform](https://img.shields.io/badge/platform-linux--64-orange.svg)](https://releases.ubuntu.com/22.04/)
 [![License](https://img.shields.io/badge/license-Apache2.0-yellow.svg)](https://opensource.org/license/apache-2-0)
@@ -26,8 +26,9 @@ The project integrates with [**IsaacLab-Arena**](https://github.com/isaac-sim/Is
 ### Tested with
 
 - **Ubuntu 22.04**
-- **Isaac Sim v5.1.0**
-- **Isaac Lab v2.3.0**
+- **Isaac Sim v6.0.0**
+- **Isaac Lab v3.0.0** (pinned submodule commit `e57379c63`)
+- **IsaacLab-Arena release/0.2.1** (pinned submodule commit `8b4a3a47f`)
 - **Python 3.11**
 
 ---
@@ -56,66 +57,69 @@ The project integrates with [**IsaacLab-Arena**](https://github.com/isaac-sim/Is
 
 ## Installation Guide
 
+Isaac Lab and IsaacLab-Arena are included as **pinned git submodules** under `submodules/`, so the
+first step is to clone them after (or while) cloning this repository.
+
+1. Clone the repository **with submodules**:
+```bash
+git clone --recurse-submodules git@github.com:OpenRob-FURG/openarm_isaac_lab.git
+```
+
+Or, if the repository was already cloned, initialize them:
+```bash
+git submodule update --init --recursive
+```
+
+The submodules are pinned to the tested versions:
+- `submodules/IsaacLab` → `e57379c63` (Isaac Lab 3.0.0)
+- `submodules/IsaacLab-Arena` → `8b4a3a47f` (IsaacLab-Arena release/0.2.1)
+
 ### (Option 1) Docker installation (Linux only)
 
-1. Pull the minimal Isaac Lab container:
+1. Build the image (requires Isaac Sim's base image `nvcr.io/nvidia/isaac-sim:6.0.0` to be
+   downloaded by the build):
 ```bash
-docker pull nvcr.io/nvidia/isaac-lab:2.3.0
+./docker/run_docker.sh -r
 ```
 
-2. Create the container:
+This builds `openarm_isaac_lab:latest` with Isaac Lab, IsaacLab-Arena, and the `openarm` package
+installed, then drops you into a shell inside the container with the repository mounted at
+`/workspaces/openarm_isaac_lab`.
+
+Additional run options:
 ```bash
-xhost +
-docker run --name isaac-lab --entrypoint bash -it --gpus all --rm -e "ACCEPT_EULA=Y" --network=host \
-   -e "PRIVACY_CONSENT=Y" \
-   -e DISPLAY \
-   -v $HOME/.Xauthority:/root/.Xauthority \
-   -v ~/docker/isaac-sim/cache/kit:/isaac-sim/kit/cache:rw \
-   -v ~/docker/isaac-sim/cache/ov:/root/.cache/ov:rw \
-   -v ~/docker/isaac-sim/cache/pip:/root/.cache/pip:rw \
-   -v ~/docker/isaac-sim/cache/glcache:/root/.cache/nvidia/GLCache:rw \
-   -v ~/docker/isaac-sim/cache/computecache:/root/.nv/ComputeCache:rw \
-   -v ~/docker/isaac-sim/logs:/root/.nvidia-omniverse/logs:rw \
-   -v ~/docker/isaac-sim/data:/root/.local/share/ov/data:rw \
-   -v ~/docker/isaac-sim/documents:/root/Documents:rw \
-   nvcr.io/nvidia/isaac-lab:2.3.0
+./docker/run_docker.sh -n my_image   # use a different image name
+./docker/run_docker.sh -m ~/models    # mount a host models directory at /models
 ```
 
-3. Clone the repository:
-```bash
-cd /workspace
-git clone git@github.com:enactic/openarm_isaac_lab.git
-```
-
-4. Install the Python package:
-```bash
-cd openarm_isaac_lab
-python -m pip install -e source/openarm
-```
-
-5. Verify the installation:
+2. Verify the installation inside the container:
 ```bash
 python ./scripts/tools/list_envs.py
+```
+
+To build the image manually:
+```bash
+docker build -t openarm_isaac_lab:latest -f docker/Dockerfile .
 ```
 
 ### (Option 2) Local installation
 
 It is assumed that you have created a virtual environment named `env_isaaclab` using miniconda or anaconda and will be working within that environment.
 
-1. Clone the repository:
+1. Clone the repository (with submodules, see above) and activate your virtual environment that contains the Isaac Lab package:
 ```bash
-cd ~
-git clone git@github.com:enactic/openarm_isaac_lab.git
+git clone --recurse-submodules git@github.com:OpenRob-FURG/openarm_isaac_lab.git
+cd openarm_isaac_lab
+conda activate env_isaaclab
 ```
 
-2. Activate your virtual environment that contains the Isaac Lab package:
+2. Install IsaacLab-Arena (from its submodule):
 ```bash
-conda activate env_isaaclab
+pip install -e submodules/IsaacLab-Arena
 ```
 
 3. Install the Python package:
 ```bash
-cd openarm_isaac_lab
 python -m pip install -e source/openarm
 ```
 
@@ -130,6 +134,13 @@ python ./scripts/tools/list_envs.py
 
 ```
 openarm_isaac_lab/
+├── submodules/
+│   ├── IsaacLab-Arena/             # Pinned git submodule (release/0.2.1)
+│   └── IsaacLab/                   # Pinned git submodule (v3.0.0)
+├── docker/
+│   ├── Dockerfile                  # Self-contained build (Isaac Sim → Lab → Arena → openarm)
+│   ├── run_docker.sh               # Build/run helper
+│   └── setup/entrypoint.sh         # Container entrypoint
 ├── source/openarm/openarm/
 │   ├── tasks/                      # Isaac Lab RL task definitions
 │   │   └── manager_based/openarm_manipulation/

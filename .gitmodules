@@ -1,0 +1,6 @@
+[submodule "submodules/IsaacLab-Arena"]
+	path = submodules/IsaacLab-Arena
+	url = https://github.com/isaac-sim/IsaacLab-Arena.git
+[submodule "submodules/IsaacLab"]
+	path = submodules/IsaacLab
+	url = https://github.com/isaac-sim/IsaacLab.git
