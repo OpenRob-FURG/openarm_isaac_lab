@@ -1,6 +1,6 @@
 import argparse
 
-from isaaclab_arena.examples.example_environments.example_environment_base import ExampleEnvironmentBase
+from isaaclab_arena_environments.example_environment_base import ExampleEnvironmentBase
 
 class BimanualOpenArmOpenMicrowaveEnvironment(ExampleEnvironmentBase):
     name: str = "openarm_bimanual_open_microwave"
@@ -14,7 +14,7 @@ class BimanualOpenArmOpenMicrowaveEnvironment(ExampleEnvironmentBase):
 
         import openarm.embodiments
         import openarm.assets
-        from openarm.arena_tasks.open_door import OpenDoorTask
+        from isaaclab_arena.tasks.open_door_task import OpenDoorTask
         from openarm.arena_tasks.pour import PourTask
         from openarm.policies.oracle.pour import OraclePourPolicy
         from isaaclab_arena.assets.asset_registry import AssetRegistry
@@ -23,8 +23,8 @@ class BimanualOpenArmOpenMicrowaveEnvironment(ExampleEnvironmentBase):
         from isaaclab_arena.environments.isaaclab_arena_environment import IsaacLabArenaEnvironment
         from isaaclab_arena.scene.scene import Scene
         from isaaclab_arena.utils.pose import Pose
-        import isaaclab_arena.teleop_devices
         import openarm.arena_devices.keyboard
+        import openarm.arena_retargeters.openarm_bimanual
 
         if args_cli.teleop_device is not None:
             teleop_device = self.device_registry.get_device_by_name(args_cli.teleop_device)()
@@ -38,10 +38,10 @@ class BimanualOpenArmOpenMicrowaveEnvironment(ExampleEnvironmentBase):
         microwave = self.asset_registry.get_asset_by_name("microwave")()
         
         microwave.set_initial_pose(
-            Pose(position_xyz=(0.4, 0.0, 0.2), rotation_wxyz=(0.707, 0.0, 0.0, -0.707))
+            Pose(position_xyz=(0.4, 0.0, 0.2), rotation_xyzw=(0.0, 0.0, -0.707, 0.707))
         )
         embodiment.set_initial_pose(
-            Pose(position_xyz=(-0.3, 0.0, -0.2), rotation_wxyz=(1, 0, 0, 0))
+            Pose(position_xyz=(-0.3, 0.0, -0.2), rotation_xyzw=(0.0, 0.0, 0.0, 1.0))
         )
 
         # Step 2: Create a scene with the assets

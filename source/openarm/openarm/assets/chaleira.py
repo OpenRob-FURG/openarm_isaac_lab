@@ -10,6 +10,6 @@ class Chaleira(LibraryObject):
     usd_path = f"{openarm.__path__[0]}/assets/meshes/chaleira.usd"
     object_type = ObjectType.RIGID
     scale = (0.2, 0.2, 0.2)
-    grasp_pose = Pose(position_xyz=(0.0, 0.0, 0.0), rotation_wxyz=(0.707, 0.0, 0.0, 0.707))
+    grasp_pose = Pose(position_xyz=(0.0, 0.0, 0.0), rotation_xyzw=(0.0, 0.0, 0.707, 0.707))
     grasp_approach_axis = 2
     grasp_approach_direction = -0.1

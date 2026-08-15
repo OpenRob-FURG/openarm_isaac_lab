@@ -21,9 +21,9 @@ from isaaclab_arena.environments.isaaclab_arena_environment import IsaacLabArena
 from isaaclab_arena.scene.scene import Scene
 from isaaclab_arena.tasks.open_door_task import OpenDoorTask
 from isaaclab_arena.utils.pose import Pose
-from isaaclab_arena.teleop_devices.keyboard import KeyboardTeleopDevice
+from openarm.arena_devices.keyboard import OpenArmKeyboardTeleopDevice
 
-keyboard = KeyboardTeleopDevice()
+keyboard = OpenArmKeyboardTeleopDevice()
 
 # Step 1: Initialize and get the assets from the registry
 asset_registry = AssetRegistry()
@@ -34,16 +34,16 @@ microwave = asset_registry.get_asset_by_name("microwave")()
 #chaleira = asset_registry.get_asset_by_name("chaleira")()
 #chimarrao = asset_registry.get_asset_by_name("chimarrao")()
 #chaleira.set_initial_pose(
-#    Pose(position_xyz=(0.3, -0.2, 0.1), rotation_wxyz=(0.707, 0.707, 0.0, 0.0))
+#    Pose(position_xyz=(0.3, -0.2, 0.1), rotation_xyzw=(0.707, 0.0, 0.707, 0.0))
 #)
 #chimarrao.set_initial_pose(
-#    Pose(position_xyz=(0.3, 0.1, 0.1), rotation_wxyz=(0.707, 0.707, 0.0, 0.0))
+#    Pose(position_xyz=(0.3, 0.1, 0.1), rotation_xyzw=(0.707, 0.0, 0.707, 0.0))
 #)
 microwave.set_initial_pose(
-    Pose(position_xyz=(0.3, 0.0, 0.1), rotation_wxyz=(1.0, 0.0, 0.0, 0.0))
+    Pose(position_xyz=(0.3, 0.0, 0.1), rotation_xyzw=(0.0, 0.0, 0.0, 1.0))
 )
 embodiment.set_initial_pose(
-    Pose(position_xyz=(0.0, 0.0, -0.2), rotation_wxyz=(1, 0, 0, 0))
+    Pose(position_xyz=(0.0, 0.0, -0.2), rotation_xyzw=(0, 0, 0, 1))
 )
 
 # Step 2: Create a scene with the assets

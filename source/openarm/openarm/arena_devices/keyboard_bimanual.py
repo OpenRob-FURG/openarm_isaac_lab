@@ -20,10 +20,12 @@ import omni.kit.commands
 from omni.physx.scripts import utils
 
 from isaaclab.devices import DeviceBase
+from isaaclab.devices.device_base import DeviceCfg
+from isaaclab.utils import configclass
 from isaaclab.utils.math import convert_quat
 
-from isaaclab_arena.teleop_devices import register_device, TeleopDeviceBase
-from isaaclab.devices.device_base import DevicesCfg
+from isaaclab_arena.assets.device_library import TeleopDeviceBase
+from isaaclab_arena.assets.register import register_device
 
 import torch
 
@@ -336,7 +338,7 @@ class DualArmKeyboard(DeviceBase):
             all_commands_merged.append(np.asarray([all_commands[arm_idx][1],]))
         return torch.as_tensor(
             np.concatenate(all_commands_merged),
-            device=torch.device('cuda')
+            device=torch.device(self.cfg.sim_device)
         )
 
     @property
@@ -345,8 +347,8 @@ class DualArmKeyboard(DeviceBase):
         return self.cfg.arm_indices[self._active_arm]
     
 
-@dataclass
-class DualArmTeleopCfg:
+@configclass
+class DualArmTeleopCfg(DeviceCfg):
     """Configuration for the dual-arm keyboard teleop device."""
     
     arm_indices: list[int] = None
@@ -368,11 +370,8 @@ class DualArmTeleopCfg:
 class KeyboardBimanualTeleopDevice(TeleopDeviceBase):
     name = "keyboard_bimanual"
 
-    def get_teleop_device_cfg(self, embodiment = None):
-        return DevicesCfg(
-                devices=dict(
-                    keyboard_bimanual=DualArmTeleopCfg(
-                        arm_indices=[0,1]
-                    ),
-                )
+    def get_device_cfg(self, pipeline_builder=None, embodiment=None):
+        return DualArmTeleopCfg(
+            arm_indices=[0, 1],
+            sim_device=self.sim_device,
         )

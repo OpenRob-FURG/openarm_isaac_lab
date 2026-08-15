@@ -13,7 +13,7 @@
 # limitations under the License.
 
 # Register Gym environments.
-#from .tasks import *
+from .tasks import *
 
 # Register UI extensions.
 from .ui_extension_example import *

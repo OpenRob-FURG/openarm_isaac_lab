@@ -3,11 +3,12 @@ from lerobot.policies.factory import make_policy, make_policy_config, make_pre_p
 from lerobot.policies.smolvla.modeling_smolvla import SmolVLAPolicy, SmolVLAConfig
 from lerobot.policies.groot.modeling_groot import GrootPolicy
 from lerobot.policies.xvla.modeling_xvla import XVLAPolicy, XVLAConfig
+import argparse
 import torch
 
 class LeRobotPolicy(PolicyBase):
     def __init__(self, repo_id, task: str, policy_type="smolvla") -> None:
-        super().__init__()
+        super().__init__(config=None)
         #self.policy_config = make_policy_config(policy_type=policy_type)
         #self.policy_config.pretrained_path = repo_id
         #assert policy_type == "smolvla"
@@ -59,3 +60,14 @@ class LeRobotPolicy(PolicyBase):
     
     def reset(self, env_ids=None):
         self.policy.reset()
+
+    @staticmethod
+    def add_args_to_parser(parser: argparse.ArgumentParser) -> argparse.ArgumentParser:
+        return parser
+
+    @staticmethod
+    def from_args(args: argparse.Namespace) -> "LeRobotPolicy":
+        raise NotImplementedError(
+            "LeRobotPolicy is constructed directly from a repo_id, policy_type and task. "
+            "Use policy_runner.py which builds the policy from CLI arguments."
+        )

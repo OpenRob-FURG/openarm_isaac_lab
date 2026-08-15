@@ -1,4 +1,5 @@
 from isaaclab_arena.tasks.task_base import TaskBase
+from isaaclab_arena.embodiments.common.arm_mode import ArmMode
 from isaaclab.envs import MimicEnvCfg
 from isaaclab.utils import configclass
 from isaaclab.scene import InteractiveSceneCfg
@@ -36,8 +37,8 @@ class PourTask(TaskBase):
         self.table_limit_lower = table_limit_lower
         self.table_limit_upper = table_limit_upper
 
-    def get_mimic_env_cfg(self, embodiment_name):
-        if embodiment_name == "openarm_bimanual":
+    def get_mimic_env_cfg(self, arm_mode):
+        if arm_mode in [ArmMode.LEFT, ArmMode.RIGHT, ArmMode.DUAL_ARM]:
             return PourMimicEnvCfg()
         
     def get_prompt(self):

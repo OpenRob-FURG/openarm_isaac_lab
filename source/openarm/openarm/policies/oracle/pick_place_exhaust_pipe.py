@@ -1,6 +1,7 @@
 from isaaclab_arena.policy.policy_base import PolicyBase
 from openarm.embodiments.openarm_bimanual.openarm_bimanual import OpenArmBimanualMimicEnv
 import isaaclab.utils.math as PoseUtils
+import argparse
 import torch
 
 class OraclePickPlaceExhaustPipePolicyStates:
@@ -13,7 +14,7 @@ class OraclePickPlaceExhaustPipePolicyStates:
 
 class OraclePickPlaceExhaustPipePolicy(PolicyBase):
     def __init__(self, pipe, destination):
-        super().__init__()
+        super().__init__(config=None)
         self.pipe = pipe
         self.destination = destination
         self.reset()
@@ -288,3 +289,14 @@ class OraclePickPlaceExhaustPipePolicy(PolicyBase):
     def reset(self, env_ids = None):
         self.state = OraclePickPlaceExhaustPipePolicyStates.APPROACH_PIPE
         self.state_step_counter = 0
+
+    @staticmethod
+    def add_args_to_parser(parser: argparse.ArgumentParser) -> argparse.ArgumentParser:
+        return parser
+
+    @staticmethod
+    def from_args(args: argparse.Namespace) -> "OraclePickPlaceExhaustPipePolicy":
+        raise NotImplementedError(
+            "OraclePickPlaceExhaustPipePolicy requires pipe and destination objects. "
+            "Construct it directly with access to the environment assets."
+        )

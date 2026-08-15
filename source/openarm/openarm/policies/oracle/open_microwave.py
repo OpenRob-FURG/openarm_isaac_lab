@@ -1,6 +1,7 @@
 from isaaclab_arena.policy.policy_base import PolicyBase
 from openarm.embodiments.openarm_bimanual.openarm_bimanual import OpenArmBimanualMimicEnv
 import isaaclab.utils.math as PoseUtils
+import argparse
 import torch
 
 class OracleOpenMicrowavePolicyStates:
@@ -10,7 +11,7 @@ class OracleOpenMicrowavePolicyStates:
 
 class OracleOpenMicrowavePolicy(PolicyBase):
     def __init__(self, microwave_handle_offset):
-        super().__init__()
+        super().__init__(config=None)
         self.microwave_handle_offset = microwave_handle_offset
         self.reset()
 
@@ -197,3 +198,14 @@ class OracleOpenMicrowavePolicy(PolicyBase):
     def reset(self, env_ids = None):
         self.state = OracleOpenMicrowavePolicyStates.APPROACH
         self.state_step_counter = 0
+
+    @staticmethod
+    def add_args_to_parser(parser: argparse.ArgumentParser) -> argparse.ArgumentParser:
+        return parser
+
+    @staticmethod
+    def from_args(args: argparse.Namespace) -> "OracleOpenMicrowavePolicy":
+        raise NotImplementedError(
+            "OracleOpenMicrowavePolicy requires a microwave_handle_offset. "
+            "Construct it directly with access to the environment assets."
+        )

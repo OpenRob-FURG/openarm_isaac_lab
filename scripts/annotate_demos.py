@@ -19,7 +19,7 @@ import gymnasium as gym
 from isaaclab.app import AppLauncher
 
 from isaaclab_arena.cli.isaaclab_arena_cli import get_isaaclab_arena_cli_parser
-from isaaclab_arena.examples.example_environments.cli import add_example_environments_cli_args, get_arena_builder_from_cli
+from openarm.arena_environments.cli import add_example_environments_cli_args, get_arena_builder_from_cli
 
 # Launching Isaac Sim Simulator first.
 
@@ -83,9 +83,8 @@ from isaaclab.envs.mdp.recorders.recorders_cfg import ActionStateRecorderManager
 from isaaclab.managers import RecorderTerm, RecorderTermCfg, TerminationTermCfg
 from isaaclab.utils import configclass
 from isaaclab.utils.datasets import EpisodeData, HDF5DatasetFileHandler
-import isaaclab_arena.teleop_devices
 import openarm.arena_devices.keyboard
-#import openarm.arena_retargeters.openarm_bimanual
+import openarm.arena_retargeters.openarm_bimanual
 
 is_paused = False
 current_action_index = 0

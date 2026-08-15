@@ -17,7 +17,7 @@
 import os
 import toml
 
-from setuptools import setup
+from setuptools import find_packages, setup
 
 # Obtain the extension data from the extension.toml file
 EXTENSION_PATH = os.path.dirname(os.path.realpath(__file__))
@@ -32,7 +32,7 @@ INSTALL_REQUIRES = [
 # Installation operation
 setup(
     name="openarm",
-    packages=["openarm"],
+    packages=find_packages(include=["openarm*"]),
     author=EXTENSION_TOML_DATA["package"]["author"],
     maintainer=EXTENSION_TOML_DATA["package"]["maintainer"],
     url=EXTENSION_TOML_DATA["package"]["repository"],
@@ -47,8 +47,7 @@ setup(
         "Natural Language :: English",
         "Programming Language :: Python :: 3.10",
         "Programming Language :: Python :: 3.11",
-        "Isaac Sim :: 4.5.0",
-        "Isaac Sim :: 5.0.0",
+        "Isaac Sim :: 6.0.0",
     ],
     zip_safe=False,
 )

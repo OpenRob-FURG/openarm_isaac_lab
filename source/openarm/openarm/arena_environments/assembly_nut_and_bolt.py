@@ -1,6 +1,6 @@
 import argparse
 
-from isaaclab_arena.examples.example_environments.example_environment_base import ExampleEnvironmentBase
+from isaaclab_arena_environments.example_environment_base import ExampleEnvironmentBase
 
 class BimanualOpenArmAssemblyNutAndBoltEnvironment(ExampleEnvironmentBase):
     name: str = "openarm_bimanual_assembly_nut_and_bolt"
@@ -22,9 +22,9 @@ class BimanualOpenArmAssemblyNutAndBoltEnvironment(ExampleEnvironmentBase):
         from isaaclab_arena.environments.isaaclab_arena_environment import IsaacLabArenaEnvironment
         from isaaclab_arena.scene.scene import Scene
         from isaaclab_arena.utils.pose import Pose
-        import isaaclab_arena.teleop_devices
         import openarm.arena_devices.keyboard
         import openarm.arena_devices.mediapipe_teleop_device
+        import openarm.arena_retargeters.openarm_bimanual
         from isaaclab_arena.tasks.dummy_task import DummyTask
 
         teleop_device = self.device_registry.get_device_by_name(args_cli.teleop_device)()
@@ -38,13 +38,13 @@ class BimanualOpenArmAssemblyNutAndBoltEnvironment(ExampleEnvironmentBase):
         nut_m16 = self.asset_registry.get_asset_by_name("nut_m16")()
         
         bolt_m16.set_initial_pose(
-            Pose(position_xyz=(0.5, 0.2, 0.08), rotation_wxyz=(0.707, 0.0, 0.0, -0.707))
+            Pose(position_xyz=(0.5, 0.2, 0.08), rotation_xyzw=(0.0, 0.0, -0.707, 0.707))
         )
         nut_m16.set_initial_pose(
-            Pose(position_xyz=(0.5, 0.0, 0.05), rotation_wxyz=(0.707, 0.0, 0.0, -0.707))
+            Pose(position_xyz=(0.5, 0.0, 0.05), rotation_xyzw=(0.0, 0.0, -0.707, 0.707))
         )
         embodiment.set_initial_pose(
-            Pose(position_xyz=(0.2, 0.0, -0.2), rotation_wxyz=(1, 0, 0, 0))
+            Pose(position_xyz=(0.2, 0.0, -0.2), rotation_xyzw=(0, 0, 0, 1))
         )
 
         # Step 2: Create a scene with the assets

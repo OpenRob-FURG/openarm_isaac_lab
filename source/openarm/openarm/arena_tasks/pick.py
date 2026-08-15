@@ -15,6 +15,7 @@ from isaaclab.sensors.frame_transformer import FrameTransformerCfg, OffsetCfg
 from isaaclab.utils import configclass
 
 from isaaclab_arena.assets.asset import Asset
+from isaaclab_arena.embodiments.common.arm_mode import ArmMode
 from isaaclab_arena.metrics.metric_base import MetricBase
 from isaaclab_arena.metrics.object_moved import ObjectMovedRateMetric
 from isaaclab_arena.metrics.success_rate import SuccessRateMetric
@@ -79,9 +80,9 @@ class PickTask(TaskBase):
     def get_prompt(self):
         return f"pick the {self.pick_up_object.name} with the left arm."
 
-    def get_mimic_env_cfg(self, embodiment_name: str):
+    def get_mimic_env_cfg(self, arm_mode: ArmMode):
         return PickMimicEnvCfg(
-            embodiment_name=embodiment_name,
+            arm_mode=arm_mode,
             pick_up_object_name=self.pick_up_object.name,
         )
 
@@ -161,11 +162,9 @@ class PickMimicEnvCfg(MimicEnvCfg):
     Isaac Lab Mimic environment config class for Pick and Place env.
     """
 
-    embodiment_name: str = "franka"
-
     pick_up_object_name: str = "pick_up_object"
 
-    single_arm: bool = True
+    arm_mode: ArmMode = ArmMode.SINGLE_ARM
 
     def __post_init__(self):
         # post init of parents
@@ -236,11 +235,16 @@ class PickMimicEnvCfg(MimicEnvCfg):
                 apply_noise_during_interpolation=False,
             )
         )
-        if self.embodiment_name == "franka" or self.single_arm == True:
+        if self.arm_mode == ArmMode.SINGLE_ARM:
             self.subtask_configs["robot"] = subtask_configs
-        # We need to add the left and right subtasks for GR1.
-        elif self.embodiment_name == "gr1_pink" or self.embodiment_name == "openarm_bimanual":
-            self.subtask_configs["right"] = subtask_configs
+        # Bimanual arm modes: one arm performs the task while the other stays static.
+        elif self.arm_mode in [ArmMode.LEFT, ArmMode.RIGHT, ArmMode.DUAL_ARM]:
+            if self.arm_mode == ArmMode.LEFT:
+                active_arm, other_arm = "left", "right"
+            else:
+                # RIGHT and DUAL_ARM both use the right arm as the active arm.
+                active_arm, other_arm = "right", "left"
+            self.subtask_configs[active_arm] = subtask_configs
             # EEF on opposite side (arm is static)
             subtask_configs = []
             subtask_configs.append(
@@ -265,7 +269,7 @@ class PickMimicEnvCfg(MimicEnvCfg):
                     apply_noise_during_interpolation=False,
                 )
             )
-            self.subtask_configs["left"] = subtask_configs
+            self.subtask_configs[other_arm] = subtask_configs
 
         else:
-            raise ValueError(f"Embodiment name {self.embodiment_name} not supported")
+            raise ValueError(f"Embodiment arm mode {self.arm_mode} not supported")

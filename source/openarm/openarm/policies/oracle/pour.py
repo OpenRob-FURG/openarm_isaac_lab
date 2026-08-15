@@ -1,6 +1,7 @@
 from isaaclab_arena.policy.policy_base import PolicyBase
 from openarm.embodiments.openarm_bimanual.openarm_bimanual import OpenArmBimanualMimicEnv
 import isaaclab.utils.math as PoseUtils
+import argparse
 import torch
 
 class OraclePourPolicyStates:
@@ -12,7 +13,7 @@ class OraclePourPolicyStates:
 
 class OraclePourPolicy(PolicyBase):
     def __init__(self, source_recipient, destination_recipient):
-        super().__init__()
+        super().__init__(config=None)
         self.source_recipient = source_recipient
         self.destination_recipient = destination_recipient
         self.reset()
@@ -155,3 +156,14 @@ class OraclePourPolicy(PolicyBase):
     def reset(self, env_ids = None):
         self.state = OraclePourPolicyStates.APPROACH
         self.state_step_counter = 0
+
+    @staticmethod
+    def add_args_to_parser(parser: argparse.ArgumentParser) -> argparse.ArgumentParser:
+        return parser
+
+    @staticmethod
+    def from_args(args: argparse.Namespace) -> "OraclePourPolicy":
+        raise NotImplementedError(
+            "OraclePourPolicy requires source_recipient and destination_recipient objects. "
+            "Construct it directly with access to the environment assets."
+        )

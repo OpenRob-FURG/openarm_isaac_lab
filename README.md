@@ -479,7 +479,7 @@ Arena environments wire together an embodiment, scene, task, and optional polici
 **1. Create an environment class** in `arena_environments/`:
 
 ```python
-from isaaclab_arena.examples.example_environments.example_environment_base import ExampleEnvironmentBase
+from isaaclab_arena_environments.example_environment_base import ExampleEnvironmentBase
 
 class MyEnvironment(ExampleEnvironmentBase):
     name: str = "openarm_bimanual_my_task"
@@ -500,9 +500,9 @@ class MyEnvironment(ExampleEnvironmentBase):
         my_object = self.asset_registry.get_asset_by_name("my_custom_object")()
 
         # 2. Set poses
-        background.set_initial_pose(Pose(position_xyz=(0.2, 0.0, -1.0), rotation_wxyz=(0.707, 0.0, 0.0, -0.707)))
-        my_object.set_initial_pose(Pose(position_xyz=(0.5, 0.0, 0.0), rotation_wxyz=(1.0, 0.0, 0.0, 0.0)))
-        embodiment.set_initial_pose(Pose(position_xyz=(0.0, 0.0, 0.0), rotation_wxyz=(1, 0, 0, 0)))
+        background.set_initial_pose(Pose(position_xyz=(0.2, 0.0, -1.0), rotation_xyzw=(0.0, 0.0, -0.707, 0.707)))
+        my_object.set_initial_pose(Pose(position_xyz=(0.5, 0.0, 0.0), rotation_xyzw=(0.0, 0.0, 0.0, 1.0)))
+        embodiment.set_initial_pose(Pose(position_xyz=(0.0, 0.0, 0.0), rotation_xyzw=(0, 0, 0, 1)))
 
         # 3. Create scene and task
         scene = Scene(assets=[background, my_object])

@@ -35,7 +35,7 @@ import contextlib
 from isaaclab.app import AppLauncher
 
 from isaaclab_arena.cli.isaaclab_arena_cli import get_isaaclab_arena_cli_parser
-from isaaclab_arena.examples.example_environments.cli import add_example_environments_cli_args, get_arena_builder_from_cli
+from openarm.arena_environments.cli import add_example_environments_cli_args, get_arena_builder_from_cli
 
 # add argparse arguments
 parser = get_isaaclab_arena_cli_parser()
@@ -112,10 +112,9 @@ from isaaclab.envs import DirectRLEnvCfg, ManagerBasedRLEnvCfg
 from isaaclab.envs.mdp.recorders.recorders_cfg import ActionStateRecorderManagerCfg
 from isaaclab.envs.ui import EmptyWindow
 from isaaclab.managers import DatasetExportMode
-import isaaclab_arena.teleop_devices
 import openarm.arena_devices.keyboard
 import openarm.arena_devices.mediapipe_teleop_device
-#import openarm.arena_retargeters.openarm_bimanual
+import openarm.arena_retargeters.openarm_bimanual
 
 
 

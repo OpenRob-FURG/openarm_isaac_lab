@@ -16,11 +16,10 @@ from isaaclab.devices import DeviceBase
 from isaaclab.devices.device_base import DeviceCfg
 from isaaclab.devices.retargeter_base import RetargeterBase, RetargeterCfg
 
-from isaaclab_arena.teleop_devices import register_device, TeleopDeviceBase
+from isaaclab_arena.assets.device_library import TeleopDeviceBase
+from isaaclab_arena.assets.register import register_device
 
-from dataclasses import dataclass, MISSING
-
-from isaaclab.devices.device_base import DevicesCfg
+from dataclasses import MISSING
 
 # MediaPipe initialization
 mp_holistic = mp.solutions.holistic
@@ -377,9 +376,9 @@ class MediaPipeTeleopDevice(DeviceBase):
     Combines camera capture, hand tracking, and robot control in one process.
     """
     
-    def __init__(self, cfg: Dict[str, Any]):
+    def __init__(self, cfg: DeviceCfg):
         # Initialize retargeter
-        retargeter_cfg = MediaPipeRetargeterCfg(cfg.retargeter)
+        retargeter_cfg = MediaPipeRetargeterCfg(**cfg.retargeter) if cfg.retargeter else MediaPipeRetargeterCfg()
         self.retargeter = HandPoseRetargeter(retargeter_cfg)
         super().__init__(retargeters=[self.retargeter])
         
@@ -572,7 +571,7 @@ class MediaPipeTeleopDevice(DeviceBase):
         self.processor.stop()
         cv2.destroyAllWindows()
 
-@dataclass
+@configclass
 class MediaPipeRetargeterCfg(RetargeterCfg):
     workspace_scale: tuple[float] = (0.4, 0.4, 0.3)
     base_position: tuple[float] = (0.0, 0.0, 1.2)
@@ -582,7 +581,7 @@ class MediaPipeRetargeterCfg(RetargeterCfg):
     right_arm_id: str = "right_arm"
     retargeter_type: type[RetargeterBase] = HandPoseRetargeter
 
-@dataclass
+@configclass
 class MediaPipeTeleopDeviceConfig(DeviceCfg):
     camera_id: int = 0
     image_width: int = 640
@@ -595,38 +594,19 @@ class MediaPipeTeleopDeviceConfig(DeviceCfg):
 class MediaPipeArenaTeleopDevice(TeleopDeviceBase):
     name = "mediapipe"
 
-    def get_teleop_device_cfg(self, embodiment = None):
-        return DevicesCfg(
-                devices=dict(
-                    mediapipe=MediaPipeTeleopDeviceConfig(
-                        sim_device=self.sim_device,
-                        camera_id=0,
-                        image_height=480,
-                        image_width=640,
-                        retargeter=dict(
-                            retargeter_type=HandPoseRetargeter,
-                            workspace_scale=(0.4, 0.4, 0.3),
-                            base_position=(0.0, 0.0, 1.2),
-                            max_velocity=0.6,
-                            filter_alpha=0.4,
-                            left_arm_id="left_arm",
-                            right_arm_id="right_arm"
-                        )
-                    )
-                )
+    def get_device_cfg(self, pipeline_builder=None, embodiment=None):
+        return MediaPipeTeleopDeviceConfig(
+            sim_device=self.sim_device,
+            camera_id=0,
+            image_height=480,
+            image_width=640,
+            retargeter=MediaPipeRetargeterCfg(
+                retargeter_type=HandPoseRetargeter,
+                workspace_scale=(0.4, 0.4, 0.3),
+                base_position=(0.0, 0.0, 1.2),
+                max_velocity=0.6,
+                filter_alpha=0.4,
+                left_arm_id="left_arm",
+                right_arm_id="right_arm"
+            )
         )
-        '''return dict(
-                class_type=MediaPipeTeleopDevice,
-                camera_id=0,
-                image_height=480,
-                image_width=640,
-                retargeter=dict(
-                    retargeter_type=HandPoseRetargeter,
-                    workspace_scale=(0.4, 0.4, 0.3),
-                    base_position=(0.0, 0.0, 1.2),
-                    max_velocity=0.6,
-                    filter_alpha=0.4,
-                    left_arm_id="left_arm",
-                    right_arm_id="right_arm"
-                )
-            )'''

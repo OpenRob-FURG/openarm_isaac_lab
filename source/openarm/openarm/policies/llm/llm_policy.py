@@ -1,6 +1,7 @@
 from isaaclab_arena.policy.policy_base import PolicyBase
 import omni.client
 from scene_synthesizer.assets import USDAsset
+import argparse
 import json
 from isaaclab_mimic.motion_planners.curobo.curobo_planner import CuroboPlanner
 from isaaclab_mimic.motion_planners.curobo.curobo_planner_cfg import CuroboPlannerCfg
@@ -10,7 +11,7 @@ import isaaclab.utils.math as PoseUtils
 
 class LLMPolicy(PolicyBase):
     def __init__(self, scene, task_description):
-        super().__init__()
+        super().__init__(config=None)
         scene_description = {}
         for asset_name in scene.assets.keys():
             scene_description[asset_name] = {}
@@ -223,3 +224,14 @@ Answer in the following format:
     
     def reset(self, env_ids = None):
         self.planner = None
+
+    @staticmethod
+    def add_args_to_parser(parser: argparse.ArgumentParser) -> argparse.ArgumentParser:
+        return parser
+
+    @staticmethod
+    def from_args(args: argparse.Namespace) -> "LLMPolicy":
+        raise NotImplementedError(
+            "LLMPolicy requires a scene and a task_description. "
+            "Construct it directly with access to the environment assets."
+        )

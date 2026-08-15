@@ -9,9 +9,8 @@ import torch
 import tqdm
 
 from isaaclab_arena.cli.isaaclab_arena_cli import get_isaaclab_arena_cli_parser
-from isaaclab_arena.examples.example_environments.cli import get_arena_builder_from_cli
 from isaaclab_arena.utils.isaaclab_utils.simulation_app import SimulationAppContext
-from isaaclab_arena.examples.example_environments.cli import add_example_environments_cli_args, get_arena_builder_from_cli
+from openarm.arena_environments.cli import add_example_environments_cli_args, get_arena_builder_from_cli
 
 
 def main():
@@ -50,7 +49,7 @@ def main():
     with SimulationAppContext(args_cli):
         from openarm.policies.lerobot.lerobot_policy import LeRobotPolicy
         from openarm.policies.oracle.open_microwave import OracleOpenMicrowavePolicy
-        from isaaclab_arena.policy.zero_action_policy import ZeroActionPolicy
+        from isaaclab_arena.policy.zero_action_policy import ZeroActionPolicy, ZeroActionPolicyArgs
         from isaaclab.envs.mdp.recorders.recorders_cfg import ActionStateRecorderManagerCfg
         from isaaclab.managers import DatasetExportMode
         from isaaclab.envs.mdp.recorders.recorders_cfg import ActionStateRecorderManagerCfg
@@ -84,11 +83,17 @@ def main():
         # Build scene
         arena_builder = get_arena_builder_from_cli(args_cli)
         if args_cli.policy_type == "scripted":
-            policy = arena_builder.arena_env.oracle_policy
+            policy = getattr(arena_builder.arena_env, "oracle_policy", None)
+            if policy is None:
+                print("No oracle_policy set for this environment. Cannot run scripted policy.")
+                return
         elif args_cli.policy_type == "llm":
-            policy = arena_builder.arena_env.llm_policy
+            policy = getattr(arena_builder.arena_env, "llm_policy", None)
+            if policy is None:
+                print("No llm_policy set for this environment. Cannot run llm policy.")
+                return
         elif args_cli.policy_type == "zero_action":
-            policy = ZeroActionPolicy()
+            policy = ZeroActionPolicy(ZeroActionPolicyArgs())
         else:
             policy = LeRobotPolicy(
                 repo_id=args_cli.policy_repo_id,

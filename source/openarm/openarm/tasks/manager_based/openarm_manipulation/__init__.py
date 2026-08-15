@@ -13,5 +13,7 @@
 # limitations under the License.
 
 import os
-from .assets import *  # noqa
+
 OPENARM_ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
+
+from .assets import *  # noqa

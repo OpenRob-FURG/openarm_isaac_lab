@@ -1,6 +1,7 @@
-from isaaclab_arena.teleop_devices import register_device, KeyboardTeleopDevice
-import torch
+from isaaclab_arena.assets.device_library import KeyboardCfg
+from isaaclab_arena.assets.register import register_device
+
 
 @register_device
-class OpenArmKeyboardTeleopDevice(KeyboardTeleopDevice):
+class OpenArmKeyboardTeleopDevice(KeyboardCfg):
     name = "keyboard__openarm_bimanual"

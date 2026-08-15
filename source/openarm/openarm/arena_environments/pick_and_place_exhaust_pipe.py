@@ -1,7 +1,6 @@
 import argparse
 
-from isaaclab_arena.examples.example_environments.example_environment_base import ExampleEnvironmentBase
-import isaaclab_arena.policy
+from isaaclab_arena_environments.example_environment_base import ExampleEnvironmentBase
 
 class BimanualOpenArmPickAndPlaceExhaustPipeEnvironment(ExampleEnvironmentBase):
     name: str = "openarm_bimanual_pick_and_place_exhaust_pipe"
@@ -28,10 +27,10 @@ class BimanualOpenArmPickAndPlaceExhaustPipeEnvironment(ExampleEnvironmentBase):
         from isaaclab_arena.environments.isaaclab_arena_environment import IsaacLabArenaEnvironment
         from isaaclab_arena.scene.scene import Scene
         from isaaclab_arena.utils.pose import Pose
-        import isaaclab_arena.teleop_devices
         import openarm.arena_devices.keyboard
         import openarm.arena_devices.keyboard_bimanual
         import openarm.arena_devices.mediapipe_teleop_device
+        import openarm.arena_retargeters.openarm_bimanual
         import openarm.assets.exhaust_pipe
         from openarm.policies.oracle.pick_place_exhaust_pipe import OraclePickPlaceExhaustPipePolicy
         from isaaclab_arena.tasks.dummy_task import DummyTask
@@ -45,7 +44,7 @@ class BimanualOpenArmPickAndPlaceExhaustPipeEnvironment(ExampleEnvironmentBase):
 
         background = self.asset_registry.get_asset_by_name("packing_table")()
         background.set_initial_pose(
-            Pose(position_xyz=(0.2, 0.0, -1.0), rotation_wxyz=(0.707, 0.0, 0.0, -0.707))
+            Pose(position_xyz=(0.2, 0.0, -1.0), rotation_xyzw=(0.0, 0.0, -0.707, 0.707))
         )
         embodiment = self.asset_registry.get_asset_by_name("openarm_bimanual")(enable_cameras=args_cli.enable_cameras)
         sorting_bin = ObjectReference(
@@ -56,14 +55,14 @@ class BimanualOpenArmPickAndPlaceExhaustPipeEnvironment(ExampleEnvironmentBase):
         exhaust_pipe = self.asset_registry.get_asset_by_name("custom_exhaust_pipe")()
         
         #sorting_bin.set_initial_pose(
-        #    Pose(position_xyz=(0.4, -0.2, 0.3), rotation_wxyz=(0.707, 0.0, 0.0, -0.707))
+        #    Pose(position_xyz=(0.4, -0.2, 0.3), rotation_xyzw=(0.0, 0.0, -0.707, 0.707))
         #)
         exhaust_pipe.set_initial_pose(
-            Pose(position_xyz=(0.5, 0.0, 0.0), rotation_wxyz=(1.0, 0.0, 0.0, 0.0))
+            Pose(position_xyz=(0.5, 0.0, 0.0), rotation_xyzw=(0.0, 0.0, 0.0, 1.0))
         )
         embodiment.set_initial_pose(
-            #Pose(position_xyz=(0.2, 0.0, -0.2), rotation_wxyz=(1, 0, 0, 0))
-            Pose(position_xyz=(0.0, 0.0, 0.0), rotation_wxyz=(1, 0, 0, 0))
+            #Pose(position_xyz=(0.2, 0.0, -0.2), rotation_xyzw=(0, 0, 0, 1))
+            Pose(position_xyz=(0.0, 0.0, 0.0), rotation_xyzw=(0, 0, 0, 1))
         )
 
         # Step 2: Create a scene with the assets

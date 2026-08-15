@@ -20,7 +20,6 @@ from isaaclab.actuators import ImplicitActuatorCfg
 from isaaclab.assets import (
     ArticulationCfg,
     AssetBaseCfg,
-    DeformableObjectCfg,
     RigidObjectCfg,
 )
 from isaaclab.envs import ManagerBasedRLEnvCfg
@@ -58,7 +57,7 @@ class ObjectTableSceneCfg(InteractiveSceneCfg):
     # end-effector sensor: will be populated by agent env cfg
     ee_frame: FrameTransformerCfg = MISSING
     # target object: will be populated by agent env cfg
-    object: RigidObjectCfg | DeformableObjectCfg = MISSING
+    object: RigidObjectCfg = MISSING
 
     # Table
     table = AssetBaseCfg(
