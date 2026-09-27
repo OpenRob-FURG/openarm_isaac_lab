@@ -10,15 +10,16 @@ if TYPE_CHECKING:
 
 def rel_ee_pos(env: ManagerBasedRLEnv, arm: str)->torch.Tensor:
     transformer: FrameTransformer = env.scene['ee_frame']
-    return transformer.data.target_pos_source[..., transformer.data.target_frame_names.index(f'{arm}_ee_tcp'), :]
+    return torch.as_tensor(transformer.data.target_pos_source[0:env.num_envs, transformer.data.target_frame_names.index(f'{arm}_ee_tcp')])
 
 def rel_ee_quat(env: ManagerBasedRLEnv, arm: str)->torch.Tensor:
     transformer: FrameTransformer = env.scene['ee_frame']
-    return transformer.data.target_quat_source[..., transformer.data.target_frame_names.index(f'{arm}_ee_tcp'), :]
+    return torch.as_tensor(transformer.data.target_quat_source[0:env.num_envs, transformer.data.target_frame_names.index(f'{arm}_ee_tcp')])
 
 def gripper_opening(env: ManagerBasedRLEnv, arm: str)->torch.Tensor:
     robot = env.scene.articulations["robot"]
-    return robot.data.joint_pos[..., [robot.joint_names.index(f'openarm_{arm}_finger_joint1'),]]
+    joint_index = robot.joint_names.index(f'openarm_{arm}_finger_joint1')
+    return torch.as_tensor(robot.data.joint_pos[0:env.num_envs, joint_index:joint_index+1])
 
 def all_poses_w(env: ManagerBasedRLEnv)->torch.Tensor:
     state = env.scene.get_state(is_relative=True)

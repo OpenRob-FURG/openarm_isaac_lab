@@ -9,6 +9,7 @@ from isaaclab.envs import mdp, ManagerBasedRLMimicEnv
 from isaaclab.managers import ActionTermCfg, ObservationTermCfg, ObservationGroupCfg, SceneEntityCfg, EventTermCfg
 from isaaclab.sensors import FrameTransformerCfg, TiledCameraCfg, CameraCfg
 from isaaclab.utils import configclass
+from isaaclab.controllers import DifferentialIKControllerCfg
 
 from isaaclab_arena.assets.register import register_asset
 from isaaclab_arena.embodiments.common.arm_mode import ArmMode
@@ -119,8 +120,9 @@ class OpenArmBimanualCameraCfg:
                 horizontal_aperture=80.0,
                 clipping_range=(0.001, 100.0),
             ),
-            width=256,
-            height=256,
+            width=640,
+            height=480,
+            data_types=["rgb"]
         )
 
 
@@ -130,7 +132,7 @@ class OpenArmBimanualActionsCfg:
         asset_name="robot",
         joint_names=["openarm_left_joint.*"],
         body_name="openarm_left_ee_tcp",
-        controller=mdp.DifferentialIKControllerCfg(
+        controller=DifferentialIKControllerCfg(
             command_type="pose",
             use_relative_mode=True,
             ik_method="dls",
@@ -148,7 +150,7 @@ class OpenArmBimanualActionsCfg:
         asset_name="robot",
         joint_names=["openarm_right_joint.*"],
         body_name="openarm_right_ee_tcp",
-        controller=mdp.DifferentialIKControllerCfg(
+        controller=DifferentialIKControllerCfg(
             command_type="pose",
             use_relative_mode=True,
             ik_method="dls",

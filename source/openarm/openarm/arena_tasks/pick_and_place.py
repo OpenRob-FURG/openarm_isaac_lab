@@ -25,7 +25,6 @@ from isaaclab_arena.terms.events import set_object_pose
 from isaaclab_arena.utils.cameras import get_viewer_cfg_look_at_object
 from openarm.arena_tasks.mdp.rewards import arm_near_object_goal, object_near_pos_goal
 
-from scene_synthesizer.assets import USDAsset
 from trimesh.transformations import quaternion_from_matrix
 
 class PickAndPlaceTask(TaskBase):

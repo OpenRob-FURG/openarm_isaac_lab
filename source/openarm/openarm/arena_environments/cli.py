@@ -5,6 +5,7 @@ import importlib
 from typing import TYPE_CHECKING, Any
 
 from isaaclab_arena.cli.isaaclab_arena_cli import get_isaaclab_arena_cli_parser
+from openarm.arena_environments.industrial import INDUSTRIAL_ENVIRONMENTS
 from openarm.arena_environments.assembly_nut_and_bolt import BimanualOpenArmAssemblyNutAndBoltEnvironment
 from openarm.arena_environments.open_microwave import BimanualOpenArmOpenMicrowaveEnvironment
 from openarm.arena_environments.pick_and_place_exhaust_pipe import BimanualOpenArmPickAndPlaceExhaustPipeEnvironment
@@ -21,6 +22,10 @@ ExampleEnvironments = {
     BimanualOpenArmPickAndPlaceExhaustPipeEnvironment.name: BimanualOpenArmPickAndPlaceExhaustPipeEnvironment,
     BimanualOpenArmPickExhaustPipeEnvironment.name: BimanualOpenArmPickExhaustPipeEnvironment,
 }
+
+# The 50 staged industrial tasks. Each is generated from a declarative spec, so
+# they are registered as a block rather than as 50 hand-written modules.
+ExampleEnvironments.update(INDUSTRIAL_ENVIRONMENTS)
 
 
 def parse_and_return_external_environment_from_string(environment_path: str) -> dict[str, Any]:
