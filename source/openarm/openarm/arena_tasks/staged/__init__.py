@@ -5,7 +5,8 @@ A staged task is described once, as data, in a
 builds both the Arena task (success predicates, observations, metrics) and the
 scripted oracle policy (demonstrations), so the two cannot drift apart.
 
-The pure-data half of the package (:mod:`~openarm.arena_tasks.staged.goals` and
+The pure-data half of the package (:mod:`~openarm.arena_tasks.staged.goals`,
+:mod:`~openarm.arena_tasks.staged.layout` and
 :mod:`~openarm.arena_tasks.staged.stages`) imports nothing from Isaac Sim, so it
 is safe to import before the simulation app has been launched.
 :class:`~openarm.arena_tasks.staged.task.StagedTask` is *not* safe to import at
@@ -30,6 +31,22 @@ from openarm.arena_tasks.staged.goals import (
     ObjectsWithinDistance,
     ObjectUpright,
 )
+from openarm.arena_tasks.staged.layout import (
+    AtPosition,
+    IsAnchor,
+    LayoutRelation,
+    NextTo,
+    NoCollision,
+    On,
+    Placement,
+    PositionLimits,
+    PoseJitter,
+    RandomAroundSolution,
+    RotateAroundSolution,
+    SceneLayout,
+    Side,
+    Surface,
+)
 from openarm.arena_tasks.staged.stages import OBJECT_SKILLS, Skill, Stage, TaskSpec
 
 if TYPE_CHECKING:
@@ -38,9 +55,14 @@ if TYPE_CHECKING:
 __all__ = [
     "All",
     "AtLeast",
+    "AtPosition",
     "Goal",
+    "IsAnchor",
     "JointNormalizedAbove",
     "JointNormalizedBelow",
+    "LayoutRelation",
+    "NextTo",
+    "NoCollision",
     "OBJECT_SKILLS",
     "ObjectAbovePlane",
     "ObjectAtRest",
@@ -48,9 +70,18 @@ __all__ = [
     "ObjectRelativeTo",
     "ObjectsWithinDistance",
     "ObjectUpright",
+    "On",
+    "Placement",
+    "PositionLimits",
+    "PoseJitter",
+    "RandomAroundSolution",
+    "RotateAroundSolution",
+    "SceneLayout",
+    "Side",
     "Skill",
     "Stage",
     "StagedTask",
+    "Surface",
     "TaskSpec",
 ]
 

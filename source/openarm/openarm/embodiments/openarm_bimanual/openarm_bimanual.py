@@ -76,8 +76,8 @@ class OpenArmBimanualSceneCfg:
         prim_path="{ENV_REGEX_NS}/Robot",
         init_state=ArticulationCfg.InitialStateCfg(
             joint_pos=dict(
-                openarm_left_joint4=torch.pi / 2,
-                openarm_right_joint4=torch.pi / 2,
+                openarm_left_joint4=1.65,
+                openarm_right_joint4=1.65,
                 openarm_left_finger_joint1=0.043,
                 openarm_right_finger_joint1=0.043,
             )
@@ -110,8 +110,8 @@ class OpenArmBimanualCameraCfg:
         self.top_camera = TiledCameraCfg(
             prim_path="{ENV_REGEX_NS}/Robot/openarm_body_link/top_camera",
             offset=TiledCameraCfg.OffsetCfg(
-                pos=(0.05, 0.0, 0.65),
-                rot=(0.0, 0.383, 0.0, 0.924),
+            pos=(0.05, 0.0, 0.65),
+            rot=(0.0, 0.383, 0.0, 0.924),
                 convention="world",
             ),
             spawn=sim_utils.PinholeCameraCfg(
@@ -136,6 +136,10 @@ class OpenArmBimanualActionsCfg:
             command_type="pose",
             use_relative_mode=True,
             ik_method="dls",
+            # The reset arm pose is close to a wrist singularity. A modest
+            # damping term prevents millimetre Cartesian steps from turning
+            # into large joint targets that kick the TCP away from the goal.
+            ik_params={"lambda_val": 0.2},
         ),
     )
 
@@ -154,6 +158,7 @@ class OpenArmBimanualActionsCfg:
             command_type="pose",
             use_relative_mode=True,
             ik_method="dls",
+            ik_params={"lambda_val": 0.2},
         ),
     )
 

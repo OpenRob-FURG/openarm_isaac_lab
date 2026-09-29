@@ -13,6 +13,9 @@ recover from their own mistakes, not to be optimal.
 from __future__ import annotations
 
 from collections.abc import Mapping
+from functools import lru_cache
+from pathlib import Path
+from urllib.parse import urlparse
 from typing import TYPE_CHECKING
 
 import torch
@@ -35,10 +38,10 @@ GRIPPER_CLOSE = -1.0
 #: Maximum magnitude of the Cartesian position command per step, in action
 #: units. Keeps the oracle from demanding an unreachable jump on the first step
 #: of a stage, which is the main cause of scripted policies flailing at start.
-MAX_POSITION_COMMAND = 0.08
+MAX_POSITION_COMMAND = 0.01
 
 #: Maximum magnitude of the rotation command per step, in axis-angle units.
-MAX_ROTATION_COMMAND = 0.35
+MAX_ROTATION_COMMAND = 0.01
 
 #: Peak speed above which an object is considered to be in flight rather than
 #: held, used to decide whether a grasp actually took.
@@ -126,6 +129,50 @@ def local_point(object_pose: torch.Tensor, local_offset: tuple[float, float, flo
     return object_pose[:3, :3] @ offset + object_pose[:3, 3]
 
 
+def align_approach(current: torch.Tensor, axis: int) -> torch.Tensor:
+    """Rotate an end-effector frame so its approach axis points the right way.
+
+    The OpenArm gripper reaches along its own +z. For a top-down grasp that has
+    to become world -z, which the resting arm is not already doing: its +z
+    points forward and down, some 58 degrees off vertical. Rotating the current
+    frame by the least amount that lands +z on the target keeps the wrist from
+    flipping through the large rotation that asking for a bare world-frame
+    orientation implies.
+
+    Args:
+        current: The end effector's current rotation matrix, ``(3, 3)``.
+        axis: World axis the gripper approaches along, 0/1/2 for x/y/z.
+
+    Returns:
+        The rotation matrix to command, ``(3, 3)``.
+    """
+    target = torch.zeros(3, device=current.device, dtype=current.dtype)
+    # The pre-grasp sits on the positive side of the axis and the gripper travels
+    # towards the object, so the gripper points along the negative axis.
+    target[axis] = -1.0
+    a = current[:, 2]
+    axis_cross = torch.linalg.cross(a, target, dim=0)
+    sine = float(torch.linalg.norm(axis_cross))
+    cosine = float(torch.dot(a, target))
+    if sine < 1e-6:
+        if cosine > 0.0:
+            return current.clone()
+        # Opposed: rotate half a turn about any axis orthogonal to a.
+        flip = torch.zeros(3, 3, device=current.device, dtype=current.dtype)
+        orthogonal = torch.zeros(3, device=current.device, dtype=current.dtype)
+        orthogonal[0 if axis != 0 else 1] = 1.0
+        flip[0, 0] = flip[1, 1] = flip[2, 2] = -1.0
+        return flip + 2.0 * torch.outer(orthogonal, orthogonal)
+    skew = torch.zeros(3, 3, device=current.device, dtype=current.dtype)
+    skew[0, 1], skew[0, 2] = -axis_cross[2], axis_cross[1]
+    skew[1, 0], skew[1, 2] = axis_cross[2], -axis_cross[0]
+    skew[2, 0], skew[2, 1] = -axis_cross[1], axis_cross[0]
+    # Rodrigues' rotation formula, in the form that stays stable as the two
+    # directions close together (the denominator blows up as cosine -> -1).
+    rotation = torch.eye(3, device=current.device, dtype=current.dtype) + skew + skew @ skew / (1.0 + cosine)
+    return rotation @ current
+
+
 def grasp_pose(object_pose: torch.Tensor, stage: Stage) -> torch.Tensor:
     """Compute where the end effector must be to grasp an object.
 
@@ -152,8 +199,205 @@ def grasp_pose(object_pose: torch.Tensor, stage: Stage) -> torch.Tensor:
     return pose
 
 
+@lru_cache(maxsize=128)
+def _usd_antipodal_geometry(
+    usd_path: str,
+) -> tuple[tuple[float, ...], tuple[tuple[float, ...], ...], object, object] | None:
+    """Find an antipodal pair in an object's USD mesh, in its root frame.
+
+    The closing axis is selected from the mesh's principal axes. A candidate
+    must fit the OpenArm's 86 mm open gap and have opposing mesh faces whose
+    normals point across that axis. Geometry is cached by USD path because a
+    task reuses the same asset across resets and episodes.
+    """
+    if not usd_path:
+        return None
+    try:
+        import numpy as np
+        from pxr import Usd, UsdGeom
+
+        local_path = Path(usd_path)
+        if not local_path.is_file() and usd_path.startswith(("http://", "https://")):
+            # IsaacLab-Arena registers public object USDs by their source URL,
+            # while Isaac Sim's content cache exposes the same `/Assets/...`
+            # tree under /tmp/Assets inside the container.
+            cached_path = Path("/tmp") / urlparse(usd_path).path.lstrip("/")
+            if cached_path.is_file():
+                local_path = cached_path
+        if not local_path.is_file():
+            return None
+        stage = Usd.Stage.Open(str(local_path))
+        if stage is None:
+            return None
+        root = stage.GetDefaultPrim()
+        if not root:
+            roots = [p for p in stage.GetPseudoRoot().GetChildren() if p.IsA(UsdGeom.Xform)]
+            root = roots[0] if roots else None
+        if not root:
+            return None
+
+        cache = UsdGeom.XformCache()
+        root_inverse = cache.GetLocalToWorldTransform(root).GetInverse()
+        vertices: list[np.ndarray] = []
+        face_normals: list[np.ndarray] = []
+        for prim in Usd.PrimRange(root, Usd.TraverseInstanceProxies()):
+            if not prim.IsA(UsdGeom.Mesh):
+                continue
+            mesh = UsdGeom.Mesh(prim)
+            points = mesh.GetPointsAttr().Get() or []
+            if len(points) < 3:
+                continue
+            transform = cache.GetLocalToWorldTransform(prim) * root_inverse
+            matrix = np.asarray([[float(transform[r][c]) for c in range(3)] for r in range(3)])
+            translation = np.asarray([float(transform[3][i]) for i in range(3)])
+            pts = np.asarray([matrix.T @ np.asarray(p, dtype=np.float64) + translation for p in points])
+            vertices.extend(pts)
+            indices = list(mesh.GetFaceVertexIndicesAttr().Get() or [])
+            counts = list(mesh.GetFaceVertexCountsAttr().Get() or [])
+            offset = 0
+            for count in counts:
+                face = indices[offset : offset + count]
+                offset += count
+                if len(face) < 3:
+                    continue
+                a = pts[face[0]]
+                for j in range(1, len(face) - 1):
+                    b, c = pts[face[j]], pts[face[j + 1]]
+                    normal = np.cross(b - a, c - a)
+                    norm = np.linalg.norm(normal)
+                    if norm > 1e-10:
+                        face_normals.append(normal / norm)
+        if not vertices or not face_normals:
+            return None
+        points = np.asarray(vertices)
+        normals = np.asarray(face_normals)
+        centre = points.mean(axis=0)
+        covariance = np.cov(points - centre, rowvar=False)
+        _, axes = np.linalg.eigh(covariance)
+
+        choices = []
+        for axis in axes.T:
+            axis = axis / np.linalg.norm(axis)
+            projections = points @ axis
+            width = float(projections.max() - projections.min())
+            if width < 0.012 or width > 0.080:  # 86 mm physical opening; leave finger clearance.
+                continue
+            alignment = normals @ axis
+            opposing_pos = float(np.max(alignment))
+            opposing_neg = float(np.max(-alignment))
+            if min(opposing_pos, opposing_neg) < 0.72:
+                continue
+            # Prefer the widest feasible pair for a stable hold, then the pair
+            # with the strongest opposing faces.
+            choices.append((width + 0.01 * (opposing_pos + opposing_neg), axis))
+        if not choices:
+            return None
+        # Preserve all feasible principal directions. For round containers two
+        # directions are equally good geometrically, so the live gripper
+        # orientation can choose the one that requires the least wrist motion.
+        choices.sort(key=lambda item: item[0], reverse=True)
+        axes = tuple(tuple(float(x) for x in axis) for _, axis in choices)
+        return tuple(float(x) for x in centre), axes, points.astype(np.float32), normals.astype(np.float32)
+    except Exception:
+        # Some Arena assets use resolver-backed references that are not
+        # available until the stage has loaded. Their declared task grasp is
+        # still used as a safe fallback.
+        return None
+
+
+def _usd_path_for_object(env: "ManagerBasedEnv", name: str) -> str | None:
+    """Get the USD source path from an Isaac Lab scene asset config."""
+    try:
+        asset = scene_of(env)[name]
+        cfg = asset.cfg
+        spawn = getattr(cfg, "spawn", None)
+        path = getattr(spawn, "usd_path", None)
+        if path is None:
+            path = getattr(cfg, "usd_path", None)
+        return str(path) if path else None
+    except (KeyError, AttributeError, TypeError):
+        return None
+
+
+def mesh_antipodal_grasp_pose(
+    env: "ManagerBasedEnv", name: str, pose: torch.Tensor, current: torch.Tensor
+) -> torch.Tensor | None:
+    """Build a top-down EEF pose from antipodal contacts on an object's USD mesh.
+
+    OpenArm local +Y is the jaw closing axis and local +Z extends through the
+    fingers. The generated pose aligns +Y with the chosen mesh axis and +Z
+    along the current finger axis. In the composed robot USD, the finger root
+    sits about 78 mm behind the TCP and its mesh extends 80 mm toward the
+    object, leaving the distal contact face about 2 mm beyond the TCP.
+    """
+    usd_path = _usd_path_for_object(env, name)
+    geometry = _usd_antipodal_geometry(usd_path) if usd_path else None
+    if geometry is None:
+        return None
+    centre_local, closing_axes_local, mesh_points, mesh_normals = geometry
+    device = pose.device
+    dtype = pose.dtype
+    centre = torch.tensor(centre_local, device=device, dtype=dtype)
+    centre_world = pose[:3, :3] @ centre + pose[:3, 3]
+    # The bimanual arm starts with the wrist pitched forward. Keep that
+    # collision-free approach direction and choose an antipodal jaw axis around
+    # it; asking this 7-DoF arm to pitch vertically over a table is unstable.
+    approach = current[:3, 2].clone()
+    approach = approach / torch.linalg.norm(approach).clamp_min(1e-8)
+    target = torch.eye(4, device=device, dtype=dtype)
+    # First test the reset wrist's actual jaw axis against mesh vertices and
+    # triangle normals. This preserves the calibrated approach when it is
+    # already antipodal (common for round cans and bottles).
+    jaw_axis_local = pose[:3, :3].transpose(-1, -2) @ current[:3, 1]
+    jaw_axis_local = jaw_axis_local / torch.linalg.norm(jaw_axis_local).clamp_min(1e-8)
+    points_np = mesh_points
+    normals_np = mesh_normals
+    axis_np = jaw_axis_local.detach().cpu().numpy()
+    normal_alignment = normals_np @ axis_np
+    width = float((points_np @ axis_np).max() - (points_np @ axis_np).min())
+    exact_antipodal = (
+        0.012 <= width <= 0.080
+        and float(normal_alignment.max()) >= 0.72
+        and float((-normal_alignment).max()) >= 0.72
+    )
+    if exact_antipodal:
+        target[:3, :3] = current[:3, :3]
+    else:
+        if not closing_axes_local:
+            return None
+        # For non-round meshes, select the feasible principal direction that
+        # needs the smallest jaw rotation. Keep the current approach axis fixed
+        # so the arm only rolls its wrist around the incoming finger axis.
+        candidates = []
+        for candidate_local in closing_axes_local:
+            candidate = pose[:3, :3] @ torch.tensor(candidate_local, device=device, dtype=dtype)
+            candidate -= torch.dot(candidate, approach) * approach
+            candidate /= torch.linalg.norm(candidate).clamp_min(1e-8)
+            candidates.append((float(torch.abs(torch.dot(candidate, current[:3, 1]))), candidate))
+        _, jaw_axis = max(candidates, key=lambda item: item[0])
+        if torch.dot(jaw_axis, current[:3, 1]) < 0:
+            jaw_axis = -jaw_axis
+        local_x = torch.linalg.cross(jaw_axis, approach, dim=0)
+        local_x /= torch.linalg.norm(local_x).clamp_min(1e-8)
+        target[:3, 0] = local_x
+        target[:3, 1] = jaw_axis
+        target[:3, 2] = approach
+    target[:3, 3] = centre_world - 0.002 * approach
+    # The finger links are about 60 mm tall. Bias the contact toward the upper
+    # side of the object so their lower edges clear the tabletop while closing
+    # on an object resting directly on it.
+    target[2, 3] += 0.012
+    return target
+
+
 def approach_pose(grasp: torch.Tensor, stage: Stage, distance: float | None = None) -> torch.Tensor:
     """Back the grasp pose off along the object's approach axis.
+
+    The gripper travels *toward* the object along the world ``approach_axis``,
+    so the pre-grasp pose is further along that axis than the grasp, not behind
+    it. In particular, the default top-down axis (``2``) must add world +z.
+    Rotating that offset by the gripper orientation reverses it after the
+    gripper is aligned to point downward, sending the pre-grasp below a table.
 
     Args:
         grasp: The grasp pose, shape ``(4, 4)``.
@@ -164,10 +408,9 @@ def approach_pose(grasp: torch.Tensor, stage: Stage, distance: float | None = No
         The pre-grasp pose, shape ``(4, 4)``.
     """
     offset = torch.zeros(3, device=grasp.device, dtype=torch.float32)
-    axis = stage.approach_axis
-    offset[axis] = float(stage.approach_distance if distance is None else distance)
+    offset[stage.approach_axis] = float(stage.approach_distance if distance is None else distance)
     pose = grasp.clone()
-    pose[:3, 3] = grasp[:3, 3] - grasp[:3, :3] @ offset
+    pose[:3, 3] = grasp[:3, 3] + offset
     return pose
 
 
@@ -469,7 +712,10 @@ def _poses_to_action(
         if gripper is None:
             # Arms that are not being commanded hold their current gripper.
             gripper = _current_gripper(env, arm, env_id)
-        actions.append(torch.cat([pose_action, torch.as_tensor(gripper, dtype=torch.float32, device=device).reshape(-1)]))
+        arm_action = torch.cat(
+            [pose_action, torch.as_tensor(gripper, dtype=torch.float32, device=device).reshape(-1)]
+        )
+        actions.append(clamp_action(arm_action))
     return torch.cat(actions)
 
 
@@ -508,6 +754,8 @@ class SkillController:
         self.elapsed = 0
         self.phase = "approach"
         self.start_object_pose: torch.Tensor | None = None
+        self.planned = False
+        self.grasp_started: int | None = None
 
     # -- lifecycle ---------------------------------------------------
 
@@ -519,8 +767,34 @@ class SkillController:
         """
         self.elapsed = 0
         self.phase = "approach"
+        self.planned = False
+        self.grasp_started = None
         if self.stage.target:
             self.start_object_pose = object_pose(env, self.stage.target, self.env_id).clone()
+
+    def ensure_planned(self, env: "ManagerBasedEnv") -> None:
+        """Derive this stage's cached target poses, once.
+
+        ``PolicyBase.reset`` only receives ``env_ids``, so a controller built by
+        the policy's reset has never seen the environment and cannot plan yet.
+        Planning lazily on the first step makes the controller work whether the
+        caller had an env to hand over or not, and it is still the pose at the
+        start of the stage because nothing has moved in between.
+
+        Args:
+            env: The environment.
+        """
+        if self.planned:
+            return
+        self.plan(env)
+        self.planned = True
+
+    def plan(self, env: "ManagerBasedEnv") -> None:
+        """Compute the cached poses this controller steers towards.
+
+        Args:
+            env: The environment.
+        """
 
     def step(self, env: "ManagerBasedEnv", env_id: int = 0) -> torch.Tensor:
         """Advance the controller by one environment step.
@@ -641,24 +915,140 @@ class PickController(SkillController):
 
     def reset(self, env: "ManagerBasedEnv", env_id: int = 0) -> None:
         super().reset(env, env_id)
-        self.pregrasp = approach_pose(grasp_pose(object_pose(env, self.stage.target, self.env_id), self.stage), self.stage)
+        self.ensure_planned(env)
+
+    def plan(self, env: "ManagerBasedEnv") -> None:
+        usd_path = _usd_path_for_object(env, self.stage.target)
+        self.mesh_grasp = bool(usd_path and _usd_antipodal_geometry(usd_path) is not None)
+        self.grasp_target = self._grasp_pose(env)
+        self.pregrasp = self._pregrasp(env)
         self.height = None
+        current = eef_pose(env, self.stage.arm, self.env_id)
+        grasp = self.grasp_target
+        # The industrial work surface spans x=0.05..0.85. The default wrist
+        # starts just beneath the slab, so extend past its far edge before
+        # lifting; the near edge is blocked by the robot base at this height.
+        self.clear_front = current.clone()
+        self.clear_front[0, 3] = 0.90
+        self.clear_height = self.clear_front.clone()
+        # The bimanual OpenArm's reachable height is limited by its base and
+        # arm geometry. A 40 cm rise from a grasp inside a bin asks for >1 m,
+        # beyond the right arm's stable IK workspace; clear the tabletop at a
+        # bounded wrist height instead.
+        self.clear_height[2, 3] = max(float(self.pregrasp[2, 3]) + 0.18, 0.82)
+        self.above_object = self.pregrasp.clone()
+        self.above_object[2, 3] = self.clear_height[2, 3]
+        # The configured reset pose already places the grippers beside the
+        # tabletop objects. A retreat to an imagined table edge is both
+        # unnecessary and outside this arm's reachable workspace.
+        # Several industrial layouts put the first object directly between the
+        # open gripper fingers at reset. If the tool is already aligned with
+        # the declared grasp point, close there instead of sweeping over the
+        # object and knocking it away on the way back down.
+        if float(torch.linalg.norm(current[:3, 3] - grasp[:3, 3])) <= 0.06:
+            # The reset gripper is already over this mesh's feasible grasp
+            # envelope. Make only the small mesh-based TCP correction before
+            # closing, instead of taking a long pre-grasp route.
+            self.phase = "grasp"
+        else:
+            self.phase = "approach"
+
+    def _grasp_pose(self, env: "ManagerBasedEnv") -> torch.Tensor:
+        """Grasp pose for the object's pose right now.
+
+        A stage that names a ``grasp_euler`` gets exactly that orientation.
+        Otherwise preserve the current wrist orientation. Asking the OpenArm's
+        constrained wrist to reorient while translating made its differential
+        IK diverge from otherwise reachable targets. Tasks that require a
+        particular grasp orientation can declare one explicitly.
+        """
+        object_transform = object_pose(env, self.stage.target, self.env_id)
+        if any(abs(value) > 1e-9 for value in self.stage.grasp_euler):
+            # Explicit stage orientations remain available for specialized
+            # tools; the mesh planner handles the common default-grasp stages.
+            return grasp_pose(object_transform, self.stage)
+        current = eef_pose(env, self.stage.arm, self.env_id)
+        target = mesh_antipodal_grasp_pose(env, self.stage.target, object_transform, current)
+        if target is not None:
+            return target
+        target = grasp_pose(object_transform, self.stage)
+        target = target.clone()
+        target[:3, :3] = current[:3, :3]
+        return target
+
+    def _pregrasp(self, env: "ManagerBasedEnv") -> torch.Tensor:
+        """Pre-grasp pose for the object's pose right now.
+
+        Derived from the live pose rather than cached at stage start: the object
+        is usually spawned above the surface and settles in the first few steps,
+        so a pose planned from the spawn height aims at empty air.
+        """
+        return approach_pose(self.grasp_target, self.stage)
 
     def step(self, env: "ManagerBasedEnv", env_id: int = 0) -> torch.Tensor:
-        device = eef_pose(env, self.stage.arm, self.env_id).device
+        self.ensure_planned(env)
+        # Spawned props are released a little above their resting pose. Record
+        # the pick baseline after that settling drop, before the arm can reach
+        # the object, so gravity alone cannot count as a successful pick.
+        if self.elapsed == 25 and self.stage.target:
+            self.start_object_pose = object_pose(env, self.stage.target, self.env_id).clone()
+            # Props settle during the first frames after reset. Replan once at
+            # that point; following the object on every step makes the target
+            # chase it when contact nudges the prop during the approach.
+            if self.phase == "approach":
+                self.grasp_target = self._grasp_pose(env)
+                self.pregrasp = self._pregrasp(env)
+        waypoint = {
+            "clear_front": self.clear_front,
+            "over_object": self.above_object,
+        }.get(self.phase)
+        if self.phase == "clear_height":
+            # Use the measured horizontal position here: IK can overshoot the
+            # front waypoint by a few centimetres, and carrying that nominal
+            # waypoint into the lift makes the wrist drift back into the slab.
+            waypoint = eef_pose(env, self.stage.arm, self.env_id).clone()
+            waypoint[2, 3] = self.clear_height[2, 3]
+        if waypoint is not None:
+            action = build_action(env, {self.stage.arm: waypoint}, {self.stage.arm: GRIPPER_OPEN}, self.env_id)
+            reached_clear_front = self.phase == "clear_front" and float(
+                eef_pose(env, self.stage.arm, self.env_id)[0, 3]
+            ) >= 0.82
+            current = eef_pose(env, self.stage.arm, self.env_id)
+            waypoint_error, _ = pose_error(current, waypoint)
+            reached_waypoint = self.settled(env, waypoint, rotation=self.phase == "over_object")
+            if self.phase == "over_object":
+                # Differential IK can stop a few cm short at the edge of the
+                # arm's workspace. Treat those transit poses as reached and
+                # let the next, task-critical approach determine grasp quality.
+                reached_waypoint = bool(waypoint_error <= 0.12)
+            if reached_clear_front or reached_waypoint:
+                self.phase = {"clear_front": "clear_height", "clear_height": "over_object", "over_object": "approach"}[
+                    self.phase
+                ]
+            self.wait()
+            return action
         if self.phase == "approach":
             action = build_action(env, {self.stage.arm: self.pregrasp}, {self.stage.arm: GRIPPER_OPEN}, self.env_id)
             if self.settled(env, self.pregrasp):
                 self.phase = "grasp"
+                self.grasp_started = self.elapsed
         elif self.phase == "grasp":
-            target = grasp_pose(object_pose(env, self.stage.target, self.env_id), self.stage)
-            action = build_action(env, {self.stage.arm: target}, {self.stage.arm: GRIPPER_CLOSE}, self.env_id)
-            if self.settled(env, target) or self.elapsed > self.stage.max_steps // 3:
-                self.phase = "lift"
-                self.height = float(target[2, 3]) + self.stage.lift_height
+            target = self.grasp_target
+            position_error, orientation_error = pose_error(eef_pose(env, self.stage.arm, self.env_id), target)
+            position_tolerance = min(self.stage.tolerance_pos, 0.01) if self.mesh_grasp else self.stage.tolerance_pos
+            reached_grasp = bool(position_error <= position_tolerance)
+            if self.stage.tolerance_rot > 0.0:
+                reached_grasp = reached_grasp and bool(orientation_error <= self.stage.tolerance_rot)
+            gripper = GRIPPER_CLOSE if reached_grasp else GRIPPER_OPEN
+            action = build_action(env, {self.stage.arm: target}, {self.stage.arm: gripper}, self.env_id)
+            if reached_grasp:
+                if self.grasp_started is None:
+                    self.grasp_started = self.elapsed
+                elif self.elapsed - self.grasp_started >= 8:
+                    self.phase = "lift"
+                    self.height = float(target[2, 3]) + self.stage.lift_height
         else:
-            target = torch.eye(4, device=device, dtype=torch.float32)
-            target[:3, :3] = eef_pose(env, self.stage.arm, self.env_id)[:3, :3]
+            target = eef_pose(env, self.stage.arm, self.env_id).clone()
             target[2, 3] = self.height if self.height is not None else target[2, 3]
             action = build_action(env, {self.stage.arm: target}, {self.stage.arm: GRIPPER_CLOSE}, self.env_id)
             if self.settled(env, target):
@@ -670,10 +1060,13 @@ class PickController(SkillController):
         return self.phase == "done"
 
     def verify(self, env: "ManagerBasedEnv", env_id: int = 0) -> bool:
-        if not self.object_moved(env):
+        if not self.object_moved(env, minimum=0.04):
+            return False
+        current = object_pose(env, self.stage.target, self.env_id)
+        if self.start_object_pose is None or float(current[2, 3] - self.start_object_pose[2, 3]) < 0.04:
             return False
         _, speed = object_velocity(env, self.stage.target, self.env_id)
-        return bool(speed < MOTION_SPEED_THRESHOLD) and self.object_held(env)
+        return bool(speed < MOTION_SPEED_THRESHOLD) and self.object_held(env, maximum=0.10)
 
 
 class PlaceController(SkillController):
@@ -710,6 +1103,20 @@ class PlaceController(SkillController):
         return True
 
 
+def _goal_region_center(goal: object | None, object_name: str) -> tuple[float, float, float] | None:
+    """Find this object's declared placement center inside composed goals."""
+    if goal is None:
+        return None
+    if getattr(goal, "object_name", None) == object_name and hasattr(goal, "center"):
+        return tuple(float(value) for value in goal.center)
+    nested = getattr(goal, "nested_goals", None)
+    for child in nested() if callable(nested) else ():
+        center = _goal_region_center(child, object_name)
+        if center is not None:
+            return center
+    return None
+
+
 class PickPlaceController(PickController):
     """A full pick followed by a place at a target height."""
 
@@ -720,13 +1127,33 @@ class PickPlaceController(PickController):
 
     def reset(self, env: "ManagerBasedEnv", env_id: int = 0) -> None:
         super().reset(env, env_id)
+        self.ensure_planned(env)
+
+    def plan(self, env: "ManagerBasedEnv") -> None:
+        # Chain: this subclass's plan replaces the base one, so the pick half of
+        # the motion (pregrasp, lift height) has to be planned explicitly.
+        super().plan(env)
         device = eef_pose(env, self.stage.arm, self.env_id).device
         self.place_target = torch.eye(4, device=device, dtype=torch.float32)
-        self.place_target[:3, :3] = eef_pose(env, self.stage.arm, self.env_id)[:3, :3]
-        self.place_target[2, 3] = self.stage.release_height
+        current = eef_pose(env, self.stage.arm, self.env_id)
+        self.place_target[:3, :3] = current[:3, :3]
+        # Place above the destination described by this stage's region goal.
+        # Falling back to the current x/y keeps non-region pick-place stages
+        # that only specify release_height compatible.
+        destination = _goal_region_center(self.stage.goal, self.stage.target)
+        if destination is not None:
+            offset = torch.as_tensor(self.stage.grasp_offset, device=device, dtype=torch.float32)
+            self.place_target[:3, 3] = torch.as_tensor(destination, device=device, dtype=torch.float32)
+            self.place_target[:3, 3] += offset
+        else:
+            self.place_target[:2, 3] = current[:2, 3]
+            self.place_target[2, 3] = self.stage.release_height
+        self.place_hover = self.place_target.clone()
+        self.place_hover[2, 3] = max(float(current[2, 3]), float(self.clear_height[2, 3]))
         self.released = False
 
     def step(self, env: "ManagerBasedEnv", env_id: int = 0) -> torch.Tensor:
+        self.ensure_planned(env)
         if not self.released:
             action = super().step(env, env_id)
             if self.phase == "done":
@@ -734,6 +1161,10 @@ class PickPlaceController(PickController):
                 self.phase = "transfer"
             return action
         if self.phase == "transfer":
+            action = build_action(env, {self.stage.arm: self.place_hover}, {self.stage.arm: GRIPPER_CLOSE}, self.env_id)
+            if self.settled(env, self.place_hover):
+                self.phase = "lower"
+        elif self.phase == "lower":
             action = build_action(env, {self.stage.arm: self.place_target}, {self.stage.arm: GRIPPER_CLOSE}, self.env_id)
             if self.settled(env, self.place_target):
                 self.phase = "release"
@@ -743,7 +1174,7 @@ class PickPlaceController(PickController):
                 self.phase = "retreat"
         else:
             retreat = self.place_target.clone()
-            retreat[2, 3] = self.stage.release_height + self.stage.lift_height
+            retreat[2, 3] += self.stage.lift_height
             action = build_action(env, {self.stage.arm: retreat}, {self.stage.arm: GRIPPER_OPEN}, self.env_id)
             if self.settled(env, retreat):
                 self.phase = "done"

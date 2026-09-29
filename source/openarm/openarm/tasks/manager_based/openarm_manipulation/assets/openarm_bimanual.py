@@ -84,7 +84,7 @@ OPEN_ARM_CFG = ArticulationCfg(
                 "openarm_right_finger_joint.*",
             ],
             velocity_limit_sim=0.2,
-            effort_limit_sim=333.33,
+            #effort_limit_sim=333.33,
             stiffness=2e3,
             damping=1e2,
         ),

@@ -1,230 +1,201 @@
 from isaaclab_arena.policy.policy_base import PolicyBase
-import omni.client
-from scene_synthesizer.assets import USDAsset
-import argparse
+from openai import OpenAI
+import base64
+import io
 import json
-from isaaclab_mimic.motion_planners.curobo.curobo_planner import CuroboPlanner
-from isaaclab_mimic.motion_planners.curobo.curobo_planner_cfg import CuroboPlannerCfg
+import re
+import numpy as np
 import torch
-import curobo
-import isaaclab.utils.math as PoseUtils
+from PIL import Image
+import argparse
+from collections import deque
+
 
 class LLMPolicy(PolicyBase):
-    def __init__(self, scene, task_description):
+    """
+    LLM-based policy: instead of a learned VLA (SmolVLA / Groot / XVLA) we query a
+    vision-language model served by Ollama (OpenAI-compatible endpoint) and parse
+    an action chunk out of the text response.
+    """
+
+    def __init__(
+        self,
+        task: str,
+        policy_type: str = "llm",
+        model: str = "qwen3.5",                     # Ollama model tag
+        base_url: str = "http://localhost:11434/v1", # Ollama OpenAI-compat endpoint
+        api_key: str = "ollama",
+        action_dim: int = 14,                         # e.g. 6-DoF + gripper
+        action_horizon: int = 1,
+        temperature: float = 0.1,
+        max_tokens: int = 1024,
+        image_size: tuple = (640, 480),
+    ) -> None:
         super().__init__(config=None)
-        scene_description = {}
-        for asset_name in scene.assets.keys():
-            scene_description[asset_name] = {}
-            if scene.assets[asset_name].usd_path.startswith('https://'):
-                omni.client.copy(scene.assets[asset_name].usd_path, "/tmp/downloaded_usd.usd")
-                usd_asset = USDAsset("/tmp/downloaded_usd.usd")
-            else:
-                usd_asset = USDAsset(fname=scene.assets[asset_name].usd_path)
-            usd_asset = usd_asset.scene()
-            for geometry_name in usd_asset.get_geometry_names():
-                geometry_transform = usd_asset.get_transform(node=geometry_name).tolist()
-                geometry_bounds = usd_asset.get_bounds(query=geometry_name).tolist()
-                scene_description[asset_name][geometry_name] = dict(
-                    geometry_transform=geometry_transform,
-                    geometry_bounds=geometry_bounds
-                )
-        self.assets_description = scene_description
-        self.task_description = task_description
-        self.action_buffer = []
-        self.gripper_action_dict = dict(
-            left=torch.as_tensor([1.0,], device='cuda'),
-            right=torch.as_tensor([1.0,], device='cuda')
-        )
-        self.planner = None
-        self.action_repeat_counter = 0
-        self.next_pose = None
+        self.task = task
+        self.policy_type = policy_type
+        self.model = model
+        self.action_dim = action_dim
+        self.action_horizon = action_horizon
+        self.image_size = image_size
+        self.temperature = temperature
+        self.max_tokens = max_tokens
 
-    def grasp_object(self, env, arm, planner):
-        frame_transformer_data = env.scene.sensors['object_frame_transformer'].data
-        for frame_index, frame_name in enumerate(frame_transformer_data.target_frame_names):
-            if arm in frame_name and "grasp" in frame_name:
-                target_pose_pos = frame_transformer_data.target_pos_w[..., frame_index, :]
-                target_pose_quat = frame_transformer_data.target_quat_w[..., frame_index, :]
-                break
-        #target_pose_quat = planner.get_ee_pose(joint_state=planner._get_current_joint_state_for_curobo()).quaternion
-        print('pos', target_pose_pos)
-        print('quat', target_pose_quat)
-        target_pose = PoseUtils.make_pose(pos=target_pose_pos, rot=PoseUtils.matrix_from_quat(target_pose_quat))
-        #print(target_pose)
-        plan_success = planner.update_world_and_plan_motion(target_pose=target_pose, step_size=env.step_dt/2.0, enable_retiming=True)
-        input()
-        if plan_success == False:
-            raise ValueError("Plan failed!")
-        while False and planner.has_next_waypoint():
-            next_pose = planner.get_next_waypoint_ee_pose().get_matrix()[0]
-            if arm == "left":
-                target_pose_dict=dict(
-                    left=next_pose,
-                    right=env.get_robot_eef_pose(eef_name="right")[0]
-                )
-                self.gripper_action_dict['left'][0] = 1.0
-            if arm == "right":
-                target_pose_dict=dict(
-                    right=next_pose,
-                    left=env.get_robot_eef_pose(eef_name="left")[0]
-                )
-                self.gripper_action_dict['right'][0] = 1.0
-            action = env.target_eef_pose_to_action(
-                target_eef_pose_dict=target_pose_dict,
-                gripper_action_dict=self.gripper_action_dict,
+        self.buffer = deque([], maxlen=3)
+        self.action_buffer = deque([], maxlen=3)
+
+        # Ollama exposes an OpenAI-compatible REST API at /v1
+        self.client = OpenAI(base_url=base_url, api_key=api_key)
+
+        self.system_prompt = (
+            "You are a robot policy controlling two 6-DoF arms with a parallel-jaw gripper.\n"
+            "You receive one or more camera images, a natural-language task, and the robot's "
+            "current proprioceptive state.\n\n"
+
+            "Axis convention:\n"
+            "  X: points forward\n"
+            "  Y: points left\n"
+            "  Z: points upward\n\n"
+
+            "Proprioceptive state is provided as a concatenated list of:\n"
+            "  left_ee_position_xyz_m        : [x, y, z] in meters (world frame)\n"
+            "  left_ee_orientation_quat_wxyz : [x, y, z, w] unit quaternion (world frame)\n"
+            "  left_gripper                  : prismatic joint position in meters\n"
+            "  right_ee_position_xyz_m        : [x, y, z] in meters (world frame)\n"
+            "  right_ee_orientation_quat_wxyz : [x, y, z, w] unit quaternion (world frame)\n"
+            "  right_gripper                  : prismatic joint position in meters\n\n"
+
+            "You must output ONLY a JSON object of the form:\n"
+            '  {"actions": [[left_dx, left_dy, left_dz, left_droll, left_dpitch, left_dyaw, left_gripper, right_dx, right_dy, right_dz, right_droll, right_dpitch, right_dyaw, right_gripper], ...]}\n'
+            f"with exactly {self.action_horizon} action(s), each having {self.action_dim} floats.\n\n"
+
+            "Action semantics (per row):\n"
+            "  .*_dx, .*_dy, .*_dz       : desired DELTA end-effector position of left and right arm in meters, "
+            "world frame, clipped to [-0.05, 0.05] per step.\n"
+            "  .*_droll, .*_dpitch, .*_dyaw : desired DELTA orientation of left and right arm end-effector in RADIANS, applied "
+            "as intrinsic X-Y-Z Euler angles relative to the current orientation, "
+            "each clipped to [-0.1, 0.1] per step.\n"
+            "  .*_gripper          : target left and right gripper command in [-1, 1], -1=closed, 1=open.\n\n"
+
+            "Rules:\n"
+            "- Position is a DELTA from the current ee_position_xyz_m, NOT absolute.\n"
+            "- Orientation is a DELTA RPY from the current quaternion, NOT absolute, "
+            "and NOT a quaternion.\n"
+            "- Output must be valid JSON. No prose, no markdown, no explanations."
+        )
+
+    # ------------------------------------------------------------------ helpers
+    def _to_b64(self, img) -> str:
+        if isinstance(img, torch.Tensor):
+            img = img.detach().cpu()
+            if img.ndim == 3 and img.shape[0] in (1, 3):   # CHW -> HWC
+                img = img.permute(1, 2, 0)
+            img = img.numpy()
+        if isinstance(img, np.ndarray):
+            img = np.clip(img, 0, 255).astype(np.uint8) if img.max() > 1.0 \
+                  else (img * 255).astype(np.uint8)
+            img = Image.fromarray(img)
+        if not isinstance(img, Image.Image):
+            raise TypeError(f"Unsupported image type: {type(img)}")
+        img = img.convert("RGB").resize(self.image_size)
+        buf = io.BytesIO()
+        img.save(buf, format="PNG")
+        return base64.b64encode(buf.getvalue()).decode("utf-8")
+
+    def _parse_actions(self, text: str) -> torch.Tensor:
+        # Strip code fences if the model added them
+        print(text)
+        text = re.sub(r"```(?:json)?", "", text).strip("` \n")
+        match = re.search(r"\{.*\}", text, re.DOTALL)
+        if not match:
+            match = re.search(r"\[.*\]", text, re.DOTALL)
+        if not match:
+            raise ValueError(f"No JSON found in LLM output: {text!r}")
+        data = json.loads(match.group(0))
+        if isinstance(data, dict):
+            actions = np.asarray(data["actions"], dtype=np.float32)
+        else:
+            actions = np.asarray(data, dtype=np.float32)
+
+        if actions.ndim == 1:
+            actions = actions[None, :]
+        if actions.shape[-1] != self.action_dim:
+            raise ValueError(
+                f"Expected action_dim={self.action_dim}, got {actions.shape[-1]}"
             )
-            self.action_buffer.append(action.reshape((1, -1)))
-        
-    def plan_motion_stages(self, env, observation):
-        urdf_path = f"{curobo.__path__[0]}/content/assets/robot/openarm_description/openarm_bimanual_v10.urdf"
-        tmp_yaml = CuroboPlannerCfg._create_temp_robot_yaml(base_yaml="openarm_bimanual.yml", urdf_path=urdf_path)
-        planner_config = CuroboPlannerCfg(
-            robot_config_file=tmp_yaml,
-            robot_name="openarm",
-            debug_planner=True,
-            #visualize_plan=True,
-            #visualize_spheres=True
-        )
-        planner = CuroboPlanner(env=env, robot=env.scene['robot'], config=planner_config)
-        planner.update_world()
-        #planner.update_world()
-        print(env.scene.sensors['ee_frame'].data.target_quat_source[..., 0, :])
-        #print(planner.get_ee_pose(joint_state=planner._get_current_joint_state_for_curobo()).quaternion)
-        #exit()
-        self.grasp_object(
-            env=env,
-            arm='left',
-            planner=planner
-        )
-        self.arm = "left"
-        self.planner = planner
-        self.plan_index = 0
+        # Pad / truncate horizon
+        if actions.shape[0] < self.action_horizon:
+            pad = np.repeat(actions[-1:], self.action_horizon - actions.shape[0], axis=0)
+            actions = np.concatenate([actions, pad], axis=0)
+        actions = actions[: self.action_horizon]
 
-    def plan_motion(self, env, observation):
-        state = env.scene.get_state(is_relative=True)
-        sim_state_description = {}
-        for asset_type in state.keys():
-            sim_state_description[asset_type] = {}
-            for state_tensor_key in state[asset_type].keys():
-                sim_state_description[asset_type][state_tensor_key] = {}
-                for key2 in state[asset_type][state_tensor_key].keys():
-                    sim_state_description[asset_type][state_tensor_key][key2] = state[asset_type][state_tensor_key][key2].flatten(start_dim=1).detach().cpu().numpy().tolist()
-        sim_state_description['object_frames'] = {}
-        frame_transformer_data = env.scene.sensors['object_frame_transformer'].data
-        for frame_index, frame_name in enumerate(frame_transformer_data.target_frame_names):
-            sim_state_description['object_frames'][frame_name] = dict(
-                target_pos_world=frame_transformer_data.target_pos_w[..., frame_index, :].detach().cpu().numpy().flatten().tolist(),
-                target_quat_world=frame_transformer_data.target_quat_w[..., frame_index, :].detach().cpu().numpy().flatten().tolist(),
-            )
-        prompt = """Given the geometry of the following USD assets (the transforms and bounds are relative to the origin of each asset): {assets_description}
-And given the following IsaacLab simulation state: {sim_state_description}
-Predict the next waypoint for one of the robotic arms (left or right) to follow in order to execute the following task: {task_description}
-Answer in the following format:
+        return torch.from_numpy(actions)
 
-{{"arm_side": "...(left or right)", "gripper_state": "...(open or close)", "tcp_pose_xyz_wxyz": [..., ..., ..., ..., ..., ..., ...]}}"""
-        response = litellm.completion(
-            model='ollama/qwen3',
+    # ------------------------------------------------------------------ API
+    @torch.no_grad()
+    def get_action(self, env, observation: dict) -> torch.Tensor:
+        """
+        observation: dict with keys like
+            - "image"      : HxWx3 uint8 / float, or tensor CHW
+            - "image_*"    : additional camera views (optional)
+            - "state"      : proprioceptive vector (optional)
+            - "task"       : override task string (optional)
+        Returns: tensor of shape (action_horizon, action_dim)
+        """
+
+        if len(self.action_buffer) != 0:
+            return torch.as_tensor(self.action_buffer.pop(), device=env.device).reshape((1,self.action_dim))
+
+        task = observation.get("task", self.task)
+
+        content = [{"type": "text", "text": f"Task: {task}"}]
+
+        # Collect all image-like entries
+        for key, val in observation.items():
+            if key == "camera_obs":
+                for img_key in val.keys():
+                    b64 = self._to_b64(val[img_key][0])
+                    content.append({
+                        "type": "image_url",
+                        "image_url": {"url": f"data:image/png;base64,{b64}"},
+                    })
+
+        state = torch.concatenate([observation["policy"]["left_eef_pos"],
+                            observation["policy"]["left_eef_quat"],
+                            observation["policy"]["left_gripper_pos"],
+                            observation["policy"]["right_eef_pos"],
+                            observation["policy"]["right_eef_quat"],
+                            observation["policy"]["right_gripper_pos"],], dim=-1).detach().cpu().numpy().ravel().tolist()
+        print(state)
+        self.buffer.append({"type": "text", "text": f"Robot state: {state}"})
+
+        content.extend(self.buffer)
+        resp = self.client.chat.completions.create(
+            model=self.model,
             messages=[
-                {"role": "user", "content": prompt.format(
-                    assets_description=self.assets_description,
-                    sim_state_description=sim_state_description,
-                    task_description=self.task_description
-                )}
+                {"role": "system", "content": self.system_prompt},
+                {"role": "user", "content": content},
             ],
-            reasoning_effort='none'
-        ).choices[0].message.content
-        print(response)
-        #exit()
-        response = response.strip('```json').strip('```').strip('\n')
-        next_waypoint = json.loads(response)
-        urdf_path = f"{curobo.__path__[0]}/content/assets/robot/openarm_description/openarm_bimanual_v10.urdf"
-        if "left" in next_waypoint['arm_side']:
-            tmp_yaml = CuroboPlannerCfg._create_temp_robot_yaml(base_yaml="openarm_bimanual.yml", urdf_path=urdf_path)
-        if "right" in next_waypoint['arm_side']:
-            tmp_yaml = CuroboPlannerCfg._create_temp_robot_yaml(base_yaml="openarm_bimanual.yml", urdf_path=urdf_path)
-        planner_config = CuroboPlannerCfg(
-            robot_config_file=tmp_yaml,
-            robot_name="openarm",
-            debug_planner=True
+            temperature=self.temperature,
+            max_tokens=self.max_tokens,
+            reasoning_effort="none",
         )
-        if "left" in next_waypoint['arm_side']:
-            planner_config.ee_link_name = "openarm_left_ee_tcp"
-            #planner_config.gripper_joint_names=["openarm_left_finger_joint1", "openarm_left_finger_joint2"],
-            #planner_config.gripper_open_positions={"openarm_left_finger_joint1": 0.04, "openarm_left_finger_joint2": 0.04},
-            #planner_config.gripper_closed_positions={"openarm_left_finger_joint1": 0.023, "openarm_left_finger_joint2": 0.023},
-            #planner_config.hand_link_names=["openarm_left_left_finger", "openarm_left_right_finger", "openarm_left_hand"],
-        if "right" in next_waypoint['arm_side']:
-            planner_config.ee_link_name = "openarm_right_ee_tcp"
-        planner = CuroboPlanner(env=env, robot=env.scene['robot'], config=planner_config)
-        target_pose_pos = torch.tensor(next_waypoint["tcp_pose_xyz_wxyz"][:3], dtype=torch.float32)
-        target_pose_quat = torch.tensor(next_waypoint["tcp_pose_xyz_wxyz"][3:7], dtype=torch.float32)
-        target_pose = PoseUtils.make_pose(pos=target_pose_pos, rot=PoseUtils.matrix_from_quat(target_pose_quat))
-        #print(target_pose)
-        plan_success = planner.update_world_and_plan_motion(target_pose=target_pose)
-        if plan_success == False:
-            raise ValueError("Plan failed!")
-        while planner.has_next_waypoint():
-            next_pose = planner.get_next_waypoint_ee_pose()
-            if "left" in next_waypoint['arm_side']:
-                target_pose_dict=dict(
-                    left=next_pose,
-                    right=env.get_robot_eef_pose(eef_name="right")[0]
-                )
-                if "close" in next_waypoint['gripper_state']:
-                    self.gripper_action_dict['left'][0] = -1.0
-                if "open" in next_waypoint['gripper_state']:
-                    self.gripper_action_dict['left'][0] = 1.0
-            if "right" in next_waypoint['arm_side']:
-                target_pose_dict=dict(
-                    right=next_pose,
-                    left=env.get_robot_eef_pose(eef_name="left")[0]
-                )
-                if "close" in next_waypoint['gripper_state']:
-                    self.gripper_action_dict['right'][0] = -1.0
-                if "open" in next_waypoint['gripper_state']:
-                    self.gripper_action_dict['right'][0] = 1.0
-            action = env.target_eef_pose_to_action(
-                target_eef_pose_dict=target_pose_dict,
-                gripper_action_dict=self.gripper_action_dict,
-            )
-            self.action_buffer.append(action)
-
-    def get_action(self, env, observation):
-        if self.planner == None or self.planner.current_plan == None or len(self.planner.current_plan) <= self.plan_index:
-            self.plan_motion_stages(env=env, observation=observation)
-        '''if self.action_repeat_counter >= 1 or self.next_pose == None:
-            self.next_pose = self.planner.get_next_waypoint_ee_pose().get_matrix()[0]
-            self.action_repeat_counter = 0'''
-        target_joint_pos = self.planner.current_plan[self.plan_index].position
-        action = torch.zeros((1, 16), device=env.device)
-        action[0, 0:7] = target_joint_pos[0:7]
-        action[0, 7] = 1.0
-        #action[0, 8:15] = target_joint_pos[9:16]
-        action[0, 15] = 1.0
-        self.plan_index += 1
-        return action
-        if self.arm == "left":
-                target_pose_dict=dict(
-                    left=self.next_pose,
-                    right=env.get_robot_eef_pose(eef_name="right")[0]
-                )
-                self.gripper_action_dict['left'][0] = 1.0
-        if self.arm == "right":
-                target_pose_dict=dict(
-                    right=self.next_pose,
-                    left=env.get_robot_eef_pose(eef_name="left")[0]
-                )
-                self.gripper_action_dict['right'][0] = 1.0
-        action = env.target_eef_pose_to_action(
-                target_eef_pose_dict=target_pose_dict,
-                gripper_action_dict=self.gripper_action_dict,
-        )
-        self.action_repeat_counter += 1
-        return action.reshape((1, -1))
-    
+        #self.buffer.clear()
+        text = resp.choices[0].message.content
+        try:
+            actions = self._parse_actions(text)
+            self.buffer.append({"type": "text", "text": f"Robot action: {actions.detach().cpu().numpy().ravel().tolist()}"})
+            self.action_buffer.extend(actions.tolist())
+            return torch.as_tensor(self.action_buffer.pop(), device=env.device).reshape((1,self.action_dim))
+        except (ValueError, KeyError) as e:
+            print(e)
+            return self.get_action(env=env, observation=observation)
+        
     def reset(self, env_ids = None):
-        self.planner = None
-
+        self.buffer.clear()
+        self.action_buffer.clear()
+        return super().reset(env_ids)
+    
     @staticmethod
     def add_args_to_parser(parser: argparse.ArgumentParser) -> argparse.ArgumentParser:
         return parser
@@ -232,6 +203,6 @@ Answer in the following format:
     @staticmethod
     def from_args(args: argparse.Namespace) -> "LLMPolicy":
         raise NotImplementedError(
-            "LLMPolicy requires a scene and a task_description. "
-            "Construct it directly with access to the environment assets."
+            "LLMPolicy is constructed directly from a task. "
+            "Use policy_runner.py which builds the policy from CLI arguments."
         )

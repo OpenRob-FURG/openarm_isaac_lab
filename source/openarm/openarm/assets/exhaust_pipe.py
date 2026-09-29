@@ -6,7 +6,7 @@ import openarm
 class CustomExhaustPipe(BlueExhaustPipe):
     name = "custom_exhaust_pipe"
     usd_path = f"{openarm.__path__[0]}/assets/meshes/blue_exhaust_pipe.usd"
-    scale = (0.5, 0.5, 2.0)
+    scale = (1.0, 1.0, 2.0)
 
     def _generate_rigid_cfg(self):
         cfg = super()._generate_rigid_cfg()

@@ -10,6 +10,7 @@ Run with ``pytest source/openarm/openarm/tests/test_industrial_tasks.py``.
 
 from __future__ import annotations
 
+import ast
 import importlib
 import re
 import sys
@@ -51,6 +52,21 @@ class StubModule(types.ModuleType):
         value = MagicMock(name=f"{self.__name__}.{name}")
         setattr(self, name, value)
         return value
+
+
+class _FakeBoundingBox:
+    """Stand-in for Arena's ``AxisAlignedBoundingBox``.
+
+    Arena's own implementation is plain data, so a two-field record is enough to
+    let the surface anchor be built and inspected without a simulator.
+    """
+
+    def __init__(self, min_point=(), max_point=()):
+        self.min_point = tuple(min_point)
+        self.max_point = tuple(max_point)
+
+    def __repr__(self):
+        return f"_FakeBoundingBox(min_point={self.min_point}, max_point={self.max_point})"
 
 
 def _stub(dotted: str, **attrs) -> StubModule:
@@ -129,7 +145,11 @@ def _install_stubs() -> None:
     _stub("isaaclab_arena.environments.isaaclab_arena_environment", IsaacLabArenaEnvironment=MagicMock)
     _stub("isaaclab_arena.environments.arena_env_builder", ArenaEnvBuilder=MagicMock)
     _stub("isaaclab_arena.scene.scene", Scene=MagicMock)
+    # ``utils`` is a package, so utils.bounding_box resolves
+    _stub("isaaclab_arena.utils").__path__ = []
     _stub("isaaclab_arena.utils.pose", Pose=MagicMock)
+    _stub("isaaclab_arena.utils.bounding_box", AxisAlignedBoundingBox=_FakeBoundingBox)
+    _stub("isaaclab_arena.assets.dummy_object", DummyObject=MagicMock)
     _stub("isaaclab_arena_environments.example_environment_base", ExampleEnvironmentBase=object)
 
     for path in (ARENA_ROOT, OPENARM_ROOT):
@@ -391,6 +411,446 @@ def test_environment_classes_are_distinct():
 
     classes = [cls for cls in INDUSTRIAL_ENVIRONMENTS.values()]
     assert len(set(classes)) == len(classes), "two tasks share an environment class"
+
+
+# -- semantic relational layout ---------------------------------------------
+
+
+def test_the_work_surface_matches_the_arena_background():
+    """The layout's surface and the background's collision slab must agree.
+
+    The layout solves against a declared slab, but the props rest on whatever
+    ``ProceduralTable`` actually spawns. If the two ever disagree the props
+    either hover above the table or sink into it, and no amount of solving
+    fixes it -- so the declared size is checked against the asset's own.
+    """
+    from openarm.arena_environments.industrial._base import TABLE_CENTER, TABLE_SIZE, work_surface
+
+    source = (ARENA_ROOT / "isaaclab_arena" / "assets" / "object_library.py").read_text()
+    block = source.split("_PROCEDURAL_TABLE_SPAWN_CFG = ", 1)[1].split("\n)", 1)[0]
+    size = re.search(r"size=\(([\d.]+),\s*([\d.]+),\s*([\d.]+)\)", block)
+    assert size, "could not read the ProceduralTable slab size from the Arena asset library"
+    assert tuple(float(value) for value in size.groups()) == TABLE_SIZE
+
+    surface = work_surface()
+    assert surface.center == TABLE_CENTER
+    assert surface.size == TABLE_SIZE
+    # A prop rests with its underside a clearance above the slab's top face.
+    assert surface.top_z == pytest.approx(TABLE_CENTER[2] + TABLE_SIZE[2] / 2.0)
+
+
+def test_every_task_layout_places_every_scene_object(tasks):
+    """A scene object with no placement would be left wherever it spawns.
+
+    ``ObjectPlacer`` only moves the objects it is handed, so an unplaced prop is
+    one the task silently never set up.
+    """
+    for key, task in tasks.items():
+        layout = task.resolve_layout()
+        assert sorted(layout.object_names()) == sorted(task.objects), f"{key}: layout does not cover the scene"
+        assert len(layout.object_names()) == len(set(layout.object_names())), f"{key}: duplicate placements"
+
+
+def test_every_placement_declares_relations_and_a_known_parent(tasks):
+    """The placer requires a relation per object, and every parent to exist.
+
+    ``ObjectPlacer.place`` asserts that each object it is given has at least one
+    relation, and a relation whose parent is not in the scene fails with a
+    ``KeyError`` from far inside the builder.
+    """
+    for key, task in tasks.items():
+        for placement in task.resolve_layout().placements:
+            assert placement.relations, f"{key}: '{placement.object_name}' declares no relation"
+            for parent in placement.parent_names():
+                assert parent in task.objects, f"{key}: '{placement.object_name}' references unknown '{parent}'"
+
+
+def test_every_placement_rests_on_the_work_surface(tasks):
+    """Nothing may be placed by absolute coordinates alone.
+
+    A prop with no ``On`` relation has no height constraint, so the solver would
+    happily leave it at the world origin, stacked on the floor.
+    """
+    from openarm.arena_tasks.staged.layout import IsAnchor, On
+
+    for key, task in tasks.items():
+        for placement in task.resolve_layout().placements:
+            if placement.is_anchor:
+                assert placement.pose is not None, f"{key}: anchored '{placement.object_name}' has no pose"
+                continue
+            assert any(
+                isinstance(relation, On) for relation in placement.relations
+            ), f"{key}: '{placement.object_name}' is not placed on the work surface"
+
+
+def test_at_position_relations_pin_at_least_one_axis(tasks):
+    """A bare ``AtPosition`` is rejected by Arena before the solver starts.
+
+    Regression test. A placement that is positioned only relative to its
+    neighbours once carried an ``AtPosition`` with every axis ``None``, which
+    looks like "no constraint" but trips Arena's assert that at least one axis
+    is given, and fails at environment-build time for all 50 tasks.
+    """
+    from openarm.arena_tasks.staged.layout import AtPosition
+
+    for key, task in tasks.items():
+        for placement in task.resolve_layout().placements:
+            for relation in placement.relations:
+                if isinstance(relation, AtPosition):
+                    assert any(axis is not None for axis in (relation.x, relation.y, relation.z)), (
+                        f"{key}: '{placement.object_name}' declares an AtPosition with no axis set"
+                    )
+
+
+def test_pinned_objects_never_receive_a_jitter_marker(tasks):
+    """Fixtures and goal-region receptacles must survive placement unjittered.
+
+    They are excluded from ``RandomAroundSolution`` rather than given one with
+    zeroed extents, so a mistake cannot leave a fixture quietly randomized.
+    """
+    from openarm.arena_dr.config import DRConfig
+    from openarm.arena_tasks.staged.layout import RandomAroundSolution
+
+    for key, task in tasks.items():
+        pinned = {*DRConfig.named(task.dr_preset).pinned_objects, *task.pinned_objects}
+        for placement in task.resolve_layout().placements:
+            if placement.object_name in pinned:
+                assert not any(isinstance(r, RandomAroundSolution) for r in placement.relations), (
+                    f"{key}: pinned object '{placement.object_name}' declares jitter"
+                )
+
+
+def test_pose_jitter_follows_the_dr_preset():
+    """Jitter magnitudes come from the preset, and a disabled preset means none.
+
+    The layout decides *where* randomization is declared, but the preset still
+    decides how much of it there is, so the two have to agree on both.
+    """
+    from openarm.arena_dr.config import DRConfig
+    from openarm.arena_tasks.staged.layout import PoseJitter
+
+    for quiet in ("none", "light"):
+        assert not PoseJitter.from_dr_config(DRConfig.named(quiet)).as_marker().is_active, (
+            f"preset '{quiet}' disables pose jitter but still produced some"
+        )
+
+    for active in ("default", "heavy"):
+        preset = DRConfig.named(active)
+        jitter = PoseJitter.from_dr_config(preset)
+        assert jitter.as_marker().is_active, f"preset '{active}' enables pose jitter but produced none"
+        assert (jitter.x_half_m, jitter.y_half_m) == (preset.position_jitter[0], preset.position_jitter[1])
+        assert jitter.z_half_m == preset.height_jitter
+        assert jitter.yaw_half_rad == preset.yaw_jitter
+
+
+_ARENA_RELATIONS = (
+    "Relation",
+    "UnaryRelation",
+    "RelationBase",
+    "NextTo",
+    "On",
+    "NoCollision",
+    "RandomAroundSolution",
+    "RotateAroundSolution",
+    "AtPosition",
+    "PositionLimits",
+    "IsAnchor",
+    "Side",
+)
+
+
+def _recording_arena_relations():
+    """Install a stand-in Arena relations module that records how it is called.
+
+    The real module needs a running simulator, and the translation from the
+    layout vocabulary to Arena relations is exactly the layer where a swapped
+    positional argument or a renamed constructor would go unnoticed -- every
+    call would still succeed and every object would still be "placed", just not
+    where the layout said. Each fake class records the arguments it received, and
+    the tests below compare them against the *real* signatures parsed out of the
+    Arena source, so a change on either side of the translation is caught here
+    rather than hours into a headless run.
+    """
+    calls: dict[str, list] = {}
+
+    def make_class(name: str):
+        def __init__(self, *args, **kwargs):
+            self.name = name
+            self.args = args
+            self.kwargs = kwargs
+            calls.setdefault(name, []).append(self)
+
+        return type(name, (), {"__init__": __init__})
+
+    module = types.ModuleType("isaaclab_arena.relations.relations")
+    for name in _ARENA_RELATIONS:
+        if name == "Side":
+            module.Side = lambda value: f"Side({value})"
+        else:
+            setattr(module, name, make_class(name))
+    # The resolver does ``from isaaclab_arena.relations import relations``, which
+    # reads the attribute off the parent package before consulting
+    # ``sys.modules``, so both have to point at the fake.
+    package = _stub("isaaclab_arena.relations")
+    package.__path__ = []
+    package.relations = module
+    sys.modules["isaaclab_arena.relations.relations"] = module
+    return calls
+
+
+def _arena_signatures() -> dict[str, list[str]]:
+    """Parse the parameter order of Arena's real relation constructors."""
+    source = (ARENA_ROOT / "isaaclab_arena" / "relations" / "relations.py").read_text()
+    signatures: dict[str, list[str]] = {}
+    for node in ast.parse(source).body:
+        if not isinstance(node, ast.ClassDef):
+            continue
+        init = next((n for n in node.body if isinstance(n, ast.FunctionDef) and n.name == "__init__"), None)
+        if init is not None:
+            signatures[node.name] = [arg.arg for arg in init.args.args][1:]
+    return signatures
+
+
+def test_declared_relations_translate_onto_the_arena_ones():
+    """The translation must target Arena's own argument order.
+
+    Every declared relation is resolved against recording fakes, and the
+    positional arguments are compared to the constructors parsed out of Arena's
+    source. A layout relation reordered without a matching change here (or the
+    reverse) fails instead of silently building a relation with, say, a distance
+    where Arena expects a clearance.
+    """
+    from openarm.arena_tasks.staged import layout as layout_module
+
+    calls = _recording_arena_relations()
+    parents = {"bin": MagicMock(name="bin")}
+    surface_object = MagicMock(name="surface")
+    jitter = layout_module.PoseJitter(0.02, 0.02, 0.005, 0.26)
+    samples = [
+        layout_module.On(),
+        layout_module.On(clearance_m=0.03, surface="bin"),
+        layout_module.NextTo("bin", side=layout_module.Side.POSITIVE_Y, distance_m=0.2),
+        layout_module.AtPosition(0.1, 0.2, None),
+        layout_module.PositionLimits(x_min=0.0, x_max=1.0, y_min=-1.0, y_max=1.0),
+        layout_module.NoCollision("bin", clearance_m=0.05),
+        layout_module.IsAnchor(),
+        jitter.as_marker(),
+        layout_module.RotateAroundSolution(0.0, 0.0, 1.57),
+    ]
+    for declared in samples:
+        built = layout_module.build_relation(declared, parents, surface_object)
+        signature = _arena_signatures().get(built.name, [])
+        assert len(built.args) <= len(signature), (
+            f"{type(declared).__name__}: passed {len(built.args)} positionally, Arena takes {signature}"
+        )
+        assert not built.kwargs, f"{type(declared).__name__}: Arena takes no keyword arguments"
+
+
+    # A spot check that the arguments landed where they are meant to.
+    assert calls["On"][0].args == (surface_object, 1.0, 0.005)
+    assert calls["On"][1].args == (parents["bin"], 1.0, 0.03)
+    assert calls["NextTo"][0].args == (parents["bin"], 1.0, 0.2, "Side(positive_y)", 0.0)
+    assert calls["AtPosition"][0].args == (0.1, 0.2, None, 1.0)
+    assert calls["RandomAroundSolution"][0].args == (0.02, 0.02, 0.005, 0.0, 0.0, 0.26)
+    assert calls["RotateAroundSolution"][0].args == (0.0, 0.0, 1.57)
+
+
+def test_every_declared_relation_is_translated():
+    """No relation in the vocabulary may fall through the dispatcher.
+
+    ``build_relation`` dispatches on the declared type and raises for anything it
+    does not recognise, so a relation added to the vocabulary without a branch
+    here would surface as a ``TypeError`` at environment-build time, for
+    whichever task happened to use it first.
+    """
+    from openarm.arena_tasks.staged import layout as layout_module
+
+    _recording_arena_relations()
+    parents = {"bin": MagicMock(name="bin")}
+    surface_object = MagicMock(name="surface")
+    samples = {
+        layout_module.On: (),
+        layout_module.NextTo: ("bin",),
+        layout_module.AtPosition: (0.1, 0.2),
+        layout_module.PositionLimits: (0.0, 1.0),
+        layout_module.NoCollision: ("bin",),
+        layout_module.IsAnchor: (),
+        layout_module.RandomAroundSolution: (0.01, 0.01, 0.0, 0.1),
+        layout_module.RotateAroundSolution: (0.0, 0.0, 0.5),
+    }
+    for declared, args in samples.items():
+        assert layout_module.build_relation(declared(*args), parents, surface_object) is not None
+    vocabulary = set(getattr(layout_module.LayoutRelation, "__args__", ()))
+    assert vocabulary == set(samples), "the relation vocabulary and the samples disagree"
+
+
+def test_the_declared_side_values_match_arena():
+    """``Side`` values are strings matched against Arena's enum, not members.
+
+    ``build_relation`` resolves a side by value, so a renamed Arena member would
+    raise at resolve time for whichever task places objects in a row.
+    """
+    from openarm.arena_tasks.staged.layout import Side
+
+    source = (ARENA_ROOT / "isaaclab_arena" / "relations" / "relations.py").read_text()
+    block = re.search(r"class Side\(.*?\n(?=class |\Z)", source, re.S).group(0)
+    pairs = re.findall(r'^\s+([A-Z_0-9]+) = "([a-z_]+)"', block, re.M)
+    assert pairs, "could not read Arena's Side enum members"
+    assert {member.name: member.value for member in Side} == dict(pairs)
+
+
+def test_build_relations_attaches_jitter_only_where_it_belongs(tasks):
+    """Jitter is declared per placement, so the exclusions have to hold.
+
+    The placer only randomizes objects that carry a ``RandomAroundSolution``,
+    which makes the declared relations, not a later pass, the thing that decides
+    whether a fixture is allowed to move.
+    """
+    from openarm.arena_tasks.staged.layout import SceneLayout, Surface, build_relations
+
+    _recording_arena_relations()
+    _stub("isaaclab_arena.assets.dummy_object", DummyObject=_FakeAnchor)
+    layout = SceneLayout(
+        surface=Surface(),
+        placements=(
+            _placement("pinned_thing", pose=((0.5, 0.5, 1.0), (0.0, 0.0, 0.0, 1.0))),
+            _placement("bin"),
+            _placement("prop"),
+        ),
+    )
+    scene = {name: _FakeObject(name) for name in ("pinned_thing", "bin", "prop")}
+    placed = build_relations(
+        layout,
+        scene,
+        jitter=layout_module_jitter(),
+        exclude_from_jitter=frozenset({"bin"}),
+    )
+    assert len(placed) == len(scene) + 1, "the surface anchor must be handed to the placer too"
+    assert placed[0] is not scene["pinned_thing"], "the surface anchor comes first"
+    assert {obj.name for obj in placed[1:]} == set(scene)
+
+    jittered = {name for name, obj in scene.items() if any(c.name == "RandomAroundSolution" for c in obj.calls)}
+    assert jittered == {"prop"}, "only the free prop should be jittered"
+    assert scene["pinned_thing"].initial_pose is not None, "an anchor's declared pose must be applied"
+
+
+class _FakeObject:
+    """Stand-in for an Arena ``Object`` that records the relations attached to it."""
+
+    def __init__(self, name: str):
+        self.name = name
+        self.relations: list = []
+        self.calls: list = []
+        self.initial_pose = None
+
+    def add_relation(self, relation):
+        self.relations.append(relation)
+        self.calls.append(relation)
+
+    def get_relations(self):
+        return self.relations
+
+    def set_initial_pose(self, pose):
+        self.initial_pose = pose
+
+    def get_initial_pose(self):
+        return self.initial_pose
+
+
+class _FakeAnchor(_FakeObject):
+    """Stand-in for Arena's ``DummyObject``, which builds its own box."""
+
+    def __init__(self, name, bounding_box=None, initial_pose=None, **kwargs):
+        super().__init__(name)
+        self.bounding_box = bounding_box
+        self.initial_pose = initial_pose
+
+
+def _placement(object_name, pose=None):
+    """Build a minimal on-surface placement for the translation tests."""
+    from openarm.arena_tasks.staged.layout import IsAnchor, On, Placement
+
+    relations = (IsAnchor(),) if pose is not None else (On(),)
+    return Placement(object_name=object_name, relations=relations, pose=pose)
+
+
+def layout_module_jitter():
+    """Return an active jitter marker for the attachment tests."""
+    from openarm.arena_tasks.staged.layout import PoseJitter
+
+    return PoseJitter(0.02, 0.02, 0.005, 0.26)
+
+
+def test_build_relations_rejects_a_layout_that_misses_an_object():
+    """A scene object with no placement is a bug, not something to paper over."""
+    from openarm.arena_tasks.staged.layout import SceneLayout, Surface, build_relations
+
+    _recording_arena_relations()
+    _stub("isaaclab_arena.assets.dummy_object", DummyObject=_FakeAnchor)
+    layout = SceneLayout(surface=Surface(), placements=())
+    with pytest.raises(KeyError, match="no placement"):
+        build_relations(layout, {"mug": MagicMock(name="mug")})
+
+
+def test_layout_resolution_anchors_explicit_object_poses():
+    """An explicit pose is a claim the solver must not overrule.
+
+    ``object_poses`` is the one place a task can insist on a coordinate, so
+    those objects become anchors and the placer leaves them alone.
+    """
+    from openarm.arena_tasks.staged.layout import On
+
+    task = _task_with_pose()
+    layout = task.resolve_layout()
+    assert layout.anchored_names() == ["pinned_thing"]
+
+    pinned = layout.placement("pinned_thing")
+    assert pinned.pose == ((1.0, 2.0, 3.0), (0.0, 0.0, 0.0, 1.0))
+    # The rest of the scene is still solved against the surface.
+    assert any(isinstance(r, On) for r in layout.placement("prop").relations)
+
+
+def _task_with_pose(**overrides):
+    """Build a one-object task with an explicitly posed object."""
+    from openarm.arena_environments.industrial._base import IndustrialTask
+    from openarm.arena_tasks.staged import Skill, Stage, TaskSpec
+
+    return IndustrialTask(
+        spec=TaskSpec(
+            name="layout_probe",
+            stages=(Stage(skill=Skill.PICK, arm="right", target="prop", label="pick"),),
+            object_names=("prop",),
+            **overrides.pop("spec_overrides", {}),
+        ),
+        objects={"prop": "mug", "pinned_thing": "mug"},
+        object_poses={"pinned_thing": ((1.0, 2.0, 3.0), (0.0, 0.0, 0.0, 1.0))},
+        **overrides,
+    )
+
+
+def test_layout_resolution_prefers_an_explicit_layout():
+    """A task's own layout wins, then the spec's, and only then the derivation.
+
+    The order matters because the three are nested fallbacks: a task that
+    attaches a layout to close off one scene must not have it overridden by the
+    spec, and a spec that declares one must not have it overridden by the
+    derivation the task would otherwise fall back to.
+    """
+    from openarm.arena_tasks.staged.layout import SceneLayout, Surface
+
+    spec_layout = SceneLayout(surface=Surface(), placements=())
+    task_layout = SceneLayout(surface=Surface(center=(1.0, 1.0, 1.0)), placements=())
+
+    # Neither declared: the layout is derived, so it places the scene.
+    assert sorted(_task_with_pose().resolve_layout().object_names()) == ["pinned_thing", "prop"]
+
+    # The spec's layout is used when the task does not override it.
+    from_spec = _task_with_pose(spec_overrides={"layout": spec_layout})
+    assert from_spec.resolve_layout() is spec_layout
+
+    # The task's own layout takes precedence over the spec's.
+    both = _task_with_pose(spec_overrides={"layout": spec_layout}, layout=task_layout)
+    assert both.resolve_layout() is task_layout
 
 
 def test_instruction_variants_are_distinct_and_nonempty(tasks):

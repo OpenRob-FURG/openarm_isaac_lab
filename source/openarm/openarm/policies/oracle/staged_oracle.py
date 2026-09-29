@@ -62,6 +62,7 @@ class OracleState:
     stage_results: list[str] = field(default_factory=list)
     retries_used: int = 0
     settle: int = 0
+    controller_needs_reset: bool = False
 
     def summary(self) -> str:
         """Return a compact human-readable progress string."""
@@ -150,6 +151,7 @@ class StagedOraclePolicy(PolicyBase):
                 continue
             self.states[env_id] = OracleState()
             self.controllers[env_id] = build_controller(self.spec.stages[0], env_id)
+            self.states[env_id].controller_needs_reset = True
 
     def set_task_description(self, task_description: str | None) -> str:
         """Record the language instruction the environment sampled.
@@ -222,6 +224,12 @@ class StagedOraclePolicy(PolicyBase):
         """Run one step of the current stage for one sub-environment."""
         state = self.states[env_id]
         controller = self.controllers[env_id]
+        if state.controller_needs_reset:
+            # PolicyBase.reset does not receive the environment. Capture the
+            # new episode's object pose on its first action so verification
+            # compares against this reset's initial state.
+            controller.reset(env, env_id)
+            state.controller_needs_reset = False
         stage = self.spec.stages[state.index]
         action = controller.step(env, env_id)
 

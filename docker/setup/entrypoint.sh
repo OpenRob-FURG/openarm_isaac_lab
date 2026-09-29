@@ -46,6 +46,16 @@ chown $DOCKER_RUN_USER_NAME:$DOCKER_RUN_GROUP_NAME /home/$DOCKER_RUN_USER_NAME/.
 mkdir -p /datasets /models /eval
 chown $DOCKER_RUN_USER_NAME:$DOCKER_RUN_GROUP_NAME /datasets /models /eval
 
+# Arena object textures can be extracted into the shared /tmp/Assets tree as
+# root with mode 0600. Isaac Sim runs as the host-mapped user, so Kit can read
+# the USD and MDL files but its RTX material database cannot upload those PNGs.
+# Make only the public Arena texture payloads readable before launching Kit.
+if [ -d /tmp/Assets ]; then
+    find /tmp/Assets -type f -path '*/Arena/assets/object_library/*/textures/*' \
+        \( -iname '*.png' -o -iname '*.jpg' -o -iname '*.jpeg' -o -iname '*.tif' -o -iname '*.tiff' \) \
+        -exec chmod a+r {} +
+fi
+
 # Create the _isaac_sim symlink if it doesn't exist
 if [ ! -e "$WORKDIR/submodules/IsaacLab/_isaac_sim" ]; then
     ln -s /isaac-sim/ "$WORKDIR/submodules/IsaacLab/_isaac_sim"

@@ -66,6 +66,9 @@ class StagedTaskObsCfg(ObservationGroupCfg):
     rgb: ObservationTermCfg = None
     rgb_augmented: ObservationTermCfg = None
     object_pose: ObservationTermCfg = None
+    # RGB frames and the numeric object pose have different trailing shapes;
+    # keep them as named dictionary entries instead of stacking them.
+    concatenate_terms: bool = False
 
 
 @configclass

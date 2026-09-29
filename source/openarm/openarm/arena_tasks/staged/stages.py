@@ -17,6 +17,10 @@ from __future__ import annotations
 
 from dataclasses import dataclass, field
 from enum import Enum
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:  # imported lazily so the pure-data modules stay simulator-free
+    from openarm.arena_tasks.staged.layout import SceneLayout
 
 
 class Skill(str, Enum):
@@ -103,11 +107,10 @@ class Stage:
         settle_steps: Number of steps to hold still after the stage completes,
             used to let physics settle before the next stage reads object poses.
         max_steps: Step budget for the stage before it is declared failed.
-            The default of 150 is 3 s of control steps at the OpenArm
-            bimanual decimation, which is enough for a reach, grasp and lift.
-            It is deliberately tight: with retries, a generous per-stage budget
-            lets the scripted policy outlast the episode and end for the wrong
-            reason.
+            The default of 600 covers the collision-free route out from under
+            the work surface, a reach, grasp, lift and placement at the OpenArm
+            bimanual control rate. The episode timeout remains the outer bound
+            for tasks with several stages.
         max_attempts: Number of times the oracle will retry the stage.
         tolerance_pos: Position convergence tolerance [m].
         tolerance_rot: Orientation convergence tolerance, as a quaternion
@@ -140,7 +143,7 @@ class Stage:
     lift_height: float = 0.12
     release_height: float = 0.10
     settle_steps: int = 5
-    max_steps: int = 150
+    max_steps: int = 600
     max_attempts: int = 3
     tolerance_pos: float = 0.03
     tolerance_rot: float = 0.15
@@ -187,6 +190,10 @@ class TaskSpec:
         pinned_objects: Objects excluded from pose and scale randomization.
         success_label: Short description of the success condition, used in
             metrics logging.
+        layout: Explicit relational arrangement of the scene, solved by Arena's
+            relation solver. ``None`` derives one from the stages' goal regions,
+            which is what every task in the industrial suite does today; setting
+            it is the escape hatch for a scene the derivation cannot express.
     """
 
     name: str
@@ -199,6 +206,7 @@ class TaskSpec:
     ground_height: float | None = -0.25
     pinned_objects: tuple[str, ...] = field(default_factory=tuple)
     success_label: str = ""
+    layout: "SceneLayout | None" = None
 
     def all_instructions(self) -> tuple[str, ...]:
         """Return the canonical instruction followed by its paraphrases."""

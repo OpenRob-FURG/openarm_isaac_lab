@@ -19,8 +19,8 @@ def main():
     args_parser.add_argument(
         "--policy-repo-id",
         type=str,
-        required=True,
-        help="The repository ID or path to the pretrained LeRobot policy.",
+        default=None,
+        help="The repository ID or path to the pretrained LeRobot policy (required for LeRobot policies).",
     )
     args_parser.add_argument(
         "--policy-type",
@@ -31,8 +31,8 @@ def main():
     args_parser.add_argument(
         "--policy-task",
         type=str,
-        required=True,
-        help="The task to run the LeRobot policy on.",
+        default=None,
+        help="Task instruction for the policy (required for language-conditioned policies).",
     )
     args_parser.add_argument(
         "--policy-num-steps",
@@ -48,6 +48,7 @@ def main():
     # Start the simulation app
     with SimulationAppContext(args_cli):
         from openarm.policies.lerobot.lerobot_policy import LeRobotPolicy
+        from openarm.policies.llm.llm_policy import LLMPolicy
         from openarm.policies.oracle.open_microwave import OracleOpenMicrowavePolicy
         from isaaclab_arena.policy.zero_action_policy import ZeroActionPolicy, ZeroActionPolicyArgs
         from isaaclab.envs.mdp.recorders.recorders_cfg import ActionStateRecorderManagerCfg
@@ -82,31 +83,30 @@ def main():
         args_cli = args_parser.parse_args()
         # Build scene
         arena_builder = get_arena_builder_from_cli(args_cli)
-        if args_cli.policy_type == "scripted":
+        if args_cli.policy_type in ("scripted", "oracle"):
             policy = getattr(arena_builder.arena_env, "oracle_policy", None)
             if policy is None:
-                print("No oracle_policy set for this environment. Cannot run scripted policy.")
-                return
+                raise ValueError("No oracle_policy set for this environment.")
         elif args_cli.policy_type == "llm":
-            policy = getattr(arena_builder.arena_env, "llm_policy", None)
-            if policy is None:
-                print("No llm_policy set for this environment. Cannot run llm policy.")
-                return
+            if args_cli.policy_task is None:
+                raise ValueError("--policy-task is required for --policy-type llm.")
+            policy = LLMPolicy(task=args_cli.policy_task)
         elif args_cli.policy_type == "zero_action":
             policy = ZeroActionPolicy(ZeroActionPolicyArgs())
         else:
+            if args_cli.policy_repo_id is None or args_cli.policy_task is None:
+                raise ValueError("--policy-repo-id and --policy-task are required for LeRobot policies.")
             policy = LeRobotPolicy(
                 repo_id=args_cli.policy_repo_id,
                 policy_type=args_cli.policy_type,
                 task=args_cli.policy_task,
             )
         env_name, env_cfg = arena_builder.build_registered()
-        env_cfg.episode_length_s = 10.0
         env_cfg.recorders = ArenaEnvRecorderManagerCfg()
         env_cfg.recorders.dataset_export_dir_path = "./datasets"
         env_cfg.recorders.dataset_filename = "policy_generated_dataset"
         env_cfg.recorders.dataset_export_mode = DatasetExportMode.EXPORT_SUCCEEDED_ONLY
-        env = arena_builder.make_registered(env_cfg=env_cfg)
+        env = arena_builder.make_registered(env_cfg=env_cfg).unwrapped
         max_episodes = 100
         episode_counter = 0
         success_counter = 0
@@ -146,7 +146,8 @@ def main():
                 
                 if terminated.any() or truncated.any():
                     print(info)
-                    success_vector[episode_counter] = info["log"]["Episode_Termination/success"]
+                    success = bool(info["log"]["Episode_Termination/success"])
+                    success_vector[episode_counter] = float(success)
                     env.recorder_manager.record_pre_reset([0], force_export_or_skip=False)
                     env.recorder_manager.set_success_to_episodes(
                         [0], torch.tensor([[success]], dtype=torch.bool, device=env.device)
