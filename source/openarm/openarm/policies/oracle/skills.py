@@ -712,10 +712,16 @@ def _poses_to_action(
         if gripper is None:
             # Arms that are not being commanded hold their current gripper.
             gripper = _current_gripper(env, arm, env_id)
-        arm_action = torch.cat(
-            [pose_action, torch.as_tensor(gripper, dtype=torch.float32, device=device).reshape(-1)]
-        )
-        actions.append(clamp_action(arm_action))
+        if env.action_manager.total_action_dim % 7 == 0:
+            arm_action = torch.cat(
+                [pose_action, torch.as_tensor(gripper, dtype=torch.float32, device=device).reshape(-1)]
+            )
+            actions.append(clamp_action(arm_action))
+        elif env.action_manager.total_action_dim % 8 == 0:
+            arm_action = torch.cat(
+                [target[0, :3, 3], quat_from_matrix(target[0, :3, :3]), torch.as_tensor(gripper, dtype=torch.float32, device=device).reshape(-1)]
+            )
+            actions.append(arm_action)
     return torch.cat(actions)
 
 

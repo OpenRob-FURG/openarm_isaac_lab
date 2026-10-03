@@ -7,7 +7,9 @@ environments anywhere in this module.
 
 All object positions are taken relative to the environment origin so that the
 same world-frame constants can be used whether the scene contains one
-environment or thousands.
+environment or thousands. The readers themselves live in
+:mod:`openarm.arena_tasks.staged.scene_state`, shared with the dense reward
+terms so the two cannot disagree about what a quantity means.
 """
 
 from __future__ import annotations
@@ -15,51 +17,21 @@ from __future__ import annotations
 from typing import TYPE_CHECKING, Any
 
 import torch
-import warp as wp
+
+from openarm.arena_tasks.staged.scene_state import (
+    normalized_joint_position,
+    object_angular_speed,
+    object_position,
+    object_speed,
+    tilt_from_vertical,
+)
 
 if TYPE_CHECKING:
     from isaaclab.envs import ManagerBasedEnv
 
-
-def _object_position(env: "ManagerBasedEnv", name: str) -> torch.Tensor:
-    """Return the environment-frame position of a scene object, shape ``(N, 3)``."""
-    asset = env.unwrapped.scene[name]
-    if hasattr(asset.data, "root_pos_w"):
-        position = wp.to_torch(asset.data.root_pos_w)
-    else:
-        position = asset.get_world_poses()[0]
-    return position - env.unwrapped.scene.env_origins
-
-
-def _object_quat(env: "ManagerBasedEnv", name: str) -> torch.Tensor:
-    """Return the environment-frame orientation of a scene object as ``(w, x, y, z)``."""
-    asset = env.unwrapped.scene[name]
-    if hasattr(asset.data, "root_quat_w"):
-        return wp.to_torch(asset.data.root_quat_w)
-    quat = asset.get_world_poses()[1]
-    # Isaac Lab world poses are returned as (w, x, y, z) for quaternions.
-    return quat
-
-
-def _normalized_joint_position(env: "ManagerBasedEnv", articulation_name: str, joint_name: str) -> torch.Tensor:
-    """Return a joint position normalized to [0, 1] from its authored limits.
-
-    Mirrors :func:`isaaclab_arena.utils.joint_utils.get_normalized_joint_position`
-    but resolves the joint by name per environment, so a task can be declared
-    with a joint name rather than an index.
-    """
-    articulation = env.unwrapped.scene[articulation_name]
-    joint_names: list[str] = articulation.data.joint_names
-    if joint_name not in joint_names:
-        raise KeyError(f"Joint '{joint_name}' not found on '{articulation_name}'. Available: {joint_names}")
-    joint_index = joint_names.index(joint_name)
-    joint_pos = wp.to_torch(articulation.data.joint_pos)[:, joint_index]
-    limits = wp.to_torch(articulation.data.joint_pos_limits)[:, joint_index, :]
-    joint_min, joint_max = limits[:, 0], limits[:, 1]
-    span = (joint_max - joint_min).clamp_min(1e-6)
-    normalized = (joint_pos - joint_min) / span
-    # A joint whose range is entirely negative is "open" at its minimum.
-    return torch.where(joint_min < 0.0, 1.0 - normalized, normalized)
+#: Local aliases, so the predicate bodies below read as one word.
+_object_position = object_position
+_normalized_joint_position = normalized_joint_position
 
 
 def object_in_region(
@@ -121,12 +93,7 @@ def object_upright(env: "ManagerBasedEnv", object_cfg: str, tolerance: float) ->
     Returns:
         Boolean tensor of shape ``(num_envs,)``.
     """
-    quat = _object_quat(env, object_cfg)
-    w, x, y, z = quat[:, 0], quat[:, 1], quat[:, 2], quat[:, 3]
-    # Third column of the rotation matrix, i.e. the body +Z axis in world frame.
-    body_z = torch.stack([2.0 * (x * z + w * y), 2.0 * (y * z - w * x), 1.0 - 2.0 * (x * x + y * y)], dim=1)
-    cos_angle = body_z[:, 2].clamp(-1.0, 1.0)
-    return torch.acos(cos_angle) <= float(tolerance)
+    return tilt_from_vertical(env, object_cfg) <= float(tolerance)
 
 
 def objects_within_distance(
@@ -157,7 +124,15 @@ def joint_normalized_above(
     joint_name: str,
     threshold: float,
 ) -> torch.Tensor:
-    """Check that a normalized joint coordinate exceeds a threshold.
+    """Check that a normalized joint coordinate reaches a threshold.
+
+    Inclusive, like every other predicate in this module: reaching the declared
+    threshold is the goal being met. The strict comparison this used to write
+    made the joint goals the only ones in the package where a state sitting
+    exactly on the threshold was a failure, which put the boolean predicate and
+    the dense shaping term in
+    :mod:`openarm.arena_tasks.staged.rewards` in direct disagreement at that one
+    point.
 
     Args:
         env: The environment.
@@ -168,7 +143,7 @@ def joint_normalized_above(
     Returns:
         Boolean tensor of shape ``(num_envs,)``.
     """
-    return _normalized_joint_position(env, asset_cfg, joint_name) > float(threshold)
+    return _normalized_joint_position(env, asset_cfg, joint_name) >= float(threshold)
 
 
 def joint_normalized_below(
@@ -177,7 +152,9 @@ def joint_normalized_below(
     joint_name: str,
     threshold: float,
 ) -> torch.Tensor:
-    """Check that a normalized joint coordinate falls below a threshold.
+    """Check that a normalized joint coordinate falls to a threshold.
+
+    Inclusive, for the same reason as :func:`joint_normalized_above`.
 
     Args:
         env: The environment.
@@ -188,7 +165,7 @@ def joint_normalized_below(
     Returns:
         Boolean tensor of shape ``(num_envs,)``.
     """
-    return _normalized_joint_position(env, asset_cfg, joint_name) < float(threshold)
+    return _normalized_joint_position(env, asset_cfg, joint_name) <= float(threshold)
 
 
 def object_at_rest(
@@ -208,9 +185,8 @@ def object_at_rest(
     Returns:
         Boolean tensor of shape ``(num_envs,)``.
     """
-    asset = env.unwrapped.scene[object_cfg]
-    linear = torch.norm(wp.to_torch(asset.data.root_lin_vel_w), dim=1)
-    angular = torch.norm(wp.to_torch(asset.data.root_ang_vel_w), dim=1)
+    linear = object_speed(env, object_cfg)
+    angular = object_angular_speed(env, object_cfg)
     return (linear <= float(max_speed)) & (angular <= float(max_angular_speed))
 
 

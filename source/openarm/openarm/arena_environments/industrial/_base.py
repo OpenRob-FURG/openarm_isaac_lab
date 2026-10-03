@@ -13,6 +13,12 @@ region says it is; the coordinates themselves come out of Arena's own
 relation vocabulary in :mod:`openarm.arena_tasks.staged.layout`. See
 :func:`derive_layout` for how a task that does not spell its layout out gets
 one, and :func:`build_environment` for the solve itself.
+
+Passing ``--rl-training`` reconfigures the same tasks for reinforcement
+learning: it attaches the dense reward manager and privileged critic group that
+:class:`~openarm.arena_tasks.staged.task.StagedTask` derives from the same task
+spec, and the RSL-RL runner config in :mod:`rsl_rl_cfg` that splits the actor
+and critic observations. See that module for why the split is asymmetric.
 """
 
 from __future__ import annotations
@@ -520,7 +526,8 @@ def build_environment(
     Args:
         task: The task to build.
         args_cli: Parsed command line arguments. Read for ``enable_cameras``,
-            ``no_cameras``, ``dr_preset``, ``single_arm`` and ``seed``.
+            ``no_cameras``, ``dr_preset``, ``single_arm``, ``rl_training`` and
+            ``seed``.
         registry: The Arena ``AssetRegistry``.
         hdr_registry: The Arena ``HDRImageRegistry``, used to sample an
             environment map for the dome light.
@@ -529,7 +536,7 @@ def build_environment(
 
     Returns:
         A configured ``IsaacLabArenaEnvironment`` with an oracle policy
-        attached.
+        attached, and an RSL-RL runner config when ``--rl-training`` is set.
     """
     from isaaclab_arena.embodiments.common.arm_mode import ArmMode
     from isaaclab_arena.environments.isaaclab_arena_environment import IsaacLabArenaEnvironment
@@ -562,6 +569,12 @@ def build_environment(
     # the target out from under a goal region would make a task unsolvable
     # rather than merely harder.
     dr = replace(dr, pinned_objects=tuple({*dr.pinned_objects, *task.pinned_objects}))
+
+    # One flag turns the whole RL path on or off, because the three things it
+    # changes belong together: a reward manager and a privileged critic group
+    # are both pure overhead for the scripted oracle, and the runner config is
+    # useless without them.
+    rl_training = bool(getattr(args_cli, "rl_training", True))
 
     seed = getattr(args_cli, "seed", None)
     background = registry.get_asset_by_name(task.background)()
@@ -616,8 +629,12 @@ def build_environment(
     # that never pass arm-mode arguments at all.
     arm_mode = ArmMode.SINGLE_ARM if getattr(args_cli, "single_arm", False) else ArmMode.DUAL_ARM
     # --no-cameras wins over --enable-cameras: it is the documented way to run
-    # on a machine without a render device.
+    # on a machine without a render device. Training from privileged state
+    # ignores the camera entirely, so a training run has no reason to pay for
+    # one.
     enable_cameras = getattr(args_cli, "enable_cameras", True) and not getattr(args_cli, "no_cameras", False)
+    if rl_training:
+        enable_cameras = False
     embodiment = registry.get_asset_by_name(EMBODIMENT)(
         enable_cameras=enable_cameras,
         arm_mode=arm_mode,
@@ -633,6 +650,11 @@ def build_environment(
         primary_object=primary,
         episode_length_s=task.spec.episode_length_s,
         enable_cameras=enable_cameras,
+        enable_rewards=rl_training,
+        # The full object list, not the spec's manipulated subset: the critic
+        # needs the position of every prop, including the ones a policy is
+        # supposed to leave alone.
+        scene_objects=list(task.objects),
     )
 
     environment = IsaacLabArenaEnvironment(
@@ -642,8 +664,32 @@ def build_environment(
         task=task_obj,
         env_cfg_callback=make_env_cfg_callback(dr),
     )
+    if rl_training:
+        _attach_rl_config(environment, task)
     environment.oracle_policy = StagedOraclePolicy(StagedOraclePolicyCfg(task=task.spec.name))
     return environment
+
+
+def _attach_rl_config(environment, task: IndustrialTask) -> None:
+    """Give an Arena environment the RSL-RL runner config the train script reads.
+
+    The runner config is attached two ways because two readers want it.
+    ``scripts/reinforcement_learning/rsl_rl/train.py`` reads
+    ``arena_env.rl_config`` directly, while anything that goes through the Gym
+    registry resolves ``rsl_rl_cfg_entry_point`` from the registration kwargs.
+    Setting both means the same environment trains whichever path reaches it,
+    and the two cannot end up describing different runs.
+
+    Args:
+        environment: The Arena environment to configure.
+        task: The task it was built for, used to name the run.
+    """
+    from openarm.arena_environments.industrial.rsl_rl_cfg import IndustrialStagedRslRlRunnerCfg
+
+    agent_cfg = IndustrialStagedRslRlRunnerCfg(run_name=task.spec.name)
+    environment.rl_config = agent_cfg
+    environment.rl_framework_entry_point = "rsl_rl_cfg_entry_point"
+    environment.rl_policy_cfg = f"{IndustrialStagedRslRlRunnerCfg.__module__}:IndustrialStagedRslRlRunnerCfg"
 
 
 class IndustrialEnvironment(ExampleEnvironmentBase):
@@ -702,6 +748,14 @@ class IndustrialEnvironment(ExampleEnvironmentBase):
             "--single-arm",
             action="store_true",
             help="Run the task with a single arm instead of the bimanual default.",
+        )
+        group.add_argument(
+            "--rl-training",
+            action="store_true",
+            help="Configure the task for RSL-RL PPO training on privileged state. Adds a dense "
+            "reward manager and a privileged critic observation group, attaches the runner config, "
+            "and disables the camera. Omit it to run the scripted oracle, where both would be "
+            "computed and never read.",
         )
         return parser
 

@@ -34,7 +34,7 @@ from openarm.arena_environments.cli import add_example_environments_cli_args  # 
 add_example_environments_cli_args(parser)
 args_cli = parser.parse_args()
 
-app_launcher = AppLauncher(headless=False, enable_cameras=args_cli.enable_cameras and not args_cli.no_cameras)
+app_launcher = AppLauncher(headless=False, enable_cameras=args_cli.enable_cameras and not args_cli.no_cameras, visualizer="kit")
 simulation_app = app_launcher.app
 
 

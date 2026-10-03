@@ -68,15 +68,15 @@ OPEN_ARM_CFG = ArticulationCfg(
                 "openarm_right_joint[5-7]": 2.61,
             },
             effort_limit_sim={
-                "openarm_left_joint[1-2]": 40.0,
-                "openarm_right_joint[1-2]": 40.0,
-                "openarm_left_joint[3-4]": 27.0,
-                "openarm_right_joint[3-4]": 27.0,
-                "openarm_left_joint[5-7]": 7.0,
-                "openarm_right_joint[5-7]": 7.0,
+                "openarm_left_joint[1-2]": 400.0,
+                "openarm_right_joint[1-2]": 400.0,
+                "openarm_left_joint[3-4]": 270.0,
+                "openarm_right_joint[3-4]": 270.0,
+                "openarm_left_joint[5-7]": 70.0,
+                "openarm_right_joint[5-7]": 70.0,
             },
-            stiffness=80.0,
-            damping=4.0,
+            stiffness=400,
+            damping=80,
         ),
         "openarm_gripper": ImplicitActuatorCfg(
             joint_names_expr=[
@@ -96,8 +96,8 @@ OPEN_ARM_CFG = ArticulationCfg(
 
 OPEN_ARM_HIGH_PD_CFG = OPEN_ARM_CFG.copy()
 OPEN_ARM_HIGH_PD_CFG.spawn.rigid_props.disable_gravity = True
-OPEN_ARM_HIGH_PD_CFG.actuators["openarm_arm"].stiffness = 400.0
-OPEN_ARM_HIGH_PD_CFG.actuators["openarm_arm"].damping = 80.0
+OPEN_ARM_HIGH_PD_CFG.actuators["openarm_arm"].stiffness = 2e3
+OPEN_ARM_HIGH_PD_CFG.actuators["openarm_arm"].damping = 1e2
 OPEN_ARM_HIGH_PD_CFG.actuators["openarm_gripper"].stiffness = 2e3
 OPEN_ARM_HIGH_PD_CFG.actuators["openarm_gripper"].damping = 1e2
 """Configuration of OpenArm robot with stiffer PD control.

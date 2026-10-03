@@ -97,6 +97,9 @@ def get_arena_builder_from_cli(args_cli: argparse.Namespace) -> ArenaEnvBuilder:
     assert (
         args_cli.example_environment in ExampleEnvironments
     ), f"Example environment type {args_cli.example_environment} not supported"
+    #args_cli.num_envs = 4096
+    args_cli.replicate_physics = False
+    args_cli.enable_cameras = False
     example_env = ExampleEnvironments[args_cli.example_environment]()
 
     # Compile the environment

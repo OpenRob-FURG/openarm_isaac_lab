@@ -39,9 +39,9 @@ parser.add_argument(
 )
 #parser.add_argument("--seed", type=int, default=None, help="Seed used for the environment")
 parser.add_argument("--max_iterations", type=int, default=None, help="RL Policy training iterations.")
-parser.add_argument(
-    "--distributed", action="store_true", default=False, help="Run training with multiple GPUs or nodes."
-)
+#parser.add_argument(
+#    "--distributed", action="store_true", default=False, help="Run training with multiple GPUs or nodes."
+#)
 parser.add_argument("--export_io_descriptors", action="store_true", default=False, help="Export IO descriptors.")
 # append RSL-RL cli arguments
 cli_args.add_rsl_rl_args(parser)
@@ -60,6 +60,22 @@ sys.argv = [sys.argv[0]] + hydra_args
 # launch omniverse app
 app_launcher = AppLauncher(args_cli)
 simulation_app = app_launcher.app
+
+import logging
+
+# Silence the specific PhysX plugin reporting the overflow warning
+logging.disable()
+
+# Optional: Silence other heavy physx/simulation logs if needed
+#logging.getLogger("omni.physx").setLevel(logging.FATAL)
+
+#import carb
+#import carb.settings
+
+# Correct way to acquire the settings interface
+#settings = carb.settings.get_settings()
+#settings.set_bool("/log/enabled", False)
+#carb.logging.configure_logging()
 
 arena_builder = get_arena_builder_from_cli(args_cli=args_cli)
 
@@ -105,7 +121,7 @@ from isaaclab.envs import (
 from isaaclab.utils.dict import print_dict
 from isaaclab.utils.io import dump_yaml
 
-from isaaclab_rl.rsl_rl import RslRlBaseRunnerCfg, RslRlVecEnvWrapper
+from isaaclab_rl.rsl_rl import RslRlBaseRunnerCfg, RslRlVecEnvWrapper, handle_deprecated_rsl_rl_cfg
 
 import isaaclab_tasks  # noqa: F401
 from isaaclab_tasks.utils import get_checkpoint_path
@@ -125,10 +141,25 @@ torch.backends.cudnn.benchmark = False
 def main():
     """Train with RSL-RL agent."""
     env_name, env_cfg = arena_builder.build_registered()
+    env_cfg.scene.num_envs = 4
+    env_cfg.scene.env_spacing = 30.0
+    print(env_cfg.scene.num_envs)
     agent_cfg = arena_builder.arena_env.rl_config
+    # The runner config rides on the Arena environment, which the manager cfg
+    # embeds, and gym.make validates every nested configclass it can reach. The
+    # config is only partly filled until handle_deprecated_rsl_rl_cfg below
+    # translates it (this config still sets the deprecated ``policy`` rather
+    # than ``actor``/``critic``), so detach it from the env config before that
+    # validation runs. The local reference keeps it alive for the runner.
+    env_cfg.isaaclab_arena_env.rl_config
 
     # override configurations with non-hydra CLI arguments
     agent_cfg = cli_args.update_rsl_rl_cfg(agent_cfg, args_cli)
+    # Translate deprecated fields (``policy``, ``empirical_normalization``, the
+    # legacy noise parameters) into the actor/critic/distribution shape the
+    # installed rsl-rl actually reads. Without this the runner is handed a
+    # config whose model fields are MISSING.
+    agent_cfg = handle_deprecated_rsl_rl_cfg(agent_cfg, installed_version)
     env_cfg.scene.num_envs = args_cli.num_envs if args_cli.num_envs is not None else env_cfg.scene.num_envs
     agent_cfg.max_iterations = (
         args_cli.max_iterations if args_cli.max_iterations is not None else agent_cfg.max_iterations

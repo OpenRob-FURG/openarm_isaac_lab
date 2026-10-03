@@ -7,6 +7,7 @@ import isaaclab.utils.math as PoseUtils
 from isaaclab.assets import ArticulationCfg
 from isaaclab.envs import mdp, ManagerBasedRLMimicEnv
 from isaaclab.managers import ActionTermCfg, ObservationTermCfg, ObservationGroupCfg, SceneEntityCfg, EventTermCfg
+from isaaclab.scene import InteractiveSceneCfg
 from isaaclab.sensors import FrameTransformerCfg, TiledCameraCfg, CameraCfg
 from isaaclab.utils import configclass
 from isaaclab.controllers import DifferentialIKControllerCfg
@@ -17,6 +18,7 @@ from isaaclab_arena.embodiments.common.mimic_utils import get_rigid_and_articula
 from isaaclab_arena.embodiments.embodiment_base import EmbodimentBase
 
 from openarm.tasks.manager_based.openarm_manipulation.assets.openarm_bimanual import OPEN_ARM_HIGH_PD_CFG
+#from isaaclab_tasks.manager_based.manipulation.reach.config.openarm.bimanual.joint_pos_env_cfg import OPENARM_BI_HIGH_PD_CFG
 
 from .mdp import rel_ee_pos, rel_ee_quat, gripper_opening, all_poses_w
 
@@ -36,11 +38,11 @@ class OpenArmBimanualEmbodiment(EmbodimentBase):
         self,
         enable_cameras: bool = False,
         initial_pose=None,
-        concatenate_observation_terms: bool = False,
+        concatenate_observation_terms: bool = True,
         arm_mode: ArmMode | None = None,
     ):
         super().__init__(enable_cameras, initial_pose, concatenate_observation_terms, arm_mode)
-        self.scene_config = OpenArmBimanualSceneCfg()
+        self.scene_config = OpenArmBimanualSceneCfg(num_envs=4, env_spacing=30.0, replicate_physics=True)
         self.action_config = OpenArmBimanualActionsCfg()
         self.observation_config = OpenArmBimanualObservationsCfg()
         self.event_config = OpenArmBimanualEventsCfg()
@@ -71,7 +73,7 @@ class OpenArmBimanualEmbodiment(EmbodimentBase):
 
 
 @configclass
-class OpenArmBimanualSceneCfg:
+class OpenArmBimanualSceneCfg(InteractiveSceneCfg):
     robot: ArticulationCfg = OPEN_ARM_HIGH_PD_CFG.replace(
         prim_path="{ENV_REGEX_NS}/Robot",
         init_state=ArticulationCfg.InitialStateCfg(
@@ -128,7 +130,7 @@ class OpenArmBimanualCameraCfg:
 
 @configclass
 class OpenArmBimanualActionsCfg:
-    left_arm_action: ActionTermCfg = mdp.DifferentialInverseKinematicsActionCfg(
+    '''left_arm_action: ActionTermCfg = mdp.DifferentialInverseKinematicsActionCfg(
         asset_name="robot",
         joint_names=["openarm_left_joint.*"],
         body_name="openarm_left_ee_tcp",
@@ -139,18 +141,23 @@ class OpenArmBimanualActionsCfg:
             # The reset arm pose is close to a wrist singularity. A modest
             # damping term prevents millimetre Cartesian steps from turning
             # into large joint targets that kick the TCP away from the goal.
-            ik_params={"lambda_val": 0.2},
+            #ik_params={"lambda_val": 0.2},
         ),
+    )'''
+
+    left_arm_action: ActionTermCfg = mdp.JointPositionActionCfg(
+        asset_name="robot",
+        joint_names=["openarm_left_joint.*"],
     )
 
-    left_hand_action: ActionTermCfg = mdp.BinaryJointPositionActionCfg(
+    left_hand_action: ActionTermCfg = mdp.JointPositionActionCfg(
         asset_name="robot",
         joint_names=["openarm_left_finger_joint1"],
-        open_command_expr=dict(openarm_left_finger_joint1=0.043),
-        close_command_expr=dict(openarm_left_finger_joint1=0.0),
+        #open_command_expr=dict(openarm_left_finger_joint1=0.043),
+        #close_command_expr=dict(openarm_left_finger_joint1=0.0),
     )
 
-    right_arm_action: ActionTermCfg = mdp.DifferentialInverseKinematicsActionCfg(
+    '''right_arm_action: ActionTermCfg = mdp.DifferentialInverseKinematicsActionCfg(
         asset_name="robot",
         joint_names=["openarm_right_joint.*"],
         body_name="openarm_right_ee_tcp",
@@ -158,15 +165,20 @@ class OpenArmBimanualActionsCfg:
             command_type="pose",
             use_relative_mode=True,
             ik_method="dls",
-            ik_params={"lambda_val": 0.2},
+            #ik_params={"lambda_val": 0.2},
         ),
+    )'''
+
+    right_arm_action: ActionTermCfg = mdp.JointPositionActionCfg(
+        asset_name="robot",
+        joint_names=["openarm_right_joint.*"],
     )
 
-    right_hand_action: ActionTermCfg = mdp.BinaryJointPositionActionCfg(
+    right_hand_action: ActionTermCfg = mdp.JointPositionActionCfg(
         asset_name="robot",
         joint_names=["openarm_right_finger_joint1"],
-        open_command_expr=dict(openarm_right_finger_joint1=0.043),
-        close_command_expr=dict(openarm_right_finger_joint1=0.0),
+        #open_command_expr=dict(openarm_right_finger_joint1=0.043),
+        #close_command_expr=dict(openarm_right_finger_joint1=0.0),
     )
 
 
@@ -199,9 +211,9 @@ class OpenArmBimanualObservationsCfg:
             func=gripper_opening,
             params=dict(arm="right"),
         )
-        body_poses = ObservationTermCfg(
-            func=all_poses_w,
-        )
+        #body_poses = ObservationTermCfg(
+        #    func=all_poses_w,
+        #)
         joint_pos = ObservationTermCfg(
             func=mdp.joint_pos,
         )
@@ -212,7 +224,7 @@ class OpenArmBimanualObservationsCfg:
             func=mdp.last_action,
         )
 
-    policy = PolicyCfg(concatenate_terms=False)
+    policy = PolicyCfg(concatenate_terms=True)
 
 
 @configclass

@@ -15,6 +15,8 @@ task's success condition and its scripted policy are written separately.
 
 from __future__ import annotations
 
+from isaaclab.utils.configclass import configclass
+
 from dataclasses import dataclass, field
 from enum import Enum
 from typing import TYPE_CHECKING
@@ -74,7 +76,7 @@ OBJECT_SKILLS = frozenset(
 )
 
 
-@dataclass(frozen=True)
+@dataclass
 class Stage:
     """One step of a staged task.
 
@@ -170,7 +172,7 @@ class Stage:
         return Stage(**{**self.__dict__, "goal": goal})
 
 
-@dataclass(frozen=True)
+@dataclass
 class TaskSpec:
     """Complete declarative description of a staged task.
 

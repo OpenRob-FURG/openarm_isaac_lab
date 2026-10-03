@@ -14,6 +14,15 @@ that point -- it subclasses an Arena task base, which transitively pulls in
 Omniverse modules that must only be touched after ``SimulationApp`` exists. It is
 therefore re-exported lazily through :pep:`562`, so that the CLI parser, which
 needs the task data to build its subparsers, does not crash the process.
+
+The task's two learning-facing halves are separate modules that read the same
+spec: :mod:`~openarm.arena_tasks.staged.terminations` decides when an episode is
+over, :mod:`~openarm.arena_tasks.staged.rewards` decides what a policy is paid
+for getting there, and
+:mod:`~openarm.arena_tasks.staged.observations` supplies the privileged state a
+critic needs to value either. All three read the scene through
+:mod:`~openarm.arena_tasks.staged.scene_state`, so they cannot disagree about
+what a quantity means.
 """
 
 from typing import TYPE_CHECKING
@@ -50,7 +59,7 @@ from openarm.arena_tasks.staged.layout import (
 from openarm.arena_tasks.staged.stages import OBJECT_SKILLS, Skill, Stage, TaskSpec
 
 if TYPE_CHECKING:
-    from openarm.arena_tasks.staged.task import StagedTask
+    from openarm.arena_tasks.staged.task import StagedRewardsCfg, StagedTask
 
 __all__ = [
     "All",
@@ -80,13 +89,14 @@ __all__ = [
     "Side",
     "Skill",
     "Stage",
+    "StagedRewardsCfg",
     "StagedTask",
     "Surface",
     "TaskSpec",
 ]
 
 #: Names resolved from :mod:`openarm.arena_tasks.staged.task` on first access.
-_LAZY = {"StagedTask"}
+_LAZY = {"StagedRewardsCfg", "StagedTask"}
 
 
 def __getattr__(name: str):

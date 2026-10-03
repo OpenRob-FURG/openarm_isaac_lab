@@ -29,18 +29,18 @@ OPENARM_ROOT = Path(__file__).resolve().parents[2]
 STUBBED_PREFIXES = ("isaaclab", "isaaclab_tasks", "warp", "omni", "pxr", "isaaclab_arena_environments")
 
 
-def _identity_decorator(*_args, **_kwargs):
-    """Return a decorator that leaves its target unchanged.
+def _identity_decorator(target=None, **_kwargs):
+    """Stand in for ``configclass`` that leaves its target unchanged.
 
-    ``configclass`` normally rewrites a class into a dataclass with extra
+    The real ``configclass`` rewrites a class into a dataclass with extra
     behaviour. For static checks the identity is enough and, unlike a mock,
-    keeps the class usable.
+    keeps the class usable -- but the class has to come back out, because these
+    configs are instantiated, not just inspected. Used bare (``@configclass``)
+    and as a factory (``configclass()``), as both forms appear upstream.
     """
-
-    def wrap(target):
-        return target
-
-    return wrap
+    if target is None:
+        return lambda inner: inner
+    return target
 
 
 class StubModule(types.ModuleType):

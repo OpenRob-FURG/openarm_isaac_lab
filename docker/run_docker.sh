@@ -99,11 +99,12 @@ add_volume_if_it_exists() {
 if [ "$( docker container inspect -f '{{.State.Running}}' $DOCKER_IMAGE_NAME'-'$DOCKER_VERSION_TAG 2>/dev/null)" = "true" ]; then
   echo "Container already running. Attaching."
   docker exec -it $DOCKER_IMAGE_NAME-$DOCKER_VERSION_TAG su $(id -un)
+  sudo chown -R $USER .
 else
     DOCKER_RUN_ARGS=("--name" "$DOCKER_IMAGE_NAME-$DOCKER_VERSION_TAG"
                     "--privileged"
-                    "--ulimit" "memlock=-1"
-                    "--ulimit" "stack=-1"
+                    #"--ulimit" "memlock=-1"
+                    #"--ulimit" "stack=-1"
                     "--ipc=host"
                     "--net=host"
                     "--gpus=all"
@@ -140,4 +141,5 @@ else
     xhost +local:docker > /dev/null
 
     docker run "${DOCKER_RUN_ARGS[@]}" --interactive --rm --tty ${DOCKER_IMAGE_NAME}:${DOCKER_VERSION_TAG} "${@}"
+    sudo chown -R $USER .
 fi
