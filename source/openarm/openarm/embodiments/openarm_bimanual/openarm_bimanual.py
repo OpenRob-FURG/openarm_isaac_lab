@@ -107,11 +107,57 @@ class OpenArmBimanualSceneCfg(InteractiveSceneCfg):
     )
 
 
+#: Nominal wrist-camera mount pose in the hand-link frame, as
+#: ``(pos_xyz, rot_xyzw)``. The OpenArm hand frame has +Z along the gripper
+#: approach axis (wrist towards fingertips) and the fingers open along Y, so an
+#: identity rotation in the ROS convention makes the camera look down the
+#: approach axis, and the offset tucks it behind the palm to one side of the
+#: fingers. Both arms use the same frame orientation, so the right arm only
+#: mirrors the lateral (Y) offset to mount on the outer side of its gripper.
+_DEFAULT_WRIST_CAMERA_POSE = ((0.045, 0.0, -0.02), (0.0, 0.0, 0.707, 0.707))
+
+
+def _make_wrist_camera_cfg(
+    prim_path: str,
+    pos: tuple[float, float, float],
+    rot: tuple[float, float, float, float],
+) -> TiledCameraCfg:
+    """Build a wrist (eye-in-hand) RGB camera config.
+
+    Args:
+        prim_path: Scene prim path for the camera, parented to a hand link.
+        pos: Camera mount position in the hand-link frame.
+        rot: Camera mount orientation ``(x, y, z, w)`` in the hand-link frame.
+
+    Returns:
+        The configured tiled camera.
+    """
+    return TiledCameraCfg(
+        prim_path=prim_path,
+        offset=TiledCameraCfg.OffsetCfg(
+            pos=pos,
+            rot=rot,
+            convention="ros",
+        ),
+        spawn=sim_utils.PinholeCameraCfg(
+            focal_length=24.0,
+            focus_distance=400.0,
+            horizontal_aperture=80.0,
+            clipping_range=(0.001, 100.0),
+        ),
+        width=640,
+        height=480,
+        data_types=["rgb"],
+    )
+
+
 @configclass
 class OpenArmBimanualCameraCfg:
     """Configuration for cameras."""
 
     top_camera: CameraCfg | TiledCameraCfg = MISSING
+    left_wrist_camera: CameraCfg | TiledCameraCfg = MISSING
+    right_wrist_camera: CameraCfg | TiledCameraCfg = MISSING
 
     def __post_init__(self):
         self.top_camera = TiledCameraCfg(
@@ -130,6 +176,20 @@ class OpenArmBimanualCameraCfg:
             width=640,
             height=480,
             data_types=["rgb"]
+        )
+
+        pos, rot = _DEFAULT_WRIST_CAMERA_POSE
+        # Mirror the lateral (Y) offset so both wrist cameras sit on the outer
+        # side of their respective gripper.
+        self.left_wrist_camera = _make_wrist_camera_cfg(
+            prim_path="{ENV_REGEX_NS}/Robot/openarm_left_hand/left_wrist_camera",
+            pos=pos,
+            rot=rot,
+        )
+        self.right_wrist_camera = _make_wrist_camera_cfg(
+            prim_path="{ENV_REGEX_NS}/Robot/openarm_right_hand/right_wrist_camera",
+            pos=(pos[0], -pos[1], pos[2]),
+            rot=rot,
         )
 
 
