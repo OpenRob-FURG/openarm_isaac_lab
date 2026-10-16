@@ -20,10 +20,11 @@ from isaaclab_arena.metrics.metric_base import MetricBase
 from isaaclab_arena.metrics.object_moved import ObjectMovedRateMetric
 from isaaclab_arena.metrics.success_rate import SuccessRateMetric
 from isaaclab_arena.tasks.task_base import TaskBase
-from isaaclab_arena.tasks.terminations import object_on_destination
+from isaaclab_arena.tasks.terminations import objects_in_proximity, object_on_destination
 from isaaclab_arena.terms.events import set_object_pose
 from isaaclab_arena.utils.cameras import get_viewer_cfg_look_at_object
 from openarm.arena_tasks.mdp.rewards import arm_near_object_goal, object_near_pos_goal
+from openarm.arena_tasks.mdp.terminations import obj_near_obj, root_height_above_maximum
 
 from trimesh.transformations import quaternion_from_matrix
 
@@ -41,25 +42,25 @@ class PickAndPlaceTask(TaskBase):
         self.background_scene = background_scene
         self.destination_location = destination_location
         self.scene_config = SceneCfg(
-            pick_up_object_contact_sensor=self.pick_up_object.get_contact_sensor_cfg(
-                contact_against_prim_paths=[self.destination_location.get_prim_path()],
-            ),
+            #pick_up_object_contact_sensor=self.pick_up_object.get_contact_sensor_cfg(
+            #    contact_against_prim_paths=[self.destination_location.get_prim_path()],
+            #),
         )
-        self.events_cfg = EventsCfg(pick_up_object=self.pick_up_object)
+        self.events_cfg = EventsCfg()
         self.termination_cfg = self.make_termination_cfg()
-        self.rewards_cfg = RewardsCfg()
-        self.rewards_cfg.left_arm_near_object.params['goal_object'] = self.pick_up_object.name
-        self.rewards_cfg.right_arm_near_object.params['goal_object'] = self.pick_up_object.name
-        self.rewards_cfg.object_near_goal.params['object_name'] = self.pick_up_object.name
-        self.rewards_cfg.object_near_goal.params['target_pos'] = self.destination_location.initial_pose_relative_to_parent.position_xyz
-        self.rewards_cfg.object_dropped.params['minimum_height'] = self.background_scene.object_min_z
-        self.rewards_cfg.object_dropped.params['asset_cfg'] = SceneEntityCfg(name=self.pick_up_object.name)
+        #self.rewards_cfg = RewardsCfg()
+        #self.rewards_cfg.left_arm_near_object.params['goal_object'] = self.pick_up_object.name
+        #self.rewards_cfg.right_arm_near_object.params['goal_object'] = self.pick_up_object.name
+        #self.rewards_cfg.object_near_goal.params['object_name'] = self.pick_up_object.name
+        #self.rewards_cfg.object_near_goal.params['target_pos'] = self.destination_location.initial_pose_relative_to_parent.position_xyz
+        #self.rewards_cfg.object_dropped.params['minimum_height'] = self.background_scene.object_min_z
+        #self.rewards_cfg.object_dropped.params['asset_cfg'] = SceneEntityCfg(name=self.pick_up_object.name)
         self.update_frame_transformer_frames()
 
     def update_frame_transformer_frames(self):
-        self.scene_config.object_frame_transformer.prim_path = self.pick_up_object.get_prim_path() + "/Geometry/sm_gtc_sorting_exhaust_pipe_a01_01"
-        interaction_poses = self.pick_up_object.get_interaction_poses()
-        for pose_name in interaction_poses.keys():
+        self.scene_config.object_frame_transformer.prim_path = self.pick_up_object.get_prim_path()# + "/Geometry/sm_gtc_sorting_exhaust_pipe_a01_01"
+        #interaction_poses = self.pick_up_object.get_interaction_poses()
+        '''for pose_name in interaction_poses.keys():
             pose_pos = interaction_poses[pose_name]['pos']
             pose_quat = interaction_poses[pose_name]['quat']
             frame_cfg = FrameTransformerCfg.FrameCfg(
@@ -70,7 +71,16 @@ class PickAndPlaceTask(TaskBase):
                     rot=pose_quat
                 )
             )
-            self.scene_config.object_frame_transformer.target_frames.append(frame_cfg)
+            self.scene_config.object_frame_transformer.target_frames.append(frame_cfg)'''
+        frame_cfg = FrameTransformerCfg.FrameCfg(
+            prim_path=self.scene_config.object_frame_transformer.prim_path,
+            name="pose",
+            offset=OffsetCfg(
+                pos=(0.0, 0.0, 0.0),
+                rot=(0.0, 0.0, 0.0, 1.0)
+            )
+        )
+        self.scene_config.object_frame_transformer.target_frames.append(frame_cfg)
 
 
     def get_rewards_cfg(self):
@@ -92,16 +102,16 @@ class PickAndPlaceTask(TaskBase):
                 "velocity_threshold": 0.1,
             },
         )
-        object_dropped = TerminationTermCfg(
+        '''object_dropped = TerminationTermCfg(
             func=mdp_isaac_lab.root_height_below_minimum,
             params={
                 "minimum_height": self.background_scene.object_min_z,
                 "asset_cfg": SceneEntityCfg(self.pick_up_object.name),
             },
-        )
+        )'''
         return TerminationsCfg(
             success=success,
-            object_dropped=object_dropped,
+            #object_dropped=object_dropped,
         )
 
     def get_events_cfg(self):
@@ -131,7 +141,7 @@ class PickAndPlaceTask(TaskBase):
 class SceneCfg:
     """Scene configuration for the pick and place task."""
 
-    pick_up_object_contact_sensor: ContactSensorCfg = MISSING
+    #pick_up_object_contact_sensor: ContactSensorCfg = MISSING
 
     object_frame_transformer: FrameTransformerCfg = FrameTransformerCfg(
         prim_path=MISSING,
@@ -148,16 +158,16 @@ class TerminationsCfg:
 
     success: TerminationTermCfg = MISSING
 
-    object_dropped: TerminationTermCfg = MISSING
+    #object_dropped: TerminationTermCfg = MISSING
 
 
 @configclass
 class EventsCfg:
     """Configuration for Pick and Place."""
 
-    reset_pick_up_object_pose: EventTermCfg = MISSING
+    #reset_pick_up_object_pose: EventTermCfg = MISSING
 
-    def __init__(self, pick_up_object: Asset):
+    '''def __init__(self, pick_up_object: Asset):
         initial_pose = pick_up_object.get_initial_pose()
         if initial_pose is not None:
             self.reset_pick_up_object_pose = EventTermCfg(
@@ -173,7 +183,7 @@ class EventsCfg:
                 f"Pick up object {pick_up_object.name} has no initial pose. Not setting reset pick up object pose"
                 " event."
             )
-            self.reset_pick_up_object_pose = None
+            self.reset_pick_up_object_pose = None'''
 
 @configclass
 class RewardsCfg:

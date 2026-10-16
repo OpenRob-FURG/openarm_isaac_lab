@@ -70,6 +70,8 @@ RUN /isaac-sim/python.sh -m pip install -e "${WORKDIR}/submodules/IsaacLab-Arena
 # isaaclab_arena.remote_policy needs a ZMQ stack, so both are required even by
 # projects that never touch a humanoid or a remote policy.
 RUN /isaac-sim/python.sh -m pip install pyzmq msgpack==1.1.0 msgpack-numpy
+RUN /isaac-sim/python.sh -m pip install isaacteleop[cloudxr,retargeters]~=1.0.0 --extra-index-url https://pypi.nvidia.com 
+RUN /isaac-sim/python.sh -m pip install --ignore-installed torch
 
 # Pinocchio ships as a cmeel wheel inside the Pink extension's pip_prebundle,
 # but that cmeel prefix is not on sys.path, so `import pinocchio` fails even

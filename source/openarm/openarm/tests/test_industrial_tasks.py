@@ -90,6 +90,48 @@ def _stub(dotted: str, **attrs) -> StubModule:
     return module
 
 
+def _mimic_cfg_stubs() -> dict:
+    """Stand-ins for ``MimicEnvCfg`` and friends, faithful enough to instantiate.
+
+    The real classes are ``configclass`` dataclasses with a ``__post_init__`` that
+    builds the default datagen config. Only that structure matters here: the Mimic
+    segmentation is generated in ``__post_init__`` from the task spec, so a
+    ``MagicMock`` would throw the assignment away and there would be nothing left
+    to assert on.
+    """
+
+    class _DataGenConfig:
+        def __init__(self) -> None:
+            self.name = ""
+            self.generation_guarantee = False
+            self.generation_keep_failed = False
+            self.generation_num_trials = 0
+            self.generation_select_src_per_subtask = False
+            self.generation_select_src_per_arm = False
+            self.generation_transform_first_robot_pose = False
+            self.generation_interpolate_from_last_target_pose = False
+            self.max_num_failures = 0
+            self.seed = 0
+
+    class _SubTaskConfig:
+        """Records the keyword arguments it was built from."""
+
+        def __init__(self, **kwargs) -> None:
+            self.__dict__.update(kwargs)
+
+    class _MimicEnvCfg:
+        def __init__(self, **kwargs) -> None:
+            self.subtask_configs: dict = {}
+            self.datagen_config = _DataGenConfig()
+            self.__dict__.update(kwargs)
+            self.__post_init__()
+
+        def __post_init__(self) -> None:
+            pass
+
+    return {"DataGenConfig": _DataGenConfig, "SubTaskConfig": _SubTaskConfig, "MimicEnvCfg": _MimicEnvCfg}
+
+
 def _install_stubs() -> None:
     """Install import stubs for every module that needs a live simulator."""
     for name in list(sys.modules):
@@ -124,6 +166,7 @@ def _install_stubs() -> None:
         make_pose=MagicMock,
     )
     _stub("isaaclab.envs")
+    _stub("isaaclab.envs.mimic_env_cfg", **_mimic_cfg_stubs())
     _stub("isaaclab.scene")
     _stub("isaaclab.app")
     _stub("isaaclab_arena.assets.object", Object=MagicMock)
@@ -865,6 +908,69 @@ def test_every_stage_arm_is_valid(tasks):
     for key, task in tasks.items():
         for stage in task.spec.stages:
             assert stage.arm in ("left", "right", "both"), f"{key}: invalid arm '{stage.arm}'"
+
+
+def test_resolved_arms_come_from_the_target_side_not_the_authored_field(tasks):
+    """Deriving arms has to ignore what the spec says and read the layout.
+
+    The authored arm is what the resolution is meant to override, so a test that
+    only checked validity would pass even if the derivation were a no-op. This
+    asserts the resolved arm against the side of the object's solved y, and that
+    resolving twice changes nothing.
+    """
+    from openarm.arena_tasks.staged.arms import arm_for_y, find_arm_conflicts, nominal_positions
+    from openarm.arena_tasks.staged.stages import Skill
+
+    for key, task in tasks.items():
+        resolved = task.resolve_arms()
+        layout, region_y = task.resolved_layout()
+        positions = nominal_positions(layout)
+
+        # Resolving is idempotent, so a caller can resolve without knowing
+        # whether the spec it was handed was already resolved.
+        assert [stage.arm for stage in resolved.resolve_arms().spec.stages] == [
+            stage.arm for stage in resolved.spec.stages
+        ], f"{key}: resolving twice changed the arms"
+
+        for stage, authored in zip(resolved.spec.stages, task.spec.stages):
+            if stage.target not in positions:
+                continue
+            if stage.skill is Skill.HANDOFF:
+                # A handoff's target has just been picked up by the other arm, so
+                # its y is the giver's side and cannot also name the receiver. The
+                # receiver is the one arm the layout cannot supply, so it comes
+                # from the spec and is asserted below.
+                assert stage.arm == authored.arm, f"{key}: handoff receiver was re-derived to {stage.arm}"
+                continue
+            assert stage.arm == arm_for_y(positions[stage.target][1]), (
+                f"{key}: {stage.target} at y={positions[stage.target][1]} is not {stage.arm}'s side"
+            )
+
+        for stage in resolved.spec.stages:
+            if stage.skill is not Skill.HANDOFF:
+                continue
+            giver = "right" if stage.arm == "left" else "left"
+            pick = next(s for s in resolved.spec.stages if s is not stage and s.target == stage.target)
+            assert pick.arm == giver, f"{key}: handoff from {pick.arm} into {stage.arm} is not across arms"
+
+        conflicts = find_arm_conflicts(resolved.spec, layout, resolved_region_y=region_y)
+        assert not conflicts, f"{key}: {conflicts}"
+
+
+def test_resolving_arms_actually_overrides_the_authored_arms(tasks):
+    """Guard against the derivation quietly degrading into a no-op.
+
+    Purely as a canary on the geometry, not as a specification: the point is
+    that resolving has to disagree with the authored arms somewhere, so a change
+    that makes the two agree again gets a human to look at it.
+    """
+    changed = sum(
+        1
+        for task in tasks.values()
+        for stage, resolved in zip(task.spec.stages, task.resolve_arms().spec.stages)
+        if stage.arm != resolved.arm
+    )
+    assert changed > 0, "resolving arms overrode nothing, so the derivation is not being exercised"
 
 
 def test_stage_budget_fits_the_episode(tasks):

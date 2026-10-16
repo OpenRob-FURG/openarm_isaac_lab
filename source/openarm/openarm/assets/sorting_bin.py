@@ -8,7 +8,7 @@ gets its own bin at the USD's natural scale instead, which is the same blue
 tray at a size that can share the table with a front row and other bins.
 """
 
-from isaaclab_arena.assets.object_library import LibraryObject
+from isaaclab_arena.assets.object_library import LibraryObject, ObjectType
 from isaaclab_arena.assets.register import register_asset
 from isaaclab.utils.assets import ISAACLAB_NUCLEUS_DIR
 
@@ -20,4 +20,5 @@ class OpenArmSortingBin(LibraryObject):
     name = "openarm_sorting_bin"
     tags = ["object"]
     usd_path = f"{ISAACLAB_NUCLEUS_DIR}/Mimic/exhaust_pipe_task/exhaust_pipe_assets/blue_sorting_bin.usd"
-    scale = (1.0, 1.0, 1.0)
+    scale = (2.0, 2.0, 1.0)
+    object_type = ObjectType.BASE

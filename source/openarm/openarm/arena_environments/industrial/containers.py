@@ -18,6 +18,9 @@ from openarm.arena_tasks.staged import (
     TaskSpec,
 )
 
+from openarm.arena_tasks.staged.layout import SceneLayout, Surface, Placement, AtPosition, NextTo, Side, On, IsAnchor
+
+
 Z = TABLE_HEIGHT + 0.06
 BIN_HALF = (0.12, 0.12, 0.10)
 
@@ -34,7 +37,7 @@ TASKS: list[IndustrialTask] = [
             stages=(
                 Stage(
                     skill=Skill.PICK_PLACE,
-                    arm="right",
+                    arm="left",
                     target="item",
                     grasp_offset=(0.0, 0.0, 0.06),
                     release_height=Z,
@@ -50,9 +53,35 @@ TASKS: list[IndustrialTask] = [
             "red_bin": "red_container",
             "green_bin": "green_container",
             "item": "sweet_potato",
+            "work_surface": "packing_table"
         },
         primary_object="item",
         pinned_objects=("red_bin", "green_bin"),
+        layout=SceneLayout(
+            surface=Surface(name="work_surface", center=(0.0, 0.0, 0.25)),
+            placements=[
+                Placement(
+                    object_name="red_bin",
+                    relations=[
+                        #On(surface="work_surface"),
+                        AtPosition(x=0.4, y=0.3)
+                    ]
+                ),
+                Placement(
+                    object_name="green_bin",
+                    relations=[
+                        #On(surface="work_surface"),
+                        AtPosition(x=0.4, y=0.0)
+                    ]
+                ),
+                Placement(
+                    object_name="item",
+                    relations=[
+                        On(surface="red_bin")
+                    ]
+                )
+            ]
+        )
     ),
     IndustrialTask(
         spec=TaskSpec(

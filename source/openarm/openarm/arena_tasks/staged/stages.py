@@ -15,8 +15,6 @@ task's success condition and its scripted policy are written separately.
 
 from __future__ import annotations
 
-from isaaclab.utils.configclass import configclass
-
 from dataclasses import dataclass, field
 from enum import Enum
 from typing import TYPE_CHECKING

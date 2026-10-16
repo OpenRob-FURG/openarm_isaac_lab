@@ -668,21 +668,71 @@ def build_action(
     return _poses_to_action(env, target_dict, gripper_dict, env_id=env_id)
 
 
+def _is_joint_action_space(env: "ManagerBasedEnv") -> bool:
+    """Whether *env* is commanded in joint space rather than in end-effector poses.
+
+    The OpenArm ships two action spaces over the same robot: a differential-IK
+    pose space of seven values per end effector, and the absolute joint position
+    space of :class:`~openarm.arena_tasks.staged.arms.ARM_JOINTS_PER_ARM` joints
+    plus a finger joint per arm. Both layouts are eight or sixteen values wide per
+    pair of arms, so the total width cannot tell them apart -- a 16-wide action
+    vector is four absolute pose values per arm *or* eight joint values per arm --
+    and the discriminator has to be the action terms themselves.
+
+    Reading the terms is the honest test because the two spaces declare
+    themselves differently: :class:`JointPositionActionCfg` names its joints,
+    whereas :class:`DifferentialInverseKinematicsActionCfg` names a body and
+    carries its own controller. The term's class is what says which, so that is
+    what is read; the term's *name* does not, because ``left_arm_action`` is a
+    plausible name for either.
+
+    Anything that is not an IK term is reported as joint space, including an
+    environment with no recognizable terms at all, so that a term added later
+    fails loudly here rather than being silently read as a pose.
+
+    Args:
+        env: The environment to inspect.
+
+    Returns:
+        ``True`` for the joint position action space.
+    """
+    action_manager = getattr(getattr(env, "unwrapped", env), "action_manager", None)
+    terms = dict(getattr(action_manager, "_terms", None) or {})
+    if not terms:
+        return True
+
+    for name, term in terms.items():
+        class_type = getattr(getattr(term, "_cfg", None), "class_type", None)
+        if class_type is not None:
+            if "JointPosition" in class_type.__name__:
+                return True
+            if "InverseKinematics" in class_type.__name__:
+                return False
+    # No term reported a class to identify it by, so fall back to the name. A
+    # joint term is named after the joints it drives, which is the one thing an
+    # IK term never is.
+    return not any("inverse_kinematics" in name or "pose" in name for name in terms)
+
+
 def _poses_to_action(
     env: "ManagerBasedEnv",
     target_poses: Mapping[str, torch.Tensor],
     gripper_actions: Mapping[str, torch.Tensor],
     env_id: int = 0,
 ) -> torch.Tensor:
-    """Convert target EEF poses into the environment's delta-pose action.
+    """Convert target EEF poses into the environment's action.
 
-    The OpenArm bimanual action space is seven values per end effector -- three
-    positional deltas, three rotational deltas as axis-angle, and one gripper
-    value -- concatenated in the order the frame transformer reports its target
-    frames. That is the same convention the differential IK controller expects,
-    so the deltas are computed here rather than delegated: Arena only exposes
-    ``target_eef_pose_to_action`` on the mimic env, and the non-mimic run uses
-    the plain ``ManagerBasedRLEnv``.
+    Which encoding that is depends on the action space. The differential IK
+    space is seven values per end effector -- three positional deltas, three
+    rotational deltas as axis-angle, and one gripper value -- which is the
+    convention the controller itself expects. The absolute joint position space
+    carries eight values per end effector, seven joints and a finger joint, so a
+    target pose has to be solved for joints; see
+    :func:`openarm.embodiments.openarm_bimanual.kinematics.joint_targets_from_poses`.
+
+    The deltas are computed here rather than delegated to the mimic env because
+    Arena only exposes ``target_eef_pose_to_action`` on the mimic env, and the
+    oracle also drives the plain ``ManagerBasedRLEnv``.
 
     Args:
         env: The environment.
@@ -692,7 +742,16 @@ def _poses_to_action(
 
     Returns:
         A 1-D action tensor of the environment's action dimension.
+
+    Raises:
+        ValueError: If the environment is in joint space and the robot does not
+            expose the articulation an IK solve needs.
     """
+    if _is_joint_action_space(env):
+        from openarm.embodiments.openarm_bimanual import kinematics
+
+        return kinematics.joint_targets_from_poses(env, target_poses, gripper_actions, env_id)
+
     device = device_of(env)
     actions: list[torch.Tensor] = []
     for arm in _eef_names(env):
@@ -712,31 +771,60 @@ def _poses_to_action(
         if gripper is None:
             # Arms that are not being commanded hold their current gripper.
             gripper = _current_gripper(env, arm, env_id)
-        if env.action_manager.total_action_dim % 7 == 0:
-            arm_action = torch.cat(
-                [pose_action, torch.as_tensor(gripper, dtype=torch.float32, device=device).reshape(-1)]
-            )
-            actions.append(clamp_action(arm_action))
-        elif env.action_manager.total_action_dim % 8 == 0:
-            arm_action = torch.cat(
-                [target[0, :3, 3], quat_from_matrix(target[0, :3, :3]), torch.as_tensor(gripper, dtype=torch.float32, device=device).reshape(-1)]
-            )
-            actions.append(arm_action)
+        actions.append(clamp_action(torch.cat([pose_action, gripper.reshape(-1).to(torch.float32)])))
     return torch.cat(actions)
 
 
 def _current_gripper(env: "ManagerBasedEnv", arm: str, env_id: int = 0) -> torch.Tensor:
     """Read an arm's current gripper command from the action manager.
 
-    Falling back to fully open keeps an untouched arm from snapping shut.
+    The index of the gripper channel differs between the two action spaces -- it
+    is the seventh value of a seven-wide pose command, and the finger joint of an
+    eight-wide joint command -- so it is resolved from the action terms rather
+    than assumed. Falling back to fully open keeps an untouched arm from snapping
+    shut.
     """
     action_manager = getattr(getattr(env, "unwrapped", env), "action_manager", None)
     last_action = getattr(action_manager, "action", None)
     names = list(_eef_names(env))
     if last_action is None or arm not in names:
         return torch.full((1,), float(GRIPPER_OPEN), dtype=torch.float32)
-    index = names.index(arm) * 7 + 6
+
+    if _is_joint_action_space(env):
+        index = _finger_action_index(env, arm)
+    else:
+        index = names.index(arm) * 7 + 6
     return last_action[env_id, index].reshape(1).to(torch.float32)
+
+
+def _finger_action_index(env: "ManagerBasedEnv", arm: str) -> int:
+    """Index of *arm*'s finger channel in the flat joint action vector.
+
+    Read from the action manager's own term list rather than computed from the
+    arm's position, because dropping the left arm's terms for ``ArmMode.RIGHT``
+    moves the right arm's channels down to offset zero.
+
+    Args:
+        env: The environment.
+        arm: ``"left"`` or ``"right"``.
+
+    Returns:
+        The flat action index of the finger joint.
+
+    Raises:
+        ValueError: If the action manager has no hand term for the arm.
+    """
+    action_manager = getattr(getattr(env, "unwrapped", env), "action_manager", None)
+    widths = list(getattr(action_manager, "action_term_dim", []) or [])
+    terms = list(getattr(action_manager, "active_terms", []) or [])
+
+    offset = 0
+    for name, width in zip(terms, widths):
+        if name == f"{arm}_hand_action":
+            # The finger is the last channel of the hand term.
+            return offset + width - 1
+        offset += width
+    raise ValueError(f"No '{arm}_hand_action' term in the action space. Terms: {terms}")
 
 
 class SkillController:
@@ -1425,8 +1513,11 @@ class HandoffController(SkillController):
         self.midpoint = (eef_pose(env, "left", self.env_id)[:3, 3] + eef_pose(env, "right", self.env_id)[:3, 3]) / 2.0
 
     def step(self, env: "ManagerBasedEnv", env_id: int = 0) -> torch.Tensor:
-        giver = self.stage.arm
-        taker = "right" if giver == "left" else "left"
+        # ``Stage.arm`` names the receiving arm, matching
+        # :func:`openarm.arena_tasks.staged.arms.handoff_sides`, and the giver is
+        # therefore its opposite.
+        taker = self.stage.arm
+        giver = "right" if taker == "left" else "left"
         midpoint = torch.eye(4, device=eef_pose(env, giver, self.env_id).device, dtype=torch.float32)
         midpoint[:3, 3] = self.midpoint
         if self.phase == "present":

@@ -32,13 +32,18 @@ from __future__ import annotations
 from dataclasses import field, dataclass
 
 from isaaclab.utils import configclass
-from isaaclab_rl.rsl_rl import RslRlOnPolicyRunnerCfg, RslRlPpoActorCriticCfg, RslRlPpoAlgorithmCfg, RslRlMLPModelCfg
+from isaaclab_rl.rsl_rl import RslRlOnPolicyRunnerCfg, RslRlPpoActorCriticCfg, RslRlPpoAlgorithmCfg
 
 #: Observation groups the actor and critic each read. ``policy`` is the
 #: embodiment's proprioception; ``critic`` is the task's privileged state.
 #: ``task_obs`` is deliberately absent from both.
+#:
+#: The split has to be spelled out rather than inherited, because rsl-rl does not
+#: derive it: an ``obs_groups`` entry listing ``critic`` on the actor would hand
+#: the policy privileged state it could not observe on hardware, and the run
+#: would not transfer.
 OBS_GROUPS: dict[str, list[str]] = {
-    "actor": ["policy", "critic"],
+    "actor": ["policy"],
     "critic": ["policy", "critic"],
 }
 
@@ -61,12 +66,20 @@ class IndustrialStagedRslRlRunnerCfg(RslRlOnPolicyRunnerCfg):
             sweep over tasks stays in one place.
         obs_groups: The actor-critic split described in this module's
             docstring.
-        policy: Actor and critic networks. Both normalize their observations,
-            which matters more than usual here: the privileged group stacks
-            positions in metres, torques in newton-metres and normalized joint
-            coordinates in [0, 1] into one vector, and the critic would
-            otherwise see a few channels dominate the rest by orders of
-            magnitude.
+        policy: Actor and critic networks, in rsl-rl's deprecated shape. Both
+            normalize their observations, which matters more than usual here: the
+            privileged group stacks positions in metres, torques in
+            newton-metres and normalized joint coordinates in [0, 1] into one
+            vector, and the critic would otherwise see a few channels dominate
+            the rest by orders of magnitude.
+
+            ``actor``/``critic`` are deliberately not spelled out. rsl-rl 3.x
+            reads ``policy`` and ignores them, rsl-rl 4.x and later read them and
+            ignore ``policy``, and
+            ``handle_deprecated_rsl_rl_cfg`` derives one from the other. Setting
+            both would let the installed version win over the one field that is
+            portable, and the explicit actor would have to repeat the
+            ``stochastic=True`` that PPO needs for exploration.
         algorithm: PPO settings. The entropy coefficient is low because the
             shaped reward is informative from the first step and there is no
             exploration problem worth solving; the learning rate is on the
@@ -88,22 +101,6 @@ class IndustrialStagedRslRlRunnerCfg(RslRlOnPolicyRunnerCfg):
         critic_hidden_dims=[512, 256, 128],
         activation="elu",
     )
-    actor = RslRlMLPModelCfg(
-        hidden_dims=[512, 256, 128],
-        activation="elu",
-        obs_normalization=True,
-        init_noise_std=0.8,
-        distribution_cfg=RslRlMLPModelCfg.GaussianDistributionCfg(init_std=1.0),
-        stochastic=False
-    )
-    critic = RslRlMLPModelCfg(
-        hidden_dims=[512, 256, 128],
-        activation="elu",
-        obs_normalization=True,
-        init_noise_std=0.8,
-        stochastic=False
-    )
-    empirical_normalization = True
     algorithm: RslRlPpoAlgorithmCfg = RslRlPpoAlgorithmCfg(
         value_loss_coef=1.0,
         use_clipped_value_loss=True,

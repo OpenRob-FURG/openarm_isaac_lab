@@ -538,9 +538,26 @@ class StagedTask(TaskBase):
         return self.observation_cfg
 
     def get_mimic_env_cfg(self, arm_mode: ArmMode) -> Any:
-        raise NotImplementedError(
-            f"Staged task '{self.spec.name}' does not provide a Mimic datagen config. "
-            "Use the scripted oracle policy to collect demonstrations instead."
+        """Build the Mimic datagen config for this task.
+
+        The subtask split is derived from the stages rather than written out, so
+        it cannot describe a segmentation the task does not have.
+
+        Args:
+            arm_mode: The embodiment's arm mode, which decides which arms get
+                subtask configs: the embodiment only commands the arms its action
+                terms include.
+
+        Returns:
+            A :class:`~openarm.arena_tasks.staged.mimic.StagedMimicEnvCfg`.
+        """
+        from openarm.arena_tasks.staged.mimic import StagedMimicEnvCfg
+
+        primary = next(iter(self.scene_objects), "")
+        return StagedMimicEnvCfg(
+            task_spec=self.spec,
+            fallback_object=primary,
+            arm_mode=arm_mode,
         )
 
     def get_metrics(self) -> list[MetricBase]:

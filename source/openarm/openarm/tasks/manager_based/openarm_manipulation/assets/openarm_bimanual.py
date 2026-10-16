@@ -104,3 +104,6 @@ OPEN_ARM_HIGH_PD_CFG.actuators["openarm_gripper"].damping = 1e2
 
 This configuration is useful for task-space control using differential IK.
 """
+
+OPEN_ARM_HIGH_PD_FIXED_BASE_CFG = OPEN_ARM_HIGH_PD_CFG.copy()
+OPEN_ARM_HIGH_PD_FIXED_BASE_CFG.spawn.usd_path = f"{OPENARM_ROOT_DIR}/usds/openarm_bimanual/openarm_bimanual.usd"

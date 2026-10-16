@@ -102,7 +102,7 @@ if [ "$( docker container inspect -f '{{.State.Running}}' $DOCKER_IMAGE_NAME'-'$
   sudo chown -R $USER .
 else
     DOCKER_RUN_ARGS=("--name" "$DOCKER_IMAGE_NAME-$DOCKER_VERSION_TAG"
-                    "--privileged"
+                    #"--privileged"
                     #"--ulimit" "memlock=-1"
                     #"--ulimit" "stack=-1"
                     "--ipc=host"
