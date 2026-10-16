@@ -47,7 +47,7 @@ class BimanualOpenArmComputerDisassemblyEnvironment(ExampleEnvironmentBase):
         #background.set_initial_pose(
         #    Pose(position_xyz=(0.5, 0.0, -0.8), rotation_xyzw=(0.0, 0.0, -0.707, 0.707))
         #)
-        hdr = self.hdr_registry.get_hdr_by_name("home_office_robolab")()
+        hdr = self.hdr_registry.get_random_hdr_by_tag(tag="polyhaven")()
         dome_light = self.asset_registry.get_asset_by_name("light")()
         dome_light.add_hdr(hdr)
         embodiment = self.asset_registry.get_asset_by_name("openarm_bimanual")(
@@ -155,7 +155,7 @@ class BimanualOpenArmComputerDisassemblyEnvironment(ExampleEnvironmentBase):
             ]
         )
 
-        teleop_device = self.device_registry.get_device_by_name("openxr")()
+        teleop_device = self.device_registry.get_device_by_name(args_cli.teleop_device)()
 
         # Step 4: Create the IsaacLab Arena environment
         isaaclab_arena_environment = IsaacLabArenaEnvironment(

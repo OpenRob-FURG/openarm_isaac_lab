@@ -201,7 +201,7 @@ class OpenArmBimanualActionsCfg:
         body_name="openarm_left_ee_tcp",
         controller=DifferentialIKControllerCfg(
             command_type="pose",
-            use_relative_mode=True,
+            use_relative_mode=False,
             ik_method="dls",
             # The reset arm pose is close to a wrist singularity. A modest
             # damping term prevents millimetre Cartesian steps from turning
@@ -235,7 +235,7 @@ class OpenArmBimanualActionsCfg:
         body_name="openarm_right_ee_tcp",
         controller=DifferentialIKControllerCfg(
             command_type="pose",
-            use_relative_mode=True,
+            use_relative_mode=False,
             ik_method="dls",
             #ik_params={"lambda_val": 0.2},
         ),
