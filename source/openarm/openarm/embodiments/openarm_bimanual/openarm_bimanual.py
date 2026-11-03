@@ -11,7 +11,7 @@ from isaaclab.scene import InteractiveSceneCfg
 from isaaclab.sensors import FrameTransformerCfg, TiledCameraCfg, CameraCfg
 from isaaclab.utils import configclass
 from isaaclab.controllers import DifferentialIKControllerCfg
-from isaaclab_teleop.xr_cfg import XrCfg
+from isaaclab_teleop.xr_cfg import XrCfg, XrAnchorRotationMode
 
 from isaaclab_arena.assets.register import register_asset
 from isaaclab_arena.embodiments.common.arm_mode import ArmMode
@@ -49,7 +49,13 @@ class OpenArmBimanualEmbodiment(EmbodimentBase):
         self.event_config = OpenArmBimanualEventsCfg()
         self.camera_config = OpenArmBimanualCameraCfg()
         self.reward_config = None
-        self.xr = XrCfg()
+        self.xr = XrCfg(
+            anchor_pos=(0.0, 0.0, -1.0),
+            anchor_rot=(0.0, 0.0, -0.70711, 0.70711),
+            anchor_prim_path="/World/envs/env_0/Robot/openarm_body_link",
+            anchor_rotation_mode=XrAnchorRotationMode.FOLLOW_PRIM_SMOOTHED,
+            fixed_anchor_height=True,
+        )
         self.mimic_env = OpenArmBimanualMimicEnv
 
         if self.arm_mode in [ArmMode.SINGLE_ARM, ArmMode.LEFT]:

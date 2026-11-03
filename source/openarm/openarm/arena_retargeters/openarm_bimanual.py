@@ -141,7 +141,7 @@ def _build_openarm_pipeline():
     )
 
     pipeline = OutputCombiner({"action": connected_reorderer.output("output")})
-    return pipeline #, [left_gripper, right_gripper]
+    return pipeline# , [left_se3, left_gripper, right_se3, right_gripper]
 
 @register_retargeter
 class BimanualOpenArmKeyboardRertargetter(RetargetterBase):
