@@ -10,12 +10,12 @@
 [![Linux platform](https://img.shields.io/badge/platform-linux--64-orange.svg)](https://releases.ubuntu.com/22.04/)
 [![License](https://img.shields.io/badge/license-Apache2.0-yellow.svg)](https://opensource.org/license/apache-2-0)
 
-Fork maintained by [OpenRob-FURG](https://github.com/OpenRob-FURG), the robotics lab at the Federal University of Rio Grande (FURG), tracking the OpenArm simulation setup used in the lab.
+Fork maintained by [OpenRob-FURG](https://github.com/OpenRob-FURG), the robotics project at the Federal University of Rio Grande (FURG), used in the OpenArm simulation setup of the project.
 
 ## Documentation
 
 - Upstream project: [enactic/openarm_isaac_lab](https://github.com/enactic/openarm_isaac_lab)
-- OpenArm ecosystem at the lab: [`openarm_hardware`](https://github.com/OpenRob-FURG/openarm_hardware) · [`openarm_ros2`](https://github.com/OpenRob-FURG/openarm_ros2) · [`openarm_data_collection`](https://github.com/OpenRob-FURG/openarm_data_collection) · [`openarm-mtc`](https://github.com/OpenRob-FURG/openarm-mtc)
+- OpenArm ecosystem at the project: [`openarm_hardware`](https://github.com/OpenRob-FURG/openarm_hardware) · [`openarm_ros2`](https://github.com/OpenRob-FURG/openarm_ros2) · [`openarm_data_collection`](https://github.com/OpenRob-FURG/openarm_data_collection) · [`openarm-mtc`](https://github.com/OpenRob-FURG/openarm-mtc)
 
 The content below is the original upstream project documentation.
 
@@ -41,6 +41,7 @@ This repository has been tested with:
 
 ## Index
 - [OpenArm Isaac Lab](#openarm-isaac-lab)
+  - [Documentation](#documentation)
   - [Overview](#overview)
     - [What this repo offers](#what-this-repo-offers)
   - [Index](#index)
@@ -51,8 +52,6 @@ This repository has been tested with:
     - [Training Model](#training-model)
     - [Replay Trained Model](#replay-trained-model)
     - [Analyze logs](#analyze-logs)
-  - [Sim2sim](#sim2sim)
-  - [Sim2Real Deployment using OpenArm](#sim2real-deployment-using-openarm)
   - [Related links](#related-links)
   - [License](#license)
   - [Code of Conduct](#code-of-conduct)
