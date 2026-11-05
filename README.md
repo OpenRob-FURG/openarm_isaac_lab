@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="images/openrob_logo.png" alt="OpenRob project logo" width="700" />
+</p>
+
 # OpenArm Isaac Lab
 
 [![IsaacSim](https://img.shields.io/badge/IsaacSim-5.1.0-silver.svg)](https://docs.isaacsim.omniverse.nvidia.com/5.1.0/index.html)
@@ -5,6 +9,17 @@
 [![Python](https://img.shields.io/badge/python-3.11-blue.svg)](https://docs.python.org/3/whatsnew/3.11.html)
 [![Linux platform](https://img.shields.io/badge/platform-linux--64-orange.svg)](https://releases.ubuntu.com/22.04/)
 [![License](https://img.shields.io/badge/license-Apache2.0-yellow.svg)](https://opensource.org/license/apache-2-0)
+
+Fork maintained by [OpenRob-FURG](https://github.com/OpenRob-FURG), the robotics lab at the Federal University of Rio Grande (FURG), tracking the OpenArm simulation setup used in the lab.
+
+## Documentation
+
+- Upstream project: [enactic/openarm_isaac_lab](https://github.com/enactic/openarm_isaac_lab)
+- OpenArm ecosystem at the lab: [`openarm_hardware`](https://github.com/OpenRob-FURG/openarm_hardware) · [`openarm_ros2`](https://github.com/OpenRob-FURG/openarm_ros2) · [`openarm_data_collection`](https://github.com/OpenRob-FURG/openarm_data_collection) · [`openarm-mtc`](https://github.com/OpenRob-FURG/openarm-mtc)
+
+The content below is the original upstream project documentation.
+
+---
 
 ## Overview
 
