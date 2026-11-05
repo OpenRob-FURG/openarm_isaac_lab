@@ -26,7 +26,7 @@ ARG BASE_IMAGE=nvcr.io/nvidia/isaac-sim:6.0.0-dev2
 # 6.0.0 also renamed the physics tensors extension from `omni.physics.tensors`
 # to `omni.physx.tensors` and dropped its `impl` python submodule, which
 # IsaacLab-Arena's physx interop layer still expects.
-ARG LEROBOT_VERSION="<1.0"
+ARG LEROBOT_VERSION="<=0.6.1"
 
 FROM ${BASE_IMAGE}
 
@@ -88,7 +88,7 @@ RUN PINK_PREFIX="/isaac-sim/exts/isaacsim.robot_motion.pink/pip_prebundle/cmeel.
 COPY source/openarm ${WORKDIR}/source/openarm
 RUN /isaac-sim/python.sh -m pip install toml
 RUN /isaac-sim/python.sh -m pip install -e "${WORKDIR}/source/openarm"
-RUN /isaac-sim/python.sh -m pip install "lerobot${LEROBOT_VERSION}" av
+RUN /isaac-sim/python.sh -m pip install "lerobot[dataset]${LEROBOT_VERSION}" av
 
 RUN PIPX_HOME=/opt/pipx PIPX_BIN_DIR=/usr/local/bin \
     pipx install "huggingface-hub[cli]" pre-commit

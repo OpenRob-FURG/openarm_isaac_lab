@@ -1,0 +1,777 @@
+#usda 1.0
+(
+    customLayerData = {
+        string creator = "URDF USD Converter v0.1.0"
+    }
+    defaultPrim = "momo_openrob"
+    doc = """Generated from Composed Stage of root layer /tmp/tmplddu1gkj/momo_openrob.usdc
+
+
+Generated from Composed Stage of root layer /workspaces/openarm_isaac_lab/source/openarm/openarm/tasks/manager_based/openarm_manipulation/usds/momo_openrob/urdf/usdex/momo_openrob.usdc
+
+
+Generated from Composed Stage of root layer /workspaces/openarm_isaac_lab/source/openarm/openarm/tasks/manager_based/openarm_manipulation/usds/momo_openrob/urdf/temp/momo_openrob.usd
+
+
+Generated from Composed Stage of root layer /workspaces/openarm_isaac_lab/source/openarm/openarm/tasks/manager_based/openarm_manipulation/usds/momo_openrob/urdf/momo_openrob/payloads/base.usd
+"""
+    kilogramsPerUnit = 1
+    metersPerUnit = 1
+    upAxis = "Z"
+)
+
+over "momo_openrob" (
+    prepend apiSchemas = ["IsaacRobotAPI", "IsaacLinkAPI"]
+)
+{
+    custom rel isaac:physics:robotJoints
+    prepend rel isaac:physics:robotJoints = [
+        </momo_openrob/Physics/revolute_1_3>,
+        </momo_openrob/Physics/revolute_2_2>,
+        </momo_openrob/Physics/revolute_3_2>,
+        </momo_openrob/Physics/revolute_4>,
+        </momo_openrob/Physics/root_joint>,
+        </momo_openrob/Physics/revolute_10_3>,
+        </momo_openrob/Physics/revolute_11_3>,
+        </momo_openrob/Physics/revolute_12_3>,
+        </momo_openrob/Physics/revolute_1_4>,
+        </momo_openrob/Physics/revolute_2_4>,
+        </momo_openrob/Physics/revolute_3_4>,
+        </momo_openrob/Physics/revolute_4_4>,
+        </momo_openrob/Physics/revolute_5_3>,
+        </momo_openrob/Physics/revolute_6_3>,
+        </momo_openrob/Physics/revolute_7_3>,
+        </momo_openrob/Physics/revolute_8_3>,
+        </momo_openrob/Physics/revolute_9_3>,
+        </momo_openrob/Physics/revolute_10_2>,
+        </momo_openrob/Physics/revolute_11_2>,
+        </momo_openrob/Physics/revolute_12_2>,
+        </momo_openrob/Physics/revolute_1_2>,
+        </momo_openrob/Physics/revolute_2_3>,
+        </momo_openrob/Physics/revolute_3_3>,
+        </momo_openrob/Physics/revolute_4_3>,
+        </momo_openrob/Physics/revolute_5_2>,
+        </momo_openrob/Physics/revolute_6_2>,
+        </momo_openrob/Physics/revolute_7_2>,
+        </momo_openrob/Physics/revolute_8_2>,
+        </momo_openrob/Physics/revolute_9_2>,
+        </momo_openrob/Physics/revolute_10_1>,
+        </momo_openrob/Physics/revolute_11_1>,
+        </momo_openrob/Physics/revolute_12_1>,
+        </momo_openrob/Physics/revolute_1_1>,
+        </momo_openrob/Physics/revolute_2_1>,
+        </momo_openrob/Physics/revolute_3_1>,
+        </momo_openrob/Physics/revolute_4_2>,
+        </momo_openrob/Physics/revolute_5_1>,
+        </momo_openrob/Physics/revolute_6_1>,
+        </momo_openrob/Physics/revolute_7_1>,
+        </momo_openrob/Physics/revolute_8_1>,
+        </momo_openrob/Physics/revolute_9_1>,
+        </momo_openrob/Physics/revolute_1>,
+        </momo_openrob/Physics/revolute_10>,
+        </momo_openrob/Physics/revolute_11>,
+        </momo_openrob/Physics/revolute_12>,
+        </momo_openrob/Physics/revolute_2>,
+        </momo_openrob/Physics/revolute_3>,
+        </momo_openrob/Physics/revolute_4_1>,
+        </momo_openrob/Physics/revolute_5>,
+        </momo_openrob/Physics/revolute_6>,
+        </momo_openrob/Physics/revolute_7>,
+        </momo_openrob/Physics/revolute_8>,
+        </momo_openrob/Physics/revolute_9>,
+    ]
+    custom rel isaac:physics:robotLinks
+    prepend rel isaac:physics:robotLinks = [
+        </momo_openrob/Geometry/root>,
+        </momo_openrob/Geometry/root/hub_half__fillet141_7>,
+        </momo_openrob/Geometry/root/hub_half__fillet141_5>,
+        </momo_openrob/Geometry/root/hub_half__fillet141>,
+        </momo_openrob/Geometry/root/hub_half__fillet141_3>,
+        </momo_openrob/Geometry/root/hub_half__fillet141_7/tn__812_roller_skin__fillet1_40_>,
+        </momo_openrob/Geometry/root/hub_half__fillet141_7/tn__812_roller_skin__fillet1_36_>,
+        </momo_openrob/Geometry/root/hub_half__fillet141_7/tn__812_roller_skin__fillet1_37_>,
+        </momo_openrob/Geometry/root/hub_half__fillet141_7/tn__812_roller_skin__fillet1_47_>,
+        </momo_openrob/Geometry/root/hub_half__fillet141_7/tn__812_roller_skin__fillet1_45_>,
+        </momo_openrob/Geometry/root/hub_half__fillet141_7/tn__812_roller_skin__fillet1_42_>,
+        </momo_openrob/Geometry/root/hub_half__fillet141_7/tn__812_roller_skin__fillet1_46_>,
+        </momo_openrob/Geometry/root/hub_half__fillet141_7/tn__812_roller_skin__fillet1_43_>,
+        </momo_openrob/Geometry/root/hub_half__fillet141_7/tn__812_roller_skin__fillet1_38_>,
+        </momo_openrob/Geometry/root/hub_half__fillet141_7/tn__812_roller_skin__fillet1_39_>,
+        </momo_openrob/Geometry/root/hub_half__fillet141_7/tn__812_roller_skin__fillet1_44_>,
+        </momo_openrob/Geometry/root/hub_half__fillet141_7/tn__812_roller_skin__fillet1_41_>,
+        </momo_openrob/Geometry/root/hub_half__fillet141_5/tn__812_roller_skin__fillet1_30_>,
+        </momo_openrob/Geometry/root/hub_half__fillet141_5/tn__812_roller_skin__fillet1_35_>,
+        </momo_openrob/Geometry/root/hub_half__fillet141_5/tn__812_roller_skin__fillet1_32_>,
+        </momo_openrob/Geometry/root/hub_half__fillet141_5/tn__812_roller_skin__fillet1_27_>,
+        </momo_openrob/Geometry/root/hub_half__fillet141_5/tn__812_roller_skin__fillet1_34_>,
+        </momo_openrob/Geometry/root/hub_half__fillet141_5/tn__812_roller_skin__fillet1_31_>,
+        </momo_openrob/Geometry/root/hub_half__fillet141_5/tn__812_roller_skin__fillet1_33_>,
+        </momo_openrob/Geometry/root/hub_half__fillet141_5/tn__812_roller_skin__fillet1_24_>,
+        </momo_openrob/Geometry/root/hub_half__fillet141_5/tn__812_roller_skin__fillet1_29_>,
+        </momo_openrob/Geometry/root/hub_half__fillet141_5/tn__812_roller_skin__fillet1_26_>,
+        </momo_openrob/Geometry/root/hub_half__fillet141_5/tn__812_roller_skin__fillet1_28_>,
+        </momo_openrob/Geometry/root/hub_half__fillet141_5/tn__812_roller_skin__fillet1_25_>,
+        </momo_openrob/Geometry/root/hub_half__fillet141/tn__812_roller_skin__fillet1_4_>,
+        </momo_openrob/Geometry/root/hub_half__fillet141/tn__812_roller_skin__fillet1_>,
+        </momo_openrob/Geometry/root/hub_half__fillet141/tn__812_roller_skin__fillet1_11_>,
+        </momo_openrob/Geometry/root/hub_half__fillet141/tn__812_roller_skin__fillet1_6_>,
+        </momo_openrob/Geometry/root/hub_half__fillet141/tn__812_roller_skin__fillet1_10_>,
+        </momo_openrob/Geometry/root/hub_half__fillet141/tn__812_roller_skin__fillet1_9_>,
+        </momo_openrob/Geometry/root/hub_half__fillet141/tn__812_roller_skin__fillet1_3_>,
+        </momo_openrob/Geometry/root/hub_half__fillet141/tn__812_roller_skin__fillet1_2_>,
+        </momo_openrob/Geometry/root/hub_half__fillet141/tn__812_roller_skin__fillet1_5_>,
+        </momo_openrob/Geometry/root/hub_half__fillet141/tn__812_roller_skin__fillet1_8_>,
+        </momo_openrob/Geometry/root/hub_half__fillet141/tn__812_roller_skin__fillet1_7_>,
+        </momo_openrob/Geometry/root/hub_half__fillet141/tn__812_roller_skin__fillet1_1_>,
+        </momo_openrob/Geometry/root/hub_half__fillet141_3/tn__812_roller_skin__fillet1_23_>,
+        </momo_openrob/Geometry/root/hub_half__fillet141_3/tn__812_roller_skin__fillet1_22_>,
+        </momo_openrob/Geometry/root/hub_half__fillet141_3/tn__812_roller_skin__fillet1_13_>,
+        </momo_openrob/Geometry/root/hub_half__fillet141_3/tn__812_roller_skin__fillet1_21_>,
+        </momo_openrob/Geometry/root/hub_half__fillet141_3/tn__812_roller_skin__fillet1_12_>,
+        </momo_openrob/Geometry/root/hub_half__fillet141_3/tn__812_roller_skin__fillet1_20_>,
+        </momo_openrob/Geometry/root/hub_half__fillet141_3/tn__812_roller_skin__fillet1_19_>,
+        </momo_openrob/Geometry/root/hub_half__fillet141_3/tn__812_roller_skin__fillet1_17_>,
+        </momo_openrob/Geometry/root/hub_half__fillet141_3/tn__812_roller_skin__fillet1_15_>,
+        </momo_openrob/Geometry/root/hub_half__fillet141_3/tn__812_roller_skin__fillet1_16_>,
+        </momo_openrob/Geometry/root/hub_half__fillet141_3/tn__812_roller_skin__fillet1_14_>,
+        </momo_openrob/Geometry/root/hub_half__fillet141_3/tn__812_roller_skin__fillet1_18_>,
+    ]
+
+    over "Physics"
+    {
+        over "revolute_1_3" (
+            prepend apiSchemas = ["IsaacJointAPI"]
+        )
+        {
+        }
+
+        over "revolute_2_2" (
+            prepend apiSchemas = ["IsaacJointAPI"]
+        )
+        {
+        }
+
+        over "revolute_3_2" (
+            prepend apiSchemas = ["IsaacJointAPI"]
+        )
+        {
+        }
+
+        over "revolute_4" (
+            prepend apiSchemas = ["IsaacJointAPI"]
+        )
+        {
+        }
+
+        over "root_joint" (
+            prepend apiSchemas = ["IsaacJointAPI"]
+        )
+        {
+        }
+
+        over "revolute_10_3" (
+            prepend apiSchemas = ["IsaacJointAPI"]
+        )
+        {
+        }
+
+        over "revolute_11_3" (
+            prepend apiSchemas = ["IsaacJointAPI"]
+        )
+        {
+        }
+
+        over "revolute_12_3" (
+            prepend apiSchemas = ["IsaacJointAPI"]
+        )
+        {
+        }
+
+        over "revolute_1_4" (
+            prepend apiSchemas = ["IsaacJointAPI"]
+        )
+        {
+        }
+
+        over "revolute_2_4" (
+            prepend apiSchemas = ["IsaacJointAPI"]
+        )
+        {
+        }
+
+        over "revolute_3_4" (
+            prepend apiSchemas = ["IsaacJointAPI"]
+        )
+        {
+        }
+
+        over "revolute_4_4" (
+            prepend apiSchemas = ["IsaacJointAPI"]
+        )
+        {
+        }
+
+        over "revolute_5_3" (
+            prepend apiSchemas = ["IsaacJointAPI"]
+        )
+        {
+        }
+
+        over "revolute_6_3" (
+            prepend apiSchemas = ["IsaacJointAPI"]
+        )
+        {
+        }
+
+        over "revolute_7_3" (
+            prepend apiSchemas = ["IsaacJointAPI"]
+        )
+        {
+        }
+
+        over "revolute_8_3" (
+            prepend apiSchemas = ["IsaacJointAPI"]
+        )
+        {
+        }
+
+        over "revolute_9_3" (
+            prepend apiSchemas = ["IsaacJointAPI"]
+        )
+        {
+        }
+
+        over "revolute_10_2" (
+            prepend apiSchemas = ["IsaacJointAPI"]
+        )
+        {
+        }
+
+        over "revolute_11_2" (
+            prepend apiSchemas = ["IsaacJointAPI"]
+        )
+        {
+        }
+
+        over "revolute_12_2" (
+            prepend apiSchemas = ["IsaacJointAPI"]
+        )
+        {
+        }
+
+        over "revolute_1_2" (
+            prepend apiSchemas = ["IsaacJointAPI"]
+        )
+        {
+        }
+
+        over "revolute_2_3" (
+            prepend apiSchemas = ["IsaacJointAPI"]
+        )
+        {
+        }
+
+        over "revolute_3_3" (
+            prepend apiSchemas = ["IsaacJointAPI"]
+        )
+        {
+        }
+
+        over "revolute_4_3" (
+            prepend apiSchemas = ["IsaacJointAPI"]
+        )
+        {
+        }
+
+        over "revolute_5_2" (
+            prepend apiSchemas = ["IsaacJointAPI"]
+        )
+        {
+        }
+
+        over "revolute_6_2" (
+            prepend apiSchemas = ["IsaacJointAPI"]
+        )
+        {
+        }
+
+        over "revolute_7_2" (
+            prepend apiSchemas = ["IsaacJointAPI"]
+        )
+        {
+        }
+
+        over "revolute_8_2" (
+            prepend apiSchemas = ["IsaacJointAPI"]
+        )
+        {
+        }
+
+        over "revolute_9_2" (
+            prepend apiSchemas = ["IsaacJointAPI"]
+        )
+        {
+        }
+
+        over "revolute_10_1" (
+            prepend apiSchemas = ["IsaacJointAPI"]
+        )
+        {
+        }
+
+        over "revolute_11_1" (
+            prepend apiSchemas = ["IsaacJointAPI"]
+        )
+        {
+        }
+
+        over "revolute_12_1" (
+            prepend apiSchemas = ["IsaacJointAPI"]
+        )
+        {
+        }
+
+        over "revolute_1_1" (
+            prepend apiSchemas = ["IsaacJointAPI"]
+        )
+        {
+        }
+
+        over "revolute_2_1" (
+            prepend apiSchemas = ["IsaacJointAPI"]
+        )
+        {
+        }
+
+        over "revolute_3_1" (
+            prepend apiSchemas = ["IsaacJointAPI"]
+        )
+        {
+        }
+
+        over "revolute_4_2" (
+            prepend apiSchemas = ["IsaacJointAPI"]
+        )
+        {
+        }
+
+        over "revolute_5_1" (
+            prepend apiSchemas = ["IsaacJointAPI"]
+        )
+        {
+        }
+
+        over "revolute_6_1" (
+            prepend apiSchemas = ["IsaacJointAPI"]
+        )
+        {
+        }
+
+        over "revolute_7_1" (
+            prepend apiSchemas = ["IsaacJointAPI"]
+        )
+        {
+        }
+
+        over "revolute_8_1" (
+            prepend apiSchemas = ["IsaacJointAPI"]
+        )
+        {
+        }
+
+        over "revolute_9_1" (
+            prepend apiSchemas = ["IsaacJointAPI"]
+        )
+        {
+        }
+
+        over "revolute_1" (
+            prepend apiSchemas = ["IsaacJointAPI"]
+        )
+        {
+        }
+
+        over "revolute_10" (
+            prepend apiSchemas = ["IsaacJointAPI"]
+        )
+        {
+        }
+
+        over "revolute_11" (
+            prepend apiSchemas = ["IsaacJointAPI"]
+        )
+        {
+        }
+
+        over "revolute_12" (
+            prepend apiSchemas = ["IsaacJointAPI"]
+        )
+        {
+        }
+
+        over "revolute_2" (
+            prepend apiSchemas = ["IsaacJointAPI"]
+        )
+        {
+        }
+
+        over "revolute_3" (
+            prepend apiSchemas = ["IsaacJointAPI"]
+        )
+        {
+        }
+
+        over "revolute_4_1" (
+            prepend apiSchemas = ["IsaacJointAPI"]
+        )
+        {
+        }
+
+        over "revolute_5" (
+            prepend apiSchemas = ["IsaacJointAPI"]
+        )
+        {
+        }
+
+        over "revolute_6" (
+            prepend apiSchemas = ["IsaacJointAPI"]
+        )
+        {
+        }
+
+        over "revolute_7" (
+            prepend apiSchemas = ["IsaacJointAPI"]
+        )
+        {
+        }
+
+        over "revolute_8" (
+            prepend apiSchemas = ["IsaacJointAPI"]
+        )
+        {
+        }
+
+        over "revolute_9" (
+            prepend apiSchemas = ["IsaacJointAPI"]
+        )
+        {
+        }
+    }
+
+    over "Geometry"
+    {
+        over "root" (
+            prepend apiSchemas = ["IsaacLinkAPI"]
+        )
+        {
+            over "hub_half__fillet141_7" (
+                prepend apiSchemas = ["IsaacLinkAPI"]
+            )
+            {
+                over "tn__812_roller_skin__fillet1_40_" (
+                    prepend apiSchemas = ["IsaacLinkAPI"]
+                )
+                {
+                }
+
+                over "tn__812_roller_skin__fillet1_36_" (
+                    prepend apiSchemas = ["IsaacLinkAPI"]
+                )
+                {
+                }
+
+                over "tn__812_roller_skin__fillet1_37_" (
+                    prepend apiSchemas = ["IsaacLinkAPI"]
+                )
+                {
+                }
+
+                over "tn__812_roller_skin__fillet1_47_" (
+                    prepend apiSchemas = ["IsaacLinkAPI"]
+                )
+                {
+                }
+
+                over "tn__812_roller_skin__fillet1_45_" (
+                    prepend apiSchemas = ["IsaacLinkAPI"]
+                )
+                {
+                }
+
+                over "tn__812_roller_skin__fillet1_42_" (
+                    prepend apiSchemas = ["IsaacLinkAPI"]
+                )
+                {
+                }
+
+                over "tn__812_roller_skin__fillet1_46_" (
+                    prepend apiSchemas = ["IsaacLinkAPI"]
+                )
+                {
+                }
+
+                over "tn__812_roller_skin__fillet1_43_" (
+                    prepend apiSchemas = ["IsaacLinkAPI"]
+                )
+                {
+                }
+
+                over "tn__812_roller_skin__fillet1_38_" (
+                    prepend apiSchemas = ["IsaacLinkAPI"]
+                )
+                {
+                }
+
+                over "tn__812_roller_skin__fillet1_39_" (
+                    prepend apiSchemas = ["IsaacLinkAPI"]
+                )
+                {
+                }
+
+                over "tn__812_roller_skin__fillet1_44_" (
+                    prepend apiSchemas = ["IsaacLinkAPI"]
+                )
+                {
+                }
+
+                over "tn__812_roller_skin__fillet1_41_" (
+                    prepend apiSchemas = ["IsaacLinkAPI"]
+                )
+                {
+                }
+            }
+
+            over "hub_half__fillet141_5" (
+                prepend apiSchemas = ["IsaacLinkAPI"]
+            )
+            {
+                over "tn__812_roller_skin__fillet1_30_" (
+                    prepend apiSchemas = ["IsaacLinkAPI"]
+                )
+                {
+                }
+
+                over "tn__812_roller_skin__fillet1_35_" (
+                    prepend apiSchemas = ["IsaacLinkAPI"]
+                )
+                {
+                }
+
+                over "tn__812_roller_skin__fillet1_32_" (
+                    prepend apiSchemas = ["IsaacLinkAPI"]
+                )
+                {
+                }
+
+                over "tn__812_roller_skin__fillet1_27_" (
+                    prepend apiSchemas = ["IsaacLinkAPI"]
+                )
+                {
+                }
+
+                over "tn__812_roller_skin__fillet1_34_" (
+                    prepend apiSchemas = ["IsaacLinkAPI"]
+                )
+                {
+                }
+
+                over "tn__812_roller_skin__fillet1_31_" (
+                    prepend apiSchemas = ["IsaacLinkAPI"]
+                )
+                {
+                }
+
+                over "tn__812_roller_skin__fillet1_33_" (
+                    prepend apiSchemas = ["IsaacLinkAPI"]
+                )
+                {
+                }
+
+                over "tn__812_roller_skin__fillet1_24_" (
+                    prepend apiSchemas = ["IsaacLinkAPI"]
+                )
+                {
+                }
+
+                over "tn__812_roller_skin__fillet1_29_" (
+                    prepend apiSchemas = ["IsaacLinkAPI"]
+                )
+                {
+                }
+
+                over "tn__812_roller_skin__fillet1_26_" (
+                    prepend apiSchemas = ["IsaacLinkAPI"]
+                )
+                {
+                }
+
+                over "tn__812_roller_skin__fillet1_28_" (
+                    prepend apiSchemas = ["IsaacLinkAPI"]
+                )
+                {
+                }
+
+                over "tn__812_roller_skin__fillet1_25_" (
+                    prepend apiSchemas = ["IsaacLinkAPI"]
+                )
+                {
+                }
+            }
+
+            over "hub_half__fillet141" (
+                prepend apiSchemas = ["IsaacLinkAPI"]
+            )
+            {
+                over "tn__812_roller_skin__fillet1_4_" (
+                    prepend apiSchemas = ["IsaacLinkAPI"]
+                )
+                {
+                }
+
+                over "tn__812_roller_skin__fillet1_" (
+                    prepend apiSchemas = ["IsaacLinkAPI"]
+                )
+                {
+                }
+
+                over "tn__812_roller_skin__fillet1_11_" (
+                    prepend apiSchemas = ["IsaacLinkAPI"]
+                )
+                {
+                }
+
+                over "tn__812_roller_skin__fillet1_6_" (
+                    prepend apiSchemas = ["IsaacLinkAPI"]
+                )
+                {
+                }
+
+                over "tn__812_roller_skin__fillet1_10_" (
+                    prepend apiSchemas = ["IsaacLinkAPI"]
+                )
+                {
+                }
+
+                over "tn__812_roller_skin__fillet1_9_" (
+                    prepend apiSchemas = ["IsaacLinkAPI"]
+                )
+                {
+                }
+
+                over "tn__812_roller_skin__fillet1_3_" (
+                    prepend apiSchemas = ["IsaacLinkAPI"]
+                )
+                {
+                }
+
+                over "tn__812_roller_skin__fillet1_2_" (
+                    prepend apiSchemas = ["IsaacLinkAPI"]
+                )
+                {
+                }
+
+                over "tn__812_roller_skin__fillet1_5_" (
+                    prepend apiSchemas = ["IsaacLinkAPI"]
+                )
+                {
+                }
+
+                over "tn__812_roller_skin__fillet1_8_" (
+                    prepend apiSchemas = ["IsaacLinkAPI"]
+                )
+                {
+                }
+
+                over "tn__812_roller_skin__fillet1_7_" (
+                    prepend apiSchemas = ["IsaacLinkAPI"]
+                )
+                {
+                }
+
+                over "tn__812_roller_skin__fillet1_1_" (
+                    prepend apiSchemas = ["IsaacLinkAPI"]
+                )
+                {
+                }
+            }
+
+            over "hub_half__fillet141_3" (
+                prepend apiSchemas = ["IsaacLinkAPI"]
+            )
+            {
+                over "tn__812_roller_skin__fillet1_23_" (
+                    prepend apiSchemas = ["IsaacLinkAPI"]
+                )
+                {
+                }
+
+                over "tn__812_roller_skin__fillet1_22_" (
+                    prepend apiSchemas = ["IsaacLinkAPI"]
+                )
+                {
+                }
+
+                over "tn__812_roller_skin__fillet1_13_" (
+                    prepend apiSchemas = ["IsaacLinkAPI"]
+                )
+                {
+                }
+
+                over "tn__812_roller_skin__fillet1_21_" (
+                    prepend apiSchemas = ["IsaacLinkAPI"]
+                )
+                {
+                }
+
+                over "tn__812_roller_skin__fillet1_12_" (
+                    prepend apiSchemas = ["IsaacLinkAPI"]
+                )
+                {
+                }
+
+                over "tn__812_roller_skin__fillet1_20_" (
+                    prepend apiSchemas = ["IsaacLinkAPI"]
+                )
+                {
+                }
+
+                over "tn__812_roller_skin__fillet1_19_" (
+                    prepend apiSchemas = ["IsaacLinkAPI"]
+                )
+                {
+                }
+
+                over "tn__812_roller_skin__fillet1_17_" (
+                    prepend apiSchemas = ["IsaacLinkAPI"]
+                )
+                {
+                }
+
+                over "tn__812_roller_skin__fillet1_15_" (
+                    prepend apiSchemas = ["IsaacLinkAPI"]
+                )
+                {
+                }
+
+                over "tn__812_roller_skin__fillet1_16_" (
+                    prepend apiSchemas = ["IsaacLinkAPI"]
+                )
+                {
+                }
+
+                over "tn__812_roller_skin__fillet1_14_" (
+                    prepend apiSchemas = ["IsaacLinkAPI"]
+                )
+                {
+                }
+
+                over "tn__812_roller_skin__fillet1_18_" (
+                    prepend apiSchemas = ["IsaacLinkAPI"]
+                )
+                {
+                }
+            }
+        }
+    }
+}
+

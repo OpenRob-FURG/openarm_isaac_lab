@@ -1,0 +1,1248 @@
+#usda 1.0
+(
+    customLayerData = {
+        string creator = "URDF USD Converter v0.1.0"
+    }
+    defaultPrim = "momo_openrob"
+    doc = """Generated from Composed Stage of root layer /tmp/tmplddu1gkj/momo_openrob.usdc
+
+
+Generated from Composed Stage of root layer /workspaces/openarm_isaac_lab/source/openarm/openarm/tasks/manager_based/openarm_manipulation/usds/momo_openrob/urdf/usdex/momo_openrob.usdc
+
+
+Generated from Composed Stage of root layer /workspaces/openarm_isaac_lab/source/openarm/openarm/tasks/manager_based/openarm_manipulation/usds/momo_openrob/urdf/temp/momo_openrob.usd
+
+
+Generated from Composed Stage of root layer /workspaces/openarm_isaac_lab/source/openarm/openarm/tasks/manager_based/openarm_manipulation/usds/momo_openrob/urdf/momo_openrob/payloads/base.usd
+"""
+    kilogramsPerUnit = 1
+    metersPerUnit = 1
+    upAxis = "Z"
+)
+
+over "momo_openrob"
+{
+    over "Geometry"
+    {
+        over "root" (
+            prepend apiSchemas = ["PhysicsRigidBodyAPI", "PhysicsArticulationRootAPI", "NewtonArticulationRootAPI", "PhysicsMassAPI"]
+        )
+        {
+            bool newton:selfCollisionEnabled = 0
+            point3f physics:centerOfMass = (-5.28488e-17, -0.0524957, -0.193714)
+            float3 physics:diagonalInertia = (1.6115268, 3.43599, 3.6382833)
+            float physics:mass = 61.4018
+            quatf physics:principalAxes = (0.018142262, 0.706874, 0.706874, 0.018142262)
+
+            over "hub_half__fillet141_7" (
+                prepend apiSchemas = ["PhysicsRigidBodyAPI", "PhysicsMassAPI"]
+            )
+            {
+                point3f physics:centerOfMass = (0.04445, 0.0000142769, 0.00000382549)
+                float3 physics:diagonalInertia = (0.000001118375, 0.0000011187449, 0.00000144151)
+                float physics:mass = 0.000474042
+                quatf physics:principalAxes = (0.09231323, 0.70118594, -0.092279375, 0.70092875)
+
+                over "tn__812_roller_skin__fillet1_40_" (
+                    prepend apiSchemas = ["PhysicsRigidBodyAPI", "PhysicsMassAPI"]
+                )
+                {
+                    point3f physics:centerOfMass = (0.037423, -1.63855e-8, 5.64933e-18)
+                    float3 physics:diagonalInertia = (3.77385e-9, 1.27613e-8, 1.27613e-8)
+                    float physics:mass = 0.0000228874
+                    quatf physics:principalAxes = (1, -0, -0, 4.527109e-7)
+                }
+
+                over "tn__812_roller_skin__fillet1_36_" (
+                    prepend apiSchemas = ["PhysicsRigidBodyAPI", "PhysicsMassAPI"]
+                )
+                {
+                    point3f physics:centerOfMass = (0.037423, -1.63855e-8, 2.89282e-18)
+                    float3 physics:diagonalInertia = (3.77385e-9, 1.27613e-8, 1.27613e-8)
+                    float physics:mass = 0.0000228874
+                    quatf physics:principalAxes = (1, -0, -0, 4.527109e-7)
+                }
+
+                over "tn__812_roller_skin__fillet1_37_" (
+                    prepend apiSchemas = ["PhysicsRigidBodyAPI", "PhysicsMassAPI"]
+                )
+                {
+                    point3f physics:centerOfMass = (0.037423, -1.63855e-8, 5.64933e-18)
+                    float3 physics:diagonalInertia = (3.77385e-9, 1.27613e-8, 1.27613e-8)
+                    float physics:mass = 0.0000228874
+                    quatf physics:principalAxes = (1, -0, -0, 4.527109e-7)
+                }
+
+                over "tn__812_roller_skin__fillet1_47_" (
+                    prepend apiSchemas = ["PhysicsRigidBodyAPI", "PhysicsMassAPI"]
+                )
+                {
+                    point3f physics:centerOfMass = (0.037423, -1.63855e-8, 2.89282e-18)
+                    float3 physics:diagonalInertia = (3.77385e-9, 1.27613e-8, 1.27613e-8)
+                    float physics:mass = 0.0000228874
+                    quatf physics:principalAxes = (1, -0, -0, 4.527109e-7)
+                }
+
+                over "tn__812_roller_skin__fillet1_45_" (
+                    prepend apiSchemas = ["PhysicsRigidBodyAPI", "PhysicsMassAPI"]
+                )
+                {
+                    point3f physics:centerOfMass = (0.037423, -1.63855e-8, 2.89282e-18)
+                    float3 physics:diagonalInertia = (3.77385e-9, 1.27613e-8, 1.27613e-8)
+                    float physics:mass = 0.0000228874
+                    quatf physics:principalAxes = (1, -0, -0, 4.527109e-7)
+                }
+
+                over "tn__812_roller_skin__fillet1_42_" (
+                    prepend apiSchemas = ["PhysicsRigidBodyAPI", "PhysicsMassAPI"]
+                )
+                {
+                    point3f physics:centerOfMass = (0.037423, -1.63855e-8, 2.89282e-18)
+                    float3 physics:diagonalInertia = (3.77385e-9, 1.27613e-8, 1.27613e-8)
+                    float physics:mass = 0.0000228874
+                    quatf physics:principalAxes = (1, -0, -0, 4.527109e-7)
+                }
+
+                over "tn__812_roller_skin__fillet1_46_" (
+                    prepend apiSchemas = ["PhysicsRigidBodyAPI", "PhysicsMassAPI"]
+                )
+                {
+                    point3f physics:centerOfMass = (0.037423, -1.63855e-8, 2.89282e-18)
+                    float3 physics:diagonalInertia = (3.77385e-9, 1.27613e-8, 1.27613e-8)
+                    float physics:mass = 0.0000228874
+                    quatf physics:principalAxes = (1, -0, -0, 4.527109e-7)
+                }
+
+                over "tn__812_roller_skin__fillet1_43_" (
+                    prepend apiSchemas = ["PhysicsRigidBodyAPI", "PhysicsMassAPI"]
+                )
+                {
+                    point3f physics:centerOfMass = (0.037423, -1.63855e-8, 2.89282e-18)
+                    float3 physics:diagonalInertia = (3.77385e-9, 1.27613e-8, 1.27613e-8)
+                    float physics:mass = 0.0000228874
+                    quatf physics:principalAxes = (1, -0, -0, 4.527109e-7)
+                }
+
+                over "tn__812_roller_skin__fillet1_38_" (
+                    prepend apiSchemas = ["PhysicsRigidBodyAPI", "PhysicsMassAPI"]
+                )
+                {
+                    point3f physics:centerOfMass = (0.037423, -1.63855e-8, 2.89282e-18)
+                    float3 physics:diagonalInertia = (3.77385e-9, 1.27613e-8, 1.27613e-8)
+                    float physics:mass = 0.0000228874
+                    quatf physics:principalAxes = (1, -0, -0, 4.527109e-7)
+                }
+
+                over "tn__812_roller_skin__fillet1_39_" (
+                    prepend apiSchemas = ["PhysicsRigidBodyAPI", "PhysicsMassAPI"]
+                )
+                {
+                    point3f physics:centerOfMass = (0.037423, -1.63855e-8, 2.89282e-18)
+                    float3 physics:diagonalInertia = (3.77385e-9, 1.27613e-8, 1.27613e-8)
+                    float physics:mass = 0.0000228874
+                    quatf physics:principalAxes = (1, -0, -0, 4.527109e-7)
+                }
+
+                over "tn__812_roller_skin__fillet1_44_" (
+                    prepend apiSchemas = ["PhysicsRigidBodyAPI", "PhysicsMassAPI"]
+                )
+                {
+                    point3f physics:centerOfMass = (0.0372137, -1.63855e-8, 6.23288e-18)
+                    float3 physics:diagonalInertia = (3.77385e-9, 1.27613e-8, 1.27613e-8)
+                    float physics:mass = 0.0000228874
+                    quatf physics:principalAxes = (1, -0, -0, 4.527109e-7)
+                }
+
+                over "tn__812_roller_skin__fillet1_41_" (
+                    prepend apiSchemas = ["PhysicsRigidBodyAPI", "PhysicsMassAPI"]
+                )
+                {
+                    point3f physics:centerOfMass = (0.037423, -1.63855e-8, 5.64933e-18)
+                    float3 physics:diagonalInertia = (3.77385e-9, 1.27613e-8, 1.27613e-8)
+                    float physics:mass = 0.0000228874
+                    quatf physics:principalAxes = (1, -0, -0, 4.527109e-7)
+                }
+            }
+
+            over "hub_half__fillet141_5" (
+                prepend apiSchemas = ["PhysicsRigidBodyAPI", "PhysicsMassAPI"]
+            )
+            {
+                point3f physics:centerOfMass = (0.04445, 0.0000143063, 0.00000383335)
+                float3 physics:diagonalInertia = (0.0000011183749, 0.000001118745, 0.00000144151)
+                float physics:mass = 0.000474041
+                quatf physics:principalAxes = (0.09231365, 0.70118576, -0.09227981, 0.70092875)
+
+                over "tn__812_roller_skin__fillet1_30_" (
+                    prepend apiSchemas = ["PhysicsRigidBodyAPI", "PhysicsMassAPI"]
+                )
+                {
+                    point3f physics:centerOfMass = (-0.0362369, -2.2423e-18, -1.63855e-8)
+                    float3 physics:diagonalInertia = (3.77385e-9, 1.27613e-8, 1.27613e-8)
+                    float physics:mass = 0.0000228874
+                    quatf physics:principalAxes = (-0.70710677, 0.70710677, -3.3747386e-7, 3.3753395e-7)
+                }
+
+                over "tn__812_roller_skin__fillet1_35_" (
+                    prepend apiSchemas = ["PhysicsRigidBodyAPI", "PhysicsMassAPI"]
+                )
+                {
+                    point3f physics:centerOfMass = (-0.0362369, -2.2423e-18, -1.63855e-8)
+                    float3 physics:diagonalInertia = (3.77385e-9, 1.27613e-8, 1.27613e-8)
+                    float physics:mass = 0.0000228874
+                    quatf physics:principalAxes = (-0.70710677, 0.70710677, -3.3747386e-7, 3.3753395e-7)
+                }
+
+                over "tn__812_roller_skin__fillet1_32_" (
+                    prepend apiSchemas = ["PhysicsRigidBodyAPI", "PhysicsMassAPI"]
+                )
+                {
+                    point3f physics:centerOfMass = (-0.0359829, -9.2123e-18, -1.63855e-8)
+                    float3 physics:diagonalInertia = (3.77385e-9, 1.27613e-8, 1.27613e-8)
+                    float physics:mass = 0.0000228874
+                    quatf physics:principalAxes = (-0.70710677, 0.70710677, -3.3747386e-7, 3.3753395e-7)
+                }
+
+                over "tn__812_roller_skin__fillet1_27_" (
+                    prepend apiSchemas = ["PhysicsRigidBodyAPI", "PhysicsMassAPI"]
+                )
+                {
+                    point3f physics:centerOfMass = (-0.0362369, -2.2423e-18, -1.63855e-8)
+                    float3 physics:diagonalInertia = (3.77385e-9, 1.27613e-8, 1.27613e-8)
+                    float physics:mass = 0.0000228874
+                    quatf physics:principalAxes = (-0.70710677, 0.70710677, -3.3747386e-7, 3.3753395e-7)
+                }
+
+                over "tn__812_roller_skin__fillet1_34_" (
+                    prepend apiSchemas = ["PhysicsRigidBodyAPI", "PhysicsMassAPI"]
+                )
+                {
+                    point3f physics:centerOfMass = (-0.0362369, -2.2423e-18, -1.63855e-8)
+                    float3 physics:diagonalInertia = (3.77385e-9, 1.27613e-8, 1.27613e-8)
+                    float physics:mass = 0.0000228874
+                    quatf physics:principalAxes = (-0.70710677, 0.70710677, -3.3747386e-7, 3.3753395e-7)
+                }
+
+                over "tn__812_roller_skin__fillet1_31_" (
+                    prepend apiSchemas = ["PhysicsRigidBodyAPI", "PhysicsMassAPI"]
+                )
+                {
+                    point3f physics:centerOfMass = (-0.0362369, -2.2423e-18, -1.63855e-8)
+                    float3 physics:diagonalInertia = (3.77385e-9, 1.27613e-8, 1.27613e-8)
+                    float physics:mass = 0.0000228874
+                    quatf physics:principalAxes = (-0.70710677, 0.70710677, -3.3747386e-7, 3.3753395e-7)
+                }
+
+                over "tn__812_roller_skin__fillet1_33_" (
+                    prepend apiSchemas = ["PhysicsRigidBodyAPI", "PhysicsMassAPI"]
+                )
+                {
+                    point3f physics:centerOfMass = (-0.0362369, -2.2423e-18, -1.63855e-8)
+                    float3 physics:diagonalInertia = (3.77385e-9, 1.27613e-8, 1.27613e-8)
+                    float physics:mass = 0.0000228874
+                    quatf physics:principalAxes = (-0.70710677, 0.70710677, -3.3747386e-7, 3.3753395e-7)
+                }
+
+                over "tn__812_roller_skin__fillet1_24_" (
+                    prepend apiSchemas = ["PhysicsRigidBodyAPI", "PhysicsMassAPI"]
+                )
+                {
+                    point3f physics:centerOfMass = (-0.0362369, -2.2423e-18, -1.63855e-8)
+                    float3 physics:diagonalInertia = (3.77385e-9, 1.27613e-8, 1.27613e-8)
+                    float physics:mass = 0.0000228874
+                    quatf physics:principalAxes = (-0.70710677, 0.70710677, -3.3747386e-7, 3.3753395e-7)
+                }
+
+                over "tn__812_roller_skin__fillet1_29_" (
+                    prepend apiSchemas = ["PhysicsRigidBodyAPI", "PhysicsMassAPI"]
+                )
+                {
+                    point3f physics:centerOfMass = (-0.0362369, -2.2423e-18, -1.63855e-8)
+                    float3 physics:diagonalInertia = (3.77385e-9, 1.27613e-8, 1.27613e-8)
+                    float physics:mass = 0.0000228874
+                    quatf physics:principalAxes = (-0.70710677, 0.70710677, -3.3747386e-7, 3.3753395e-7)
+                }
+
+                over "tn__812_roller_skin__fillet1_26_" (
+                    prepend apiSchemas = ["PhysicsRigidBodyAPI", "PhysicsMassAPI"]
+                )
+                {
+                    point3f physics:centerOfMass = (-0.0362369, -2.2423e-18, -1.63855e-8)
+                    float3 physics:diagonalInertia = (3.77385e-9, 1.27613e-8, 1.27613e-8)
+                    float physics:mass = 0.0000228874
+                    quatf physics:principalAxes = (-0.70710677, 0.70710677, -3.3747386e-7, 3.3753395e-7)
+                }
+
+                over "tn__812_roller_skin__fillet1_28_" (
+                    prepend apiSchemas = ["PhysicsRigidBodyAPI", "PhysicsMassAPI"]
+                )
+                {
+                    point3f physics:centerOfMass = (-0.0362369, -2.2423e-18, -1.63855e-8)
+                    float3 physics:diagonalInertia = (3.77385e-9, 1.27613e-8, 1.27613e-8)
+                    float physics:mass = 0.0000228874
+                    quatf physics:principalAxes = (-0.70710677, 0.70710677, -3.3747386e-7, 3.3753395e-7)
+                }
+
+                over "tn__812_roller_skin__fillet1_25_" (
+                    prepend apiSchemas = ["PhysicsRigidBodyAPI", "PhysicsMassAPI"]
+                )
+                {
+                    point3f physics:centerOfMass = (-0.0362369, -2.2423e-18, -1.63855e-8)
+                    float3 physics:diagonalInertia = (3.77385e-9, 1.27613e-8, 1.27613e-8)
+                    float physics:mass = 0.0000228874
+                    quatf physics:principalAxes = (-0.70710677, 0.70710677, -3.3747386e-7, 3.3753395e-7)
+                }
+            }
+
+            over "hub_half__fillet141" (
+                prepend apiSchemas = ["PhysicsRigidBodyAPI", "PhysicsMassAPI"]
+            )
+            {
+                point3f physics:centerOfMass = (0.04445, 0.0000143063, 0.00000383335)
+                float3 physics:diagonalInertia = (0.0000011183749, 0.000001118745, 0.00000144151)
+                float physics:mass = 0.000474041
+                quatf physics:principalAxes = (0.09231365, 0.70118576, -0.09227981, 0.70092875)
+
+                over "tn__812_roller_skin__fillet1_4_" (
+                    prepend apiSchemas = ["PhysicsRigidBodyAPI", "PhysicsMassAPI"]
+                )
+                {
+                    point3f physics:centerOfMass = (-0.0362369, -2.2423e-18, -1.63855e-8)
+                    float3 physics:diagonalInertia = (3.77385e-9, 1.27613e-8, 1.27613e-8)
+                    float physics:mass = 0.0000228874
+                    quatf physics:principalAxes = (-0.70710677, 0.70710677, -3.3747386e-7, 3.3753395e-7)
+                }
+
+                over "tn__812_roller_skin__fillet1_" (
+                    prepend apiSchemas = ["PhysicsRigidBodyAPI", "PhysicsMassAPI"]
+                )
+                {
+                    point3f physics:centerOfMass = (-0.0362369, -2.2423e-18, -1.63855e-8)
+                    float3 physics:diagonalInertia = (3.77385e-9, 1.27613e-8, 1.27613e-8)
+                    float physics:mass = 0.0000228874
+                    quatf physics:principalAxes = (-0.70710677, 0.70710677, -3.3747386e-7, 3.3753395e-7)
+                }
+
+                over "tn__812_roller_skin__fillet1_11_" (
+                    prepend apiSchemas = ["PhysicsRigidBodyAPI", "PhysicsMassAPI"]
+                )
+                {
+                    point3f physics:centerOfMass = (-0.0359829, -9.2123e-18, -1.63855e-8)
+                    float3 physics:diagonalInertia = (3.77385e-9, 1.27613e-8, 1.27613e-8)
+                    float physics:mass = 0.0000228874
+                    quatf physics:principalAxes = (-0.70710677, 0.70710677, -3.3747386e-7, 3.3753395e-7)
+                }
+
+                over "tn__812_roller_skin__fillet1_6_" (
+                    prepend apiSchemas = ["PhysicsRigidBodyAPI", "PhysicsMassAPI"]
+                )
+                {
+                    point3f physics:centerOfMass = (-0.0362369, -2.2423e-18, -1.63855e-8)
+                    float3 physics:diagonalInertia = (3.77385e-9, 1.27613e-8, 1.27613e-8)
+                    float physics:mass = 0.0000228874
+                    quatf physics:principalAxes = (-0.70710677, 0.70710677, -3.3747386e-7, 3.3753395e-7)
+                }
+
+                over "tn__812_roller_skin__fillet1_10_" (
+                    prepend apiSchemas = ["PhysicsRigidBodyAPI", "PhysicsMassAPI"]
+                )
+                {
+                    point3f physics:centerOfMass = (-0.0362369, -2.2423e-18, -1.63855e-8)
+                    float3 physics:diagonalInertia = (3.77385e-9, 1.27613e-8, 1.27613e-8)
+                    float physics:mass = 0.0000228874
+                    quatf physics:principalAxes = (-0.70710677, 0.70710677, -3.3747386e-7, 3.3753395e-7)
+                }
+
+                over "tn__812_roller_skin__fillet1_9_" (
+                    prepend apiSchemas = ["PhysicsRigidBodyAPI", "PhysicsMassAPI"]
+                )
+                {
+                    point3f physics:centerOfMass = (-0.0362369, -2.2423e-18, -1.63855e-8)
+                    float3 physics:diagonalInertia = (3.77385e-9, 1.27613e-8, 1.27613e-8)
+                    float physics:mass = 0.0000228874
+                    quatf physics:principalAxes = (-0.70710677, 0.70710677, -3.3747386e-7, 3.3753395e-7)
+                }
+
+                over "tn__812_roller_skin__fillet1_3_" (
+                    prepend apiSchemas = ["PhysicsRigidBodyAPI", "PhysicsMassAPI"]
+                )
+                {
+                    point3f physics:centerOfMass = (-0.0362369, -2.2423e-18, -1.63855e-8)
+                    float3 physics:diagonalInertia = (3.77385e-9, 1.27613e-8, 1.27613e-8)
+                    float physics:mass = 0.0000228874
+                    quatf physics:principalAxes = (-0.70710677, 0.70710677, -3.3747386e-7, 3.3753395e-7)
+                }
+
+                over "tn__812_roller_skin__fillet1_2_" (
+                    prepend apiSchemas = ["PhysicsRigidBodyAPI", "PhysicsMassAPI"]
+                )
+                {
+                    point3f physics:centerOfMass = (-0.0362369, -2.2423e-18, -1.63855e-8)
+                    float3 physics:diagonalInertia = (3.77385e-9, 1.27613e-8, 1.27613e-8)
+                    float physics:mass = 0.0000228874
+                    quatf physics:principalAxes = (-0.70710677, 0.70710677, -3.3747386e-7, 3.3753395e-7)
+                }
+
+                over "tn__812_roller_skin__fillet1_5_" (
+                    prepend apiSchemas = ["PhysicsRigidBodyAPI", "PhysicsMassAPI"]
+                )
+                {
+                    point3f physics:centerOfMass = (-0.0362369, -2.2423e-18, -1.63855e-8)
+                    float3 physics:diagonalInertia = (3.77385e-9, 1.27613e-8, 1.27613e-8)
+                    float physics:mass = 0.0000228874
+                    quatf physics:principalAxes = (-0.70710677, 0.70710677, -3.3747386e-7, 3.3753395e-7)
+                }
+
+                over "tn__812_roller_skin__fillet1_8_" (
+                    prepend apiSchemas = ["PhysicsRigidBodyAPI", "PhysicsMassAPI"]
+                )
+                {
+                    point3f physics:centerOfMass = (-0.0362369, -2.2423e-18, -1.63855e-8)
+                    float3 physics:diagonalInertia = (3.77385e-9, 1.27613e-8, 1.27613e-8)
+                    float physics:mass = 0.0000228874
+                    quatf physics:principalAxes = (-0.70710677, 0.70710677, -3.3747386e-7, 3.3753395e-7)
+                }
+
+                over "tn__812_roller_skin__fillet1_7_" (
+                    prepend apiSchemas = ["PhysicsRigidBodyAPI", "PhysicsMassAPI"]
+                )
+                {
+                    point3f physics:centerOfMass = (-0.0362369, -2.2423e-18, -1.63855e-8)
+                    float3 physics:diagonalInertia = (3.77385e-9, 1.27613e-8, 1.27613e-8)
+                    float physics:mass = 0.0000228874
+                    quatf physics:principalAxes = (-0.70710677, 0.70710677, -3.3747386e-7, 3.3753395e-7)
+                }
+
+                over "tn__812_roller_skin__fillet1_1_" (
+                    prepend apiSchemas = ["PhysicsRigidBodyAPI", "PhysicsMassAPI"]
+                )
+                {
+                    point3f physics:centerOfMass = (-0.0362369, -2.2423e-18, -1.63855e-8)
+                    float3 physics:diagonalInertia = (3.77385e-9, 1.27613e-8, 1.27613e-8)
+                    float physics:mass = 0.0000228874
+                    quatf physics:principalAxes = (-0.70710677, 0.70710677, -3.3747386e-7, 3.3753395e-7)
+                }
+            }
+
+            over "hub_half__fillet141_3" (
+                prepend apiSchemas = ["PhysicsRigidBodyAPI", "PhysicsMassAPI"]
+            )
+            {
+                point3f physics:centerOfMass = (0.04445, 0.0000142769, 0.00000382549)
+                float3 physics:diagonalInertia = (0.000001118375, 0.0000011187449, 0.00000144151)
+                float physics:mass = 0.000474042
+                quatf physics:principalAxes = (0.09231323, 0.70118594, -0.092279375, 0.70092875)
+
+                over "tn__812_roller_skin__fillet1_23_" (
+                    prepend apiSchemas = ["PhysicsRigidBodyAPI", "PhysicsMassAPI"]
+                )
+                {
+                    point3f physics:centerOfMass = (0.037423, -1.63855e-8, 2.89282e-18)
+                    float3 physics:diagonalInertia = (3.77385e-9, 1.27613e-8, 1.27613e-8)
+                    float physics:mass = 0.0000228874
+                    quatf physics:principalAxes = (1, -0, -0, 4.527109e-7)
+                }
+
+                over "tn__812_roller_skin__fillet1_22_" (
+                    prepend apiSchemas = ["PhysicsRigidBodyAPI", "PhysicsMassAPI"]
+                )
+                {
+                    point3f physics:centerOfMass = (0.037423, -1.63855e-8, 5.64933e-18)
+                    float3 physics:diagonalInertia = (3.77385e-9, 1.27613e-8, 1.27613e-8)
+                    float physics:mass = 0.0000228874
+                    quatf physics:principalAxes = (1, -0, -0, 4.527109e-7)
+                }
+
+                over "tn__812_roller_skin__fillet1_13_" (
+                    prepend apiSchemas = ["PhysicsRigidBodyAPI", "PhysicsMassAPI"]
+                )
+                {
+                    point3f physics:centerOfMass = (0.037423, -1.63855e-8, 2.89282e-18)
+                    float3 physics:diagonalInertia = (3.77385e-9, 1.27613e-8, 1.27613e-8)
+                    float physics:mass = 0.0000228874
+                    quatf physics:principalAxes = (1, -0, -0, 4.527109e-7)
+                }
+
+                over "tn__812_roller_skin__fillet1_21_" (
+                    prepend apiSchemas = ["PhysicsRigidBodyAPI", "PhysicsMassAPI"]
+                )
+                {
+                    point3f physics:centerOfMass = (0.037423, -1.63855e-8, 5.64933e-18)
+                    float3 physics:diagonalInertia = (3.77385e-9, 1.27613e-8, 1.27613e-8)
+                    float physics:mass = 0.0000228874
+                    quatf physics:principalAxes = (1, -0, -0, 4.527109e-7)
+                }
+
+                over "tn__812_roller_skin__fillet1_12_" (
+                    prepend apiSchemas = ["PhysicsRigidBodyAPI", "PhysicsMassAPI"]
+                )
+                {
+                    point3f physics:centerOfMass = (0.037423, -1.63855e-8, 2.89282e-18)
+                    float3 physics:diagonalInertia = (3.77385e-9, 1.27613e-8, 1.27613e-8)
+                    float physics:mass = 0.0000228874
+                    quatf physics:principalAxes = (1, -0, -0, 4.527109e-7)
+                }
+
+                over "tn__812_roller_skin__fillet1_20_" (
+                    prepend apiSchemas = ["PhysicsRigidBodyAPI", "PhysicsMassAPI"]
+                )
+                {
+                    point3f physics:centerOfMass = (0.037423, -1.63855e-8, 2.89282e-18)
+                    float3 physics:diagonalInertia = (3.77385e-9, 1.27613e-8, 1.27613e-8)
+                    float physics:mass = 0.0000228874
+                    quatf physics:principalAxes = (1, -0, -0, 4.527109e-7)
+                }
+
+                over "tn__812_roller_skin__fillet1_19_" (
+                    prepend apiSchemas = ["PhysicsRigidBodyAPI", "PhysicsMassAPI"]
+                )
+                {
+                    point3f physics:centerOfMass = (0.037423, -1.63855e-8, 2.89282e-18)
+                    float3 physics:diagonalInertia = (3.77385e-9, 1.27613e-8, 1.27613e-8)
+                    float physics:mass = 0.0000228874
+                    quatf physics:principalAxes = (1, -0, -0, 4.527109e-7)
+                }
+
+                over "tn__812_roller_skin__fillet1_17_" (
+                    prepend apiSchemas = ["PhysicsRigidBodyAPI", "PhysicsMassAPI"]
+                )
+                {
+                    point3f physics:centerOfMass = (0.037423, -1.63855e-8, 2.89282e-18)
+                    float3 physics:diagonalInertia = (3.77385e-9, 1.27613e-8, 1.27613e-8)
+                    float physics:mass = 0.0000228874
+                    quatf physics:principalAxes = (1, -0, -0, 4.527109e-7)
+                }
+
+                over "tn__812_roller_skin__fillet1_15_" (
+                    prepend apiSchemas = ["PhysicsRigidBodyAPI", "PhysicsMassAPI"]
+                )
+                {
+                    point3f physics:centerOfMass = (0.037423, -1.63855e-8, 2.89282e-18)
+                    float3 physics:diagonalInertia = (3.77385e-9, 1.27613e-8, 1.27613e-8)
+                    float physics:mass = 0.0000228874
+                    quatf physics:principalAxes = (1, -0, -0, 4.527109e-7)
+                }
+
+                over "tn__812_roller_skin__fillet1_16_" (
+                    prepend apiSchemas = ["PhysicsRigidBodyAPI", "PhysicsMassAPI"]
+                )
+                {
+                    point3f physics:centerOfMass = (0.037423, -1.63855e-8, 2.89282e-18)
+                    float3 physics:diagonalInertia = (3.77385e-9, 1.27613e-8, 1.27613e-8)
+                    float physics:mass = 0.0000228874
+                    quatf physics:principalAxes = (1, -0, -0, 4.527109e-7)
+                }
+
+                over "tn__812_roller_skin__fillet1_14_" (
+                    prepend apiSchemas = ["PhysicsRigidBodyAPI", "PhysicsMassAPI"]
+                )
+                {
+                    point3f physics:centerOfMass = (0.0372137, -1.63855e-8, 6.23288e-18)
+                    float3 physics:diagonalInertia = (3.77385e-9, 1.27613e-8, 1.27613e-8)
+                    float physics:mass = 0.0000228874
+                    quatf physics:principalAxes = (1, -0, -0, 4.527109e-7)
+                }
+
+                over "tn__812_roller_skin__fillet1_18_" (
+                    prepend apiSchemas = ["PhysicsRigidBodyAPI", "PhysicsMassAPI"]
+                )
+                {
+                    point3f physics:centerOfMass = (0.037423, -1.63855e-8, 5.64933e-18)
+                    float3 physics:diagonalInertia = (3.77385e-9, 1.27613e-8, 1.27613e-8)
+                    float physics:mass = 0.0000228874
+                    quatf physics:principalAxes = (1, -0, -0, 4.527109e-7)
+                }
+            }
+        }
+    }
+
+    over "Physics"
+    {
+        def PhysicsRevoluteJoint "revolute_1" (
+            prepend apiSchemas = ["PhysicsDriveAPI:angular", "PhysicsJointStateAPI:angular"]
+        )
+        {
+            uniform token physics:axis = "X"
+            custom rel physics:body0 = </momo_openrob/Geometry/root/hub_half__fillet141_3>
+            custom rel physics:body1 = </momo_openrob/Geometry/root/hub_half__fillet141_3/tn__812_roller_skin__fillet1_23_>
+            point3f physics:localPos0 = (0.0175091, 0.0269415, 0.085725)
+            point3f physics:localPos1 = (-0.03683, 2.4923952e-12, -7.548129e-14)
+            quatf physics:localRot0 = (0.0024920744, -0.3826753, -0.92385995, 0.0060164006)
+            quatf physics:localRot1 = (-2.1097013e-13, 5.1439922e-11, 1, -7.624318e-13)
+        }
+
+        def PhysicsRevoluteJoint "revolute_10" (
+            prepend apiSchemas = ["PhysicsDriveAPI:angular", "PhysicsJointStateAPI:angular"]
+        )
+        {
+            uniform token physics:axis = "X"
+            custom rel physics:body0 = </momo_openrob/Geometry/root/hub_half__fillet141_3>
+            custom rel physics:body1 = </momo_openrob/Geometry/root/hub_half__fillet141_3/tn__812_roller_skin__fillet1_22_>
+            point3f physics:localPos0 = (0.0175091, 0.085725, -0.0269415)
+            point3f physics:localPos1 = (-0.03683, 2.557593e-12, -5.2846616e-13)
+            quatf physics:localRot0 = (-0.26883018, -0.27235433, -0.64901364, 0.65752167)
+            quatf physics:localRot1 = (3.556759e-11, 3.7820823e-12, 1, 1.0631732e-11)
+        }
+
+        def PhysicsRevoluteJoint "revolute_10_1" (
+            prepend apiSchemas = ["PhysicsDriveAPI:angular", "PhysicsJointStateAPI:angular"]
+        )
+        {
+            uniform token physics:axis = "X"
+            custom rel physics:body0 = </momo_openrob/Geometry/root/hub_half__fillet141>
+            custom rel physics:body1 = </momo_openrob/Geometry/root/hub_half__fillet141/tn__812_roller_skin__fillet1_4_>
+            point3f physics:localPos0 = (0.0175091, 0.0269415, -0.085725)
+            point3f physics:localPos1 = (0.03683, 6.8722805e-13, 4.622136e-13)
+            quatf physics:localRot0 = (0.23609482, -0.30117676, -0.7271004, 0.56997967)
+            quatf physics:localRot1 = (1, 3.832175e-11, -8.45439e-12, -2.4200322e-11)
+        }
+
+        def PhysicsRevoluteJoint "revolute_10_2" (
+            prepend apiSchemas = ["PhysicsDriveAPI:angular", "PhysicsJointStateAPI:angular"]
+        )
+        {
+            uniform token physics:axis = "X"
+            custom rel physics:body0 = </momo_openrob/Geometry/root/hub_half__fillet141_5>
+            custom rel physics:body1 = </momo_openrob/Geometry/root/hub_half__fillet141_5/tn__812_roller_skin__fillet1_30_>
+            point3f physics:localPos0 = (0.0713909, -0.0195305, 0.0877108)
+            point3f physics:localPos1 = (0.03683, 1.4799134e-12, 2.692055e-12)
+            quatf physics:localRot0 = (0.5548038, 0.7387464, 0.150099, 0.35201815)
+            quatf physics:localRot1 = (1, 2.9681285e-11, 9.3603875e-12, 4.1791404e-11)
+        }
+
+        def PhysicsRevoluteJoint "revolute_10_3" (
+            prepend apiSchemas = ["PhysicsDriveAPI:angular", "PhysicsJointStateAPI:angular"]
+        )
+        {
+            uniform token physics:axis = "X"
+            custom rel physics:body0 = </momo_openrob/Geometry/root/hub_half__fillet141_7>
+            custom rel physics:body1 = </momo_openrob/Geometry/root/hub_half__fillet141_7/tn__812_roller_skin__fillet1_40_>
+            point3f physics:localPos0 = (0.0175091, 0.085725, -0.0269415)
+            point3f physics:localPos1 = (-0.03683, 2.5576208e-12, -5.284384e-13)
+            quatf physics:localRot0 = (0.26883018, 0.27235433, 0.64901364, -0.65752167)
+            quatf physics:localRot1 = (3.556755e-11, 3.7821066e-12, 1, 1.0631801e-11)
+        }
+
+        def PhysicsRevoluteJoint "revolute_11" (
+            prepend apiSchemas = ["PhysicsDriveAPI:angular", "PhysicsJointStateAPI:angular"]
+        )
+        {
+            uniform token physics:axis = "X"
+            custom rel physics:body0 = </momo_openrob/Geometry/root/hub_half__fillet141_3>
+            custom rel physics:body1 = </momo_openrob/Geometry/root/hub_half__fillet141_3/tn__812_roller_skin__fillet1_13_>
+            point3f physics:localPos0 = (0.0175091, 0.0877108, 0.0195305)
+            point3f physics:localPos1 = (-0.03683, -2.895184e-12, -6.676326e-13)
+            quatf physics:localRot0 = (-0.18917942, -0.3326527, -0.797078, 0.4671402)
+            quatf physics:localRot1 = (1.627859e-11, 5.283472e-12, 1, 5.3393335e-11)
+        }
+
+        def PhysicsRevoluteJoint "revolute_11_1" (
+            prepend apiSchemas = ["PhysicsDriveAPI:angular", "PhysicsJointStateAPI:angular"]
+        )
+        {
+            uniform token physics:axis = "X"
+            custom rel physics:body0 = </momo_openrob/Geometry/root/hub_half__fillet141>
+            custom rel physics:body1 = </momo_openrob/Geometry/root/hub_half__fillet141/tn__812_roller_skin__fillet1_>
+            point3f physics:localPos0 = (0.0175091, 0.0661945, -0.0607693)
+            point3f physics:localPos1 = (0.03683, -3.2583936e-12, -1.2310708e-12)
+            quatf physics:localRot0 = (0.30599797, -0.22980712, -0.8498482, 0.3623699)
+            quatf physics:localRot1 = (1, -1.8018483e-11, 1.6336488e-11, -2.8393711e-11)
+        }
+
+        def PhysicsRevoluteJoint "revolute_11_2" (
+            prepend apiSchemas = ["PhysicsDriveAPI:angular", "PhysicsJointStateAPI:angular"]
+        )
+        {
+            uniform token physics:axis = "X"
+            custom rel physics:body0 = </momo_openrob/Geometry/root/hub_half__fillet141_5>
+            custom rel physics:body1 = </momo_openrob/Geometry/root/hub_half__fillet141_5/tn__812_roller_skin__fillet1_35_>
+            point3f physics:localPos0 = (0.0713909, 0.0269415, 0.085725)
+            point3f physics:localPos1 = (0.03683, 1.772027e-12, -1.3807983e-12)
+            quatf physics:localRot0 = (0.72710186, 0.56997925, 0.23609309, 0.3011754)
+            quatf physics:localRot1 = (1, -3.0434058e-11, -1.6268722e-11, -3.116052e-11)
+        }
+
+        def PhysicsRevoluteJoint "revolute_11_3" (
+            prepend apiSchemas = ["PhysicsDriveAPI:angular", "PhysicsJointStateAPI:angular"]
+        )
+        {
+            uniform token physics:axis = "X"
+            custom rel physics:body0 = </momo_openrob/Geometry/root/hub_half__fillet141_7>
+            custom rel physics:body1 = </momo_openrob/Geometry/root/hub_half__fillet141_7/tn__812_roller_skin__fillet1_36_>
+            point3f physics:localPos0 = (0.0175091, 0.0877108, 0.0195305)
+            point3f physics:localPos1 = (-0.03683, -2.8951286e-12, -6.6753547e-13)
+            quatf physics:localRot0 = (0.18917942, 0.3326527, 0.797078, -0.4671402)
+            quatf physics:localRot1 = (1.6278562e-11, 5.283385e-12, 1, 5.339333e-11)
+        }
+
+        def PhysicsRevoluteJoint "revolute_12" (
+            prepend apiSchemas = ["PhysicsDriveAPI:angular", "PhysicsJointStateAPI:angular"]
+        )
+        {
+            uniform token physics:axis = "X"
+            custom rel physics:body0 = </momo_openrob/Geometry/root/hub_half__fillet141_3>
+            custom rel physics:body1 = </momo_openrob/Geometry/root/hub_half__fillet141_3/tn__812_roller_skin__fillet1_21_>
+            point3f physics:localPos0 = (0.0175091, 0.0661945, 0.0607693)
+            point3f physics:localPos1 = (-0.03683, -3.012035e-13, -5.511702e-13)
+            quatf physics:localRot0 = (-0.096636474, -0.37028074, -0.8908231, 0.24492389)
+            quatf physics:localRot1 = (-2.7406147e-11, -6.7427834e-11, 1, 4.7434223e-11)
+        }
+
+        def PhysicsRevoluteJoint "revolute_12_1" (
+            prepend apiSchemas = ["PhysicsDriveAPI:angular", "PhysicsJointStateAPI:angular"]
+        )
+        {
+            uniform token physics:axis = "X"
+            custom rel physics:body0 = </momo_openrob/Geometry/root/hub_half__fillet141>
+            custom rel physics:body1 = </momo_openrob/Geometry/root/hub_half__fillet141/tn__812_roller_skin__fillet1_11_>
+            point3f physics:localPos0 = (0.0175091, 0.0877108, -0.0195305)
+            point3f physics:localPos1 = (0.036576, 6.2411257e-12, 1.4399038e-12)
+            quatf physics:localRot0 = (0.35505003, -0.14277679, -0.91467863, 0.13006638)
+            quatf physics:localRot1 = (1, 2.4587048e-11, -2.8756539e-11, 5.1933464e-11)
+        }
+
+        def PhysicsRevoluteJoint "revolute_12_2" (
+            prepend apiSchemas = ["PhysicsDriveAPI:angular", "PhysicsJointStateAPI:angular"]
+        )
+        {
+            uniform token physics:axis = "X"
+            custom rel physics:body0 = </momo_openrob/Geometry/root/hub_half__fillet141_5>
+            custom rel physics:body1 = </momo_openrob/Geometry/root/hub_half__fillet141_5/tn__812_roller_skin__fillet1_32_>
+            point3f physics:localPos0 = (0.0713909, 0.0661945, 0.0607693)
+            point3f physics:localPos1 = (0.036576, -3.1519787e-12, 7.0196626e-13)
+            quatf physics:localRot0 = (0.84984803, 0.3623698, 0.3059982, 0.22980763)
+            quatf physics:localRot1 = (1, -1.057146e-11, 1.9315077e-11, 1.043679e-12)
+        }
+
+        def PhysicsRevoluteJoint "revolute_12_3" (
+            prepend apiSchemas = ["PhysicsDriveAPI:angular", "PhysicsJointStateAPI:angular"]
+        )
+        {
+            uniform token physics:axis = "X"
+            custom rel physics:body0 = </momo_openrob/Geometry/root/hub_half__fillet141_7>
+            custom rel physics:body1 = </momo_openrob/Geometry/root/hub_half__fillet141_7/tn__812_roller_skin__fillet1_37_>
+            point3f physics:localPos0 = (0.0175091, 0.0661945, 0.0607693)
+            point3f physics:localPos1 = (-0.03683, -3.0131453e-13, -5.510592e-13)
+            quatf physics:localRot0 = (-0.096636474, -0.37028074, -0.8908231, 0.24492389)
+            quatf physics:localRot1 = (-2.7406188e-11, -6.742777e-11, 1, 4.7434244e-11)
+        }
+
+        def PhysicsRevoluteJoint "revolute_1_1" (
+            prepend apiSchemas = ["PhysicsDriveAPI:angular", "PhysicsJointStateAPI:angular"]
+        )
+        {
+            uniform token physics:axis = "X"
+            custom rel physics:body0 = </momo_openrob/Geometry/root/hub_half__fillet141>
+            custom rel physics:body1 = </momo_openrob/Geometry/root/hub_half__fillet141/tn__812_roller_skin__fillet1_6_>
+            point3f physics:localPos0 = (0.0175091, 0.085725, 0.0269415)
+            point3f physics:localPos1 = (0.03683, 3.5938197e-12, -5.3859694e-12)
+            quatf physics:localRot0 = (0.37990642, -0.046018213, -0.9171751, -0.11110025)
+            quatf physics:localRot1 = (1, -3.7978412e-11, 4.623149e-11, -1.19134425e-11)
+        }
+
+        def PhysicsRevoluteJoint "revolute_1_2" (
+            prepend apiSchemas = ["PhysicsDriveAPI:angular", "PhysicsJointStateAPI:angular"]
+        )
+        {
+            uniform token physics:axis = "X"
+            custom rel physics:body0 = </momo_openrob/Geometry/root/hub_half__fillet141_5>
+            custom rel physics:body1 = </momo_openrob/Geometry/root/hub_half__fillet141_5/tn__812_roller_skin__fillet1_27_>
+            point3f physics:localPos0 = (0.0713909, 0.0877108, 0.0195305)
+            point3f physics:localPos1 = (0.03683, -1.3993806e-12, 6.614709e-13)
+            quatf physics:localRot0 = (0.9146782, 0.1300656, 0.3550504, 0.14277919)
+            quatf physics:localRot1 = (1, 3.036499e-11, 4.159037e-11, 5.2816224e-12)
+        }
+
+        def PhysicsRevoluteJoint "revolute_1_3" (
+            prepend apiSchemas = ["PhysicsDriveAPI:angular", "PhysicsJointStateAPI:angular"]
+        )
+        {
+            uniform token physics:axis = "X"
+            custom rel physics:body0 = </momo_openrob/Geometry/root>
+            custom rel physics:body1 = </momo_openrob/Geometry/root/hub_half__fillet141_7>
+            point3f physics:localPos0 = (0.2105, -0.2995, -0.335)
+            point3f physics:localPos1 = (0, 0, 0)
+            quatf physics:localRot0 = (-1.4317737e-17, -3.4541315e-17, -0.9237825, 0.38291755)
+            quatf physics:localRot1 = (-0, 0, -1, 0)
+        }
+
+        def PhysicsRevoluteJoint "revolute_1_4" (
+            prepend apiSchemas = ["PhysicsDriveAPI:angular", "PhysicsJointStateAPI:angular"]
+        )
+        {
+            uniform token physics:axis = "X"
+            custom rel physics:body0 = </momo_openrob/Geometry/root/hub_half__fillet141_7>
+            custom rel physics:body1 = </momo_openrob/Geometry/root/hub_half__fillet141_7/tn__812_roller_skin__fillet1_47_>
+            point3f physics:localPos0 = (0.0175091, 0.0269415, 0.085725)
+            point3f physics:localPos1 = (-0.03683, 2.492312e-12, -7.5495166e-14)
+            quatf physics:localRot0 = (0.0024920744, -0.3826753, -0.92385995, 0.0060164006)
+            quatf physics:localRot1 = (-2.1091462e-13, 5.143988e-11, 1, -7.624734e-13)
+        }
+
+        def PhysicsRevoluteJoint "revolute_2" (
+            prepend apiSchemas = ["PhysicsDriveAPI:angular", "PhysicsJointStateAPI:angular"]
+        )
+        {
+            uniform token physics:axis = "X"
+            custom rel physics:body0 = </momo_openrob/Geometry/root/hub_half__fillet141_3>
+            custom rel physics:body1 = </momo_openrob/Geometry/root/hub_half__fillet141_3/tn__812_roller_skin__fillet1_12_>
+            point3f physics:localPos0 = (0.0175091, -0.0195305, 0.0877108)
+            point3f physics:localPos1 = (-0.03683, -6.454115e-12, 1.1850798e-12)
+            quatf physics:localRot0 = (-0.101450875, 0.36899078, 0.89393747, 0.23330094)
+            quatf physics:localRot1 = (4.0307823e-11, -4.570483e-11, 1, -3.3406087e-11)
+        }
+
+        def PhysicsRevoluteJoint "revolute_2_1" (
+            prepend apiSchemas = ["PhysicsDriveAPI:angular", "PhysicsJointStateAPI:angular"]
+        )
+        {
+            uniform token physics:axis = "X"
+            custom rel physics:body0 = </momo_openrob/Geometry/root/hub_half__fillet141>
+            custom rel physics:body1 = </momo_openrob/Geometry/root/hub_half__fillet141/tn__812_roller_skin__fillet1_10_>
+            point3f physics:localPos0 = (0.0175091, 0.0607693, 0.0661945)
+            point3f physics:localPos1 = (0.03683, -3.734013e-12, -5.3290705e-15)
+            quatf physics:localRot0 = (0.3788712, 0.053873364, -0.857168, -0.34469873)
+            quatf physics:localRot1 = (1, -2.6874086e-11, -2.7277219e-11, -2.6674163e-11)
+        }
+
+        def PhysicsRevoluteJoint "revolute_2_2" (
+            prepend apiSchemas = ["PhysicsDriveAPI:angular", "PhysicsJointStateAPI:angular"]
+        )
+        {
+            uniform token physics:axis = "X"
+            custom rel physics:body0 = </momo_openrob/Geometry/root>
+            custom rel physics:body1 = </momo_openrob/Geometry/root/hub_half__fillet141_5>
+            point3f physics:localPos0 = (0.2105, 0.1615, -0.335)
+            point3f physics:localPos1 = (0, 0, 0)
+            quatf physics:localRot0 = (-1.665533e-17, -2.5003989e-17, -0.83226526, 0.5543776)
+            quatf physics:localRot1 = (-0, 0, -1, 0)
+        }
+
+        def PhysicsRevoluteJoint "revolute_2_3" (
+            prepend apiSchemas = ["PhysicsDriveAPI:angular", "PhysicsJointStateAPI:angular"]
+        )
+        {
+            uniform token physics:axis = "X"
+            custom rel physics:body0 = </momo_openrob/Geometry/root/hub_half__fillet141_5>
+            custom rel physics:body1 = </momo_openrob/Geometry/root/hub_half__fillet141_5/tn__812_roller_skin__fillet1_34_>
+            point3f physics:localPos0 = (0.0713909, 0.085725, -0.0269415)
+            point3f physics:localPos1 = (0.03683, 2.7916558e-12, 4.704126e-12)
+            quatf physics:localRot0 = (0.9171749, -0.11110228, 0.37990615, 0.04602006)
+            quatf physics:localRot1 = (1, -1.6088469e-11, -9.658372e-11, -2.892965e-11)
+        }
+
+        def PhysicsRevoluteJoint "revolute_2_4" (
+            prepend apiSchemas = ["PhysicsDriveAPI:angular", "PhysicsJointStateAPI:angular"]
+        )
+        {
+            uniform token physics:axis = "X"
+            custom rel physics:body0 = </momo_openrob/Geometry/root/hub_half__fillet141_7>
+            custom rel physics:body1 = </momo_openrob/Geometry/root/hub_half__fillet141_7/tn__812_roller_skin__fillet1_45_>
+            point3f physics:localPos0 = (0.0175091, -0.0195305, 0.0877108)
+            point3f physics:localPos1 = (-0.03683, -6.4540664e-12, 1.1851631e-12)
+            quatf physics:localRot0 = (0.101450875, -0.36899078, -0.89393747, -0.23330094)
+            quatf physics:localRot1 = (4.0307813e-11, -4.570481e-11, 1, -3.3406056e-11)
+        }
+
+        def PhysicsRevoluteJoint "revolute_3" (
+            prepend apiSchemas = ["PhysicsDriveAPI:angular", "PhysicsJointStateAPI:angular"]
+        )
+        {
+            uniform token physics:axis = "X"
+            custom rel physics:body0 = </momo_openrob/Geometry/root/hub_half__fillet141_3>
+            custom rel physics:body1 = </momo_openrob/Geometry/root/hub_half__fillet141_3/tn__812_roller_skin__fillet1_20_>
+            point3f physics:localPos0 = (0.0163866, -0.060208, 0.0671666)
+            point3f physics:localPos1 = (-0.03683, 1.4327428e-12, 1.0123291e-12)
+            quatf physics:localRot0 = (-0.80309427, -0.45671973, -0.19349572, 0.33016068)
+            quatf physics:localRot1 = (1, -8.7812146e-11, -1.3280058e-11, 7.507481e-12)
+        }
+
+        def PhysicsRevoluteJoint "revolute_3_1" (
+            prepend apiSchemas = ["PhysicsDriveAPI:angular", "PhysicsJointStateAPI:angular"]
+        )
+        {
+            uniform token physics:axis = "X"
+            custom rel physics:body0 = </momo_openrob/Geometry/root/hub_half__fillet141>
+            custom rel physics:body1 = </momo_openrob/Geometry/root/hub_half__fillet141/tn__812_roller_skin__fillet1_9_>
+            point3f physics:localPos0 = (0.0175091, 0.0195305, 0.0877108)
+            point3f physics:localPos1 = (0.03683, -9.103829e-15, 2.3328006e-12)
+            quatf physics:localRot0 = (-0.35201776, -0.1500985, 0.7387465, 0.554804)
+            quatf physics:localRot1 = (1, 2.722253e-12, -3.828211e-12, -3.599264e-11)
+        }
+
+        def PhysicsRevoluteJoint "revolute_3_2" (
+            prepend apiSchemas = ["PhysicsDriveAPI:angular", "PhysicsJointStateAPI:angular"]
+        )
+        {
+            uniform token physics:axis = "X"
+            custom rel physics:body0 = </momo_openrob/Geometry/root>
+            custom rel physics:body1 = </momo_openrob/Geometry/root/hub_half__fillet141>
+            point3f physics:localPos0 = (-0.2105, -0.2995, -0.335)
+            point3f physics:localPos1 = (0, 0, 0)
+            quatf physics:localRot0 = (0.9473897, -0.32008228, 4.2468352e-7, -0.0000012569919)
+            quatf physics:localRot1 = (-0, 0, -1, 0)
+        }
+
+        def PhysicsRevoluteJoint "revolute_3_3" (
+            prepend apiSchemas = ["PhysicsDriveAPI:angular", "PhysicsJointStateAPI:angular"]
+        )
+        {
+            uniform token physics:axis = "X"
+            custom rel physics:body0 = </momo_openrob/Geometry/root/hub_half__fillet141_5>
+            custom rel physics:body1 = </momo_openrob/Geometry/root/hub_half__fillet141_5/tn__812_roller_skin__fillet1_31_>
+            point3f physics:localPos0 = (0.0713909, 0.0607693, -0.0661945)
+            point3f physics:localPos1 = (0.03683, 3.0320746e-12, 4.4114712e-13)
+            quatf physics:localRot0 = (-0.8571673, 0.34469917, -0.37887225, 0.053875025)
+            quatf physics:localRot1 = (1, -7.284341e-11, 2.9427898e-11, -2.927442e-11)
+        }
+
+        def PhysicsRevoluteJoint "revolute_3_4" (
+            prepend apiSchemas = ["PhysicsDriveAPI:angular", "PhysicsJointStateAPI:angular"]
+        )
+        {
+            uniform token physics:axis = "X"
+            custom rel physics:body0 = </momo_openrob/Geometry/root/hub_half__fillet141_7>
+            custom rel physics:body1 = </momo_openrob/Geometry/root/hub_half__fillet141_7/tn__812_roller_skin__fillet1_42_>
+            point3f physics:localPos0 = (0.0163866, -0.060208, 0.0671666)
+            point3f physics:localPos1 = (-0.03683, 1.4326873e-12, 1.0123569e-12)
+            quatf physics:localRot0 = (0.80309427, 0.45671973, 0.19349572, -0.33016068)
+            quatf physics:localRot1 = (1, -8.7812105e-11, -1.3280051e-11, 7.507449e-12)
+        }
+
+        def PhysicsRevoluteJoint "revolute_4" (
+            prepend apiSchemas = ["PhysicsDriveAPI:angular", "PhysicsJointStateAPI:angular"]
+        )
+        {
+            uniform token physics:axis = "X"
+            custom rel physics:body0 = </momo_openrob/Geometry/root>
+            custom rel physics:body1 = </momo_openrob/Geometry/root/hub_half__fillet141_3>
+            point3f physics:localPos0 = (-0.2105, 0.1615, -0.335)
+            point3f physics:localPos1 = (0, 0, 0)
+            quatf physics:localRot0 = (0.831218, -0.5559466, 7.376271e-7, -0.0000011028558)
+            quatf physics:localRot1 = (-0, 0, -1, 0)
+        }
+
+        def PhysicsRevoluteJoint "revolute_4_1" (
+            prepend apiSchemas = ["PhysicsDriveAPI:angular", "PhysicsJointStateAPI:angular"]
+        )
+        {
+            uniform token physics:axis = "X"
+            custom rel physics:body0 = </momo_openrob/Geometry/root/hub_half__fillet141_3>
+            custom rel physics:body1 = </momo_openrob/Geometry/root/hub_half__fillet141_3/tn__812_roller_skin__fillet1_19_>
+            point3f physics:localPos0 = (0.0175091, -0.085725, 0.0269415)
+            point3f physics:localPos1 = (-0.03683, 6.1896877e-12, -6.685985e-12)
+            quatf physics:localRot0 = (-0.2723547, 0.26882982, 0.65752256, 0.64901274)
+            quatf physics:localRot1 = (2.3707106e-11, 6.512682e-11, 1, 3.542959e-11)
+        }
+
+        def PhysicsRevoluteJoint "revolute_4_2" (
+            prepend apiSchemas = ["PhysicsDriveAPI:angular", "PhysicsJointStateAPI:angular"]
+        )
+        {
+            uniform token physics:axis = "X"
+            custom rel physics:body0 = </momo_openrob/Geometry/root/hub_half__fillet141>
+            custom rel physics:body1 = </momo_openrob/Geometry/root/hub_half__fillet141/tn__812_roller_skin__fillet1_3_>
+            point3f physics:localPos0 = (0.0175091, -0.0269415, 0.085725)
+            point3f physics:localPos1 = (0.03683, 1.3630208e-12, -1.3998525e-12)
+            quatf physics:localRot0 = (-0.30117705, -0.23609442, 0.5699787, 0.72710115)
+            quatf physics:localRot1 = (1, 1.38103695e-11, 2.7841549e-11, 4.2665815e-11)
+        }
+
+        def PhysicsRevoluteJoint "revolute_4_3" (
+            prepend apiSchemas = ["PhysicsDriveAPI:angular", "PhysicsJointStateAPI:angular"]
+        )
+        {
+            uniform token physics:axis = "X"
+            custom rel physics:body0 = </momo_openrob/Geometry/root/hub_half__fillet141_5>
+            custom rel physics:body1 = </momo_openrob/Geometry/root/hub_half__fillet141_5/tn__812_roller_skin__fillet1_33_>
+            point3f physics:localPos0 = (0.0713909, 0.0195305, -0.0877108)
+            point3f physics:localPos1 = (0.03683, 1.3553048e-12, 1.6905921e-12)
+            quatf physics:localRot0 = (-0.7387444, 0.55480653, -0.35201868, 0.15009771)
+            quatf physics:localRot1 = (1, -1.0877313e-11, 4.309414e-12, -1.6945709e-11)
+        }
+
+        def PhysicsRevoluteJoint "revolute_4_4" (
+            prepend apiSchemas = ["PhysicsDriveAPI:angular", "PhysicsJointStateAPI:angular"]
+        )
+        {
+            uniform token physics:axis = "X"
+            custom rel physics:body0 = </momo_openrob/Geometry/root/hub_half__fillet141_7>
+            custom rel physics:body1 = </momo_openrob/Geometry/root/hub_half__fillet141_7/tn__812_roller_skin__fillet1_46_>
+            point3f physics:localPos0 = (0.0175091, -0.085725, 0.0269415)
+            point3f physics:localPos1 = (-0.03683, 6.189632e-12, -6.685888e-12)
+            quatf physics:localRot0 = (0.2723547, -0.26882982, -0.65752256, -0.64901274)
+            quatf physics:localRot1 = (2.3707064e-11, 6.512686e-11, 1, 3.5429645e-11)
+        }
+
+        def PhysicsRevoluteJoint "revolute_5" (
+            prepend apiSchemas = ["PhysicsDriveAPI:angular", "PhysicsJointStateAPI:angular"]
+        )
+        {
+            uniform token physics:axis = "X"
+            custom rel physics:body0 = </momo_openrob/Geometry/root/hub_half__fillet141_3>
+            custom rel physics:body1 = </momo_openrob/Geometry/root/hub_half__fillet141_3/tn__812_roller_skin__fillet1_17_>
+            point3f physics:localPos0 = (0.0163866, -0.088272, -0.0185584)
+            point3f physics:localPos1 = (-0.03683, 8.6160246e-13, -6.9147466e-13)
+            quatf physics:localRot0 = (-0.46714085, -0.79707766, -0.33265284, 0.18917915)
+            quatf physics:localRot1 = (1, -1.471857e-11, 1.9020955e-11, -2.1440326e-12)
+        }
+
+        def PhysicsRevoluteJoint "revolute_5_1" (
+            prepend apiSchemas = ["PhysicsDriveAPI:angular", "PhysicsJointStateAPI:angular"]
+        )
+        {
+            uniform token physics:axis = "X"
+            custom rel physics:body0 = </momo_openrob/Geometry/root/hub_half__fillet141>
+            custom rel physics:body1 = </momo_openrob/Geometry/root/hub_half__fillet141/tn__812_roller_skin__fillet1_2_>
+            point3f physics:localPos0 = (0.0175091, -0.0661945, 0.0607693)
+            point3f physics:localPos1 = (0.03683, 2.0546898e-12, -6.294326e-12)
+            quatf physics:localRot0 = (-0.22980708, -0.305998, 0.36237004, 0.84984815)
+            quatf physics:localRot1 = (1, -1.8151362e-11, 3.823092e-11, 2.2286777e-11)
+        }
+
+        def PhysicsRevoluteJoint "revolute_5_2" (
+            prepend apiSchemas = ["PhysicsDriveAPI:angular", "PhysicsJointStateAPI:angular"]
+        )
+        {
+            uniform token physics:axis = "X"
+            custom rel physics:body0 = </momo_openrob/Geometry/root/hub_half__fillet141_5>
+            custom rel physics:body1 = </momo_openrob/Geometry/root/hub_half__fillet141_5/tn__812_roller_skin__fillet1_24_>
+            point3f physics:localPos0 = (0.0713909, -0.0269415, -0.085725)
+            point3f physics:localPos1 = (0.03683, -6.9554085e-13, 3.008982e-12)
+            quatf physics:localRot0 = (-0.5699802, 0.7271011, -0.30117506, 0.23609349)
+            quatf physics:localRot1 = (1, -7.239348e-14, -2.3679683e-11, -7.208477e-12)
+        }
+
+        def PhysicsRevoluteJoint "revolute_5_3" (
+            prepend apiSchemas = ["PhysicsDriveAPI:angular", "PhysicsJointStateAPI:angular"]
+        )
+        {
+            uniform token physics:axis = "X"
+            custom rel physics:body0 = </momo_openrob/Geometry/root/hub_half__fillet141_7>
+            custom rel physics:body1 = </momo_openrob/Geometry/root/hub_half__fillet141_7/tn__812_roller_skin__fillet1_43_>
+            point3f physics:localPos0 = (0.0163866, -0.088272, -0.0185584)
+            point3f physics:localPos1 = (-0.03683, 8.616302e-13, -6.915024e-13)
+            quatf physics:localRot0 = (0.46714085, 0.79707766, 0.33265284, -0.18917915)
+            quatf physics:localRot1 = (1, -1.471858e-11, 1.9020945e-11, -2.1439933e-12)
+        }
+
+        def PhysicsRevoluteJoint "revolute_6" (
+            prepend apiSchemas = ["PhysicsDriveAPI:angular", "PhysicsJointStateAPI:angular"]
+        )
+        {
+            uniform token physics:axis = "X"
+            custom rel physics:body0 = </momo_openrob/Geometry/root/hub_half__fillet141_3>
+            custom rel physics:body1 = </momo_openrob/Geometry/root/hub_half__fillet141_3/tn__812_roller_skin__fillet1_15_>
+            point3f physics:localPos0 = (0.0163866, -0.0671666, -0.060208)
+            point3f physics:localPos1 = (-0.03683, 1.5734566e-12, -1.5682594e-12)
+            quatf physics:localRot0 = (-0.24492465, -0.8908229, -0.37028086, 0.09663618)
+            quatf physics:localRot1 = (1, 8.717901e-12, -4.6929682e-12, 2.3209601e-11)
+        }
+
+        def PhysicsRevoluteJoint "revolute_6_1" (
+            prepend apiSchemas = ["PhysicsDriveAPI:angular", "PhysicsJointStateAPI:angular"]
+        )
+        {
+            uniform token physics:axis = "X"
+            custom rel physics:body0 = </momo_openrob/Geometry/root/hub_half__fillet141>
+            custom rel physics:body1 = </momo_openrob/Geometry/root/hub_half__fillet141/tn__812_roller_skin__fillet1_5_>
+            point3f physics:localPos0 = (0.0163866, -0.088272, 0.0185584)
+            point3f physics:localPos1 = (0.03683, -3.0186964e-13, 1.4938328e-12)
+            quatf physics:localRot0 = (0.13006654, 0.91467863, 0.14277673, 0.35505003)
+            quatf physics:localRot1 = (4.824753e-11, 4.588753e-12, 1, 3.6996635e-11)
+        }
+
+        def PhysicsRevoluteJoint "revolute_6_2" (
+            prepend apiSchemas = ["PhysicsDriveAPI:angular", "PhysicsJointStateAPI:angular"]
+        )
+        {
+            uniform token physics:axis = "X"
+            custom rel physics:body0 = </momo_openrob/Geometry/root/hub_half__fillet141_5>
+            custom rel physics:body1 = </momo_openrob/Geometry/root/hub_half__fillet141_5/tn__812_roller_skin__fillet1_29_>
+            point3f physics:localPos0 = (0.0725134, -0.0671666, -0.060208)
+            point3f physics:localPos1 = (0.03683, 7.4601436e-13, -3.1293856e-12)
+            quatf physics:localRot0 = (-0.2298077, 0.3059982, 0.3623697, -0.8498481)
+            quatf physics:localRot1 = (-4.7715054e-11, -1.8257465e-11, 1, -3.4704746e-11)
+        }
+
+        def PhysicsRevoluteJoint "revolute_6_3" (
+            prepend apiSchemas = ["PhysicsDriveAPI:angular", "PhysicsJointStateAPI:angular"]
+        )
+        {
+            uniform token physics:axis = "X"
+            custom rel physics:body0 = </momo_openrob/Geometry/root/hub_half__fillet141_7>
+            custom rel physics:body1 = </momo_openrob/Geometry/root/hub_half__fillet141_7/tn__812_roller_skin__fillet1_38_>
+            point3f physics:localPos0 = (0.0163866, -0.0671666, -0.060208)
+            point3f physics:localPos1 = (-0.03683, 1.5735192e-12, -1.568301e-12)
+            quatf physics:localRot0 = (0.24492465, 0.8908229, 0.37028086, -0.09663618)
+            quatf physics:localRot1 = (1, 8.717908e-12, -4.692982e-12, 2.3209615e-11)
+        }
+
+        def PhysicsRevoluteJoint "revolute_7" (
+            prepend apiSchemas = ["PhysicsDriveAPI:angular", "PhysicsJointStateAPI:angular"]
+        )
+        {
+            uniform token physics:axis = "X"
+            custom rel physics:body0 = </momo_openrob/Geometry/root/hub_half__fillet141_3>
+            custom rel physics:body1 = </momo_openrob/Geometry/root/hub_half__fillet141_3/tn__812_roller_skin__fillet1_16_>
+            point3f physics:localPos0 = (0.0175091, -0.0269415, -0.085725)
+            point3f physics:localPos1 = (-0.03683, 6.437767e-13, -3.2654296e-12)
+            quatf physics:localRot0 = (-0.38267523, -0.002491759, 0.0060156393, 0.92385995)
+            quatf physics:localRot1 = (1.8324231e-13, -3.3600248e-11, 1, -5.4328764e-13)
+        }
+
+        def PhysicsRevoluteJoint "revolute_7_1" (
+            prepend apiSchemas = ["PhysicsDriveAPI:angular", "PhysicsJointStateAPI:angular"]
+        )
+        {
+            uniform token physics:axis = "X"
+            custom rel physics:body0 = </momo_openrob/Geometry/root/hub_half__fillet141>
+            custom rel physics:body1 = </momo_openrob/Geometry/root/hub_half__fillet141/tn__812_roller_skin__fillet1_8_>
+            point3f physics:localPos0 = (0.0175091, -0.085725, -0.0269415)
+            point3f physics:localPos1 = (0.03683, 3.2013836e-12, -1.1499135e-12)
+            quatf physics:localRot0 = (-0.046018846, -0.37990633, -0.111101784, 0.91717494)
+            quatf physics:localRot1 = (1, -2.6663033e-11, 2.7457661e-11, -4.4175913e-12)
+        }
+
+        def PhysicsRevoluteJoint "revolute_7_2" (
+            prepend apiSchemas = ["PhysicsDriveAPI:angular", "PhysicsJointStateAPI:angular"]
+        )
+        {
+            uniform token physics:axis = "X"
+            custom rel physics:body0 = </momo_openrob/Geometry/root/hub_half__fillet141_5>
+            custom rel physics:body1 = </momo_openrob/Geometry/root/hub_half__fillet141_5/tn__812_roller_skin__fillet1_26_>
+            point3f physics:localPos0 = (0.0713909, -0.0877108, -0.0195305)
+            point3f physics:localPos1 = (0.03683, 2.809808e-12, -3.2394643e-12)
+            quatf physics:localRot0 = (-0.13006543, 0.9146783, -0.14277923, 0.35505036)
+            quatf physics:localRot1 = (1, 1.5211415e-11, 2.7188536e-11, 5.7454347e-11)
+        }
+
+        def PhysicsRevoluteJoint "revolute_7_3" (
+            prepend apiSchemas = ["PhysicsDriveAPI:angular", "PhysicsJointStateAPI:angular"]
+        )
+        {
+            uniform token physics:axis = "X"
+            custom rel physics:body0 = </momo_openrob/Geometry/root/hub_half__fillet141_7>
+            custom rel physics:body1 = </momo_openrob/Geometry/root/hub_half__fillet141_7/tn__812_roller_skin__fillet1_39_>
+            point3f physics:localPos0 = (0.0175091, -0.0269415, -0.085725)
+            point3f physics:localPos1 = (-0.03683, 6.4367955e-13, -3.265499e-12)
+            quatf physics:localRot0 = (0.38267523, 0.002491759, -0.0060156393, -0.92385995)
+            quatf physics:localRot1 = (1.8320068e-13, -3.3600275e-11, 1, -5.432599e-13)
+        }
+
+        def PhysicsRevoluteJoint "revolute_8" (
+            prepend apiSchemas = ["PhysicsDriveAPI:angular", "PhysicsJointStateAPI:angular"]
+        )
+        {
+            uniform token physics:axis = "X"
+            custom rel physics:body0 = </momo_openrob/Geometry/root/hub_half__fillet141_3>
+            custom rel physics:body1 = </momo_openrob/Geometry/root/hub_half__fillet141_3/tn__812_roller_skin__fillet1_14_>
+            point3f physics:localPos0 = (0.0175091, 0.0195305, -0.0877108)
+            point3f physics:localPos1 = (-0.0366206, 2.6430108e-12, 5.1558757e-13)
+            quatf physics:localRot0 = (-0.3689908, -0.101450756, -0.23330124, 0.8939374)
+            quatf physics:localRot1 = (-1.9592515e-11, 4.434078e-11, 1, 2.550683e-11)
+        }
+
+        def PhysicsRevoluteJoint "revolute_8_1" (
+            prepend apiSchemas = ["PhysicsDriveAPI:angular", "PhysicsJointStateAPI:angular"]
+        )
+        {
+            uniform token physics:axis = "X"
+            custom rel physics:body0 = </momo_openrob/Geometry/root/hub_half__fillet141>
+            custom rel physics:body1 = </momo_openrob/Geometry/root/hub_half__fillet141/tn__812_roller_skin__fillet1_7_>
+            point3f physics:localPos0 = (0.0163866, -0.060208, -0.0671666)
+            point3f physics:localPos1 = (0.03683, 1.3264667e-12, -3.7291975e-12)
+            quatf physics:localRot0 = (-0.34470016, 0.8571675, -0.05387273, 0.3788713)
+            quatf physics:localRot1 = (2.4864854e-12, -5.52558e-12, 1, 2.2556117e-11)
+        }
+
+        def PhysicsRevoluteJoint "revolute_8_2" (
+            prepend apiSchemas = ["PhysicsDriveAPI:angular", "PhysicsJointStateAPI:angular"]
+        )
+        {
+            uniform token physics:axis = "X"
+            custom rel physics:body0 = </momo_openrob/Geometry/root/hub_half__fillet141_5>
+            custom rel physics:body1 = </momo_openrob/Geometry/root/hub_half__fillet141_5/tn__812_roller_skin__fillet1_28_>
+            point3f physics:localPos0 = (0.0725134, -0.085725, 0.028064)
+            point3f physics:localPos1 = (0.03683, -4.1758264e-12, -1.2761042e-12)
+            quatf physics:localRot0 = (-0.046019427, 0.37990627, -0.111100756, -0.91717505)
+            quatf physics:localRot1 = (2.6964412e-11, 1.5825785e-11, 1, -2.9604194e-11)
+        }
+
+        def PhysicsRevoluteJoint "revolute_8_3" (
+            prepend apiSchemas = ["PhysicsDriveAPI:angular", "PhysicsJointStateAPI:angular"]
+        )
+        {
+            uniform token physics:axis = "X"
+            custom rel physics:body0 = </momo_openrob/Geometry/root/hub_half__fillet141_7>
+            custom rel physics:body1 = </momo_openrob/Geometry/root/hub_half__fillet141_7/tn__812_roller_skin__fillet1_44_>
+            point3f physics:localPos0 = (0.0175091, 0.0195305, -0.0877108)
+            point3f physics:localPos1 = (-0.0366206, 2.642997e-12, 5.156431e-13)
+            quatf physics:localRot0 = (0.3689908, 0.101450756, 0.23330124, -0.8939374)
+            quatf physics:localRot1 = (-1.9592543e-11, 4.434079e-11, 1, 2.550684e-11)
+        }
+
+        def PhysicsRevoluteJoint "revolute_9" (
+            prepend apiSchemas = ["PhysicsDriveAPI:angular", "PhysicsJointStateAPI:angular"]
+        )
+        {
+            uniform token physics:axis = "X"
+            custom rel physics:body0 = </momo_openrob/Geometry/root/hub_half__fillet141_3>
+            custom rel physics:body1 = </momo_openrob/Geometry/root/hub_half__fillet141_3/tn__812_roller_skin__fillet1_18_>
+            point3f physics:localPos0 = (0.0175091, 0.0607693, -0.0661945)
+            point3f physics:localPos1 = (-0.03683, -2.3425012e-13, -4.5377035e-12)
+            quatf physics:localRot0 = (-0.33016065, -0.19349578, -0.45671958, 0.8030944)
+            quatf physics:localRot1 = (-6.2806704e-12, 1.7438856e-11, 1, 1.7146146e-11)
+        }
+
+        def PhysicsRevoluteJoint "revolute_9_1" (
+            prepend apiSchemas = ["PhysicsDriveAPI:angular", "PhysicsJointStateAPI:angular"]
+        )
+        {
+            uniform token physics:axis = "X"
+            custom rel physics:body0 = </momo_openrob/Geometry/root/hub_half__fillet141>
+            custom rel physics:body1 = </momo_openrob/Geometry/root/hub_half__fillet141/tn__812_roller_skin__fillet1_1_>
+            point3f physics:localPos0 = (0.0175091, -0.0195305, -0.0877108)
+            point3f physics:localPos1 = (0.03683, -4.2972848e-12, -3.7388703e-12)
+            quatf physics:localRot0 = (0.1500972, -0.35201833, -0.55480677, 0.7387445)
+            quatf physics:localRot1 = (1, -6.9542705e-12, 3.5909598e-11, -2.3631076e-11)
+        }
+
+        def PhysicsRevoluteJoint "revolute_9_2" (
+            prepend apiSchemas = ["PhysicsDriveAPI:angular", "PhysicsJointStateAPI:angular"]
+        )
+        {
+            uniform token physics:axis = "X"
+            custom rel physics:body0 = </momo_openrob/Geometry/root/hub_half__fillet141_5>
+            custom rel physics:body1 = </momo_openrob/Geometry/root/hub_half__fillet141_5/tn__812_roller_skin__fillet1_25_>
+            point3f physics:localPos0 = (0.0713909, -0.0607693, 0.0661945)
+            point3f physics:localPos1 = (0.03683, 4.855477e-12, 3.0498243e-12)
+            quatf physics:localRot0 = (0.3446977, 0.8571679, 0.053875655, 0.37887213)
+            quatf physics:localRot1 = (1, 4.0284928e-11, 3.0140848e-11, 3.145208e-11)
+        }
+
+        def PhysicsRevoluteJoint "revolute_9_3" (
+            prepend apiSchemas = ["PhysicsDriveAPI:angular", "PhysicsJointStateAPI:angular"]
+        )
+        {
+            uniform token physics:axis = "X"
+            custom rel physics:body0 = </momo_openrob/Geometry/root/hub_half__fillet141_7>
+            custom rel physics:body1 = </momo_openrob/Geometry/root/hub_half__fillet141_7/tn__812_roller_skin__fillet1_41_>
+            point3f physics:localPos0 = (0.0175091, 0.0607693, -0.0661945)
+            point3f physics:localPos1 = (-0.03683, -2.3414604e-13, -4.537759e-12)
+            quatf physics:localRot0 = (0.33016065, 0.19349578, 0.45671958, -0.8030944)
+            quatf physics:localRot1 = (-6.2806635e-12, 1.7438904e-11, 1, 1.714618e-11)
+        }
+
+        def PhysicsFixedJoint "root_joint"
+        {
+            custom rel physics:body0 = </momo_openrob>
+            custom rel physics:body1 = </momo_openrob/Geometry/root>
+            point3f physics:localPos0 = (0, 0, 0)
+            point3f physics:localPos1 = (0, 0, 0)
+            quatf physics:localRot0 = (1, 0, 0, 0)
+            quatf physics:localRot1 = (1, 0, 0, 0)
+        }
+    }
+}
+

@@ -1,0 +1,2944 @@
+#usda 1.0
+(
+    customLayerData = {
+        dictionary cameraSettings = {
+            dictionary Front = {
+                double3 position = (5, 0, 0)
+                double radius = 5
+            }
+            dictionary Perspective = {
+                double3 position = (-1.3863898462461017, 1.0042349016843388, 0.8427454444175168)
+                double3 target = (-0.8415576187511309, 0.5119861685349185, 0.44700281673122083)
+            }
+            dictionary Right = {
+                double3 position = (0, -5, 0)
+                double radius = 5
+            }
+            dictionary Top = {
+                double3 position = (0, 0, 5)
+                double radius = 5
+            }
+            string boundCamera = "/OmniverseKit_Persp"
+        }
+        string creator = "URDF USD Converter v0.1.0"
+        dictionary omni_layer = {
+            string authoring_layer = "./momo_openrob.usda"
+        }
+        dictionary renderSettings = {
+        }
+    }
+    defaultPrim = "momo_openrob"
+    doc = """Generated from Composed Stage of root layer /tmp/tmplddu1gkj/momo_openrob.usdc
+
+
+Generated from Composed Stage of root layer /workspaces/openarm_isaac_lab/source/openarm/openarm/tasks/manager_based/openarm_manipulation/usds/momo_openrob/urdf/usdex/momo_openrob.usdc
+
+
+Generated from Composed Stage of root layer /workspaces/openarm_isaac_lab/source/openarm/openarm/tasks/manager_based/openarm_manipulation/usds/momo_openrob/urdf/temp/momo_openrob.usd
+
+
+Generated from Composed Stage of root layer /workspaces/openarm_isaac_lab/source/openarm/openarm/tasks/manager_based/openarm_manipulation/usds/momo_openrob/urdf/momo_openrob/payloads/base.usd
+"""
+    kilogramsPerUnit = 1
+    metersPerUnit = 1
+    upAxis = "Z"
+)
+
+def "Render" (
+    hide_in_stage_window = true
+    no_delete = true
+)
+{
+    def "OmniverseKit"
+    {
+        def "HydraTextures" (
+            hide_in_stage_window = true
+            no_delete = true
+        )
+        {
+            def RenderProduct "omni_kit_widget_viewport_ViewportTexture_0" (
+                prepend apiSchemas = ["OmniRtxSettingsCommonAdvancedAPI_1", "OmniRtxSettingsRtAdvancedAPI_1", "OmniRtxSettingsPtAdvancedAPI_1", "OmniRtxPostColorGradingAPI_1", "OmniRtxPostChromaticAberrationAPI_1", "OmniRtxPostBloomPhysicalAPI_1", "OmniRtxPostMatteObjectAPI_1", "OmniRtxPostCompositingAPI_1", "OmniRtxPostDofAPI_1", "OmniRtxPostMotionBlurAPI_1", "OmniRtxPostTvNoiseAPI_1", "OmniRtxPostTonemapIrayReinhardAPI_1", "OmniRtxPostDebugSettingsAPI_1", "OmniRtxDebugSettingsAPI_1"]
+                hide_in_stage_window = true
+                no_delete = true
+            )
+            {
+                rel camera = </OmniverseKit_Persp>
+                token omni:rtx:ambientOcclusion:denoiserMode = "none"
+                token omni:rtx:background:source:texture:textureMode = "repeatMirrored"
+                token omni:rtx:background:source:type = "domeLight"
+                bool omni:rtx:debug:view:pixelDebug:enableFixedTextPos = 1
+                token omni:rtx:directLighting:sampledLighting:denoisingTechnique = "None"
+                bool omni:rtx:dlss:frameGeneration = 0
+                bool omni:rtx:indirectDiffuse:denoiser:enabled = 0
+                bool omni:rtx:material:db:syncLoads = 1
+                token omni:rtx:post:dlss:execMode = "performance"
+                bool omni:rtx:post:registeredCompositing:invertColorCorrection = 1
+                bool omni:rtx:post:registeredCompositing:invertToneMap = 1
+                bool omni:rtx:pt:adaptiveSampling:filterError = 0
+                uint omni:rtx:pt:adaptiveSampling:fixedSppIterations = 2
+                uint omni:rtx:pt:maxSamplesPerLaunch = 2073600
+                uint omni:rtx:pt:mgpu:maxPixelsPerRegionExponent = 12
+                bool omni:rtx:reflections:denoiser:enabled = 0
+                token omni:rtx:rendermode = "RealTimePathTracing"
+                color3f omni:rtx:rt:ambientLight:color = (0.1, 0.1, 0.1)
+                bool omni:rtx:rt:demoire = 0
+                bool omni:rtx:rt:ecoMode:enabled
+                bool omni:rtx:rt:lightcache:spatialCache:dontResolveConflicts = 1
+                int omni:rtx:rt:sss:samples = 1
+                uint omni:rtx:rtpt:maxVolumeBounces = 15
+                float omni:rtx:rtpt:modulatingRoughnessThreshold = 0.08
+                bool omni:rtx:scene:hydra:materialSyncLoads = 1
+                bool omni:rtx:scene:hydra:mdlMaterialWarmup = 1
+                bool omni:rtx:scene:useViewLightingMode
+                rel orderedVars = </Render/Vars/LdrColor>
+                custom bool overrideClipRange = 0
+                uniform int2 resolution = (1280, 720)
+            }
+        }
+    }
+
+    def RenderSettings "OmniverseGlobalRenderSettings" (
+        prepend apiSchemas = ["OmniRtxSettingsGlobalRtAdvancedAPI_1", "OmniRtxSettingsGlobalPtAdvancedAPI_1"]
+        no_delete = true
+    )
+    {
+        rel products = </Render/OmniverseKit/HydraTextures/omni_kit_widget_viewport_ViewportTexture_0>
+    }
+
+    def "Vars"
+    {
+        def RenderVar "LdrColor" (
+            hide_in_stage_window = true
+            no_delete = true
+        )
+        {
+            uniform string sourceName = "LdrColor"
+        }
+    }
+}
+
+over "OmniverseKit_Persp" (
+    prepend apiSchemas = ["OmniRtxCameraAutoExposureAPI_1", "OmniRtxCameraExposureAPI_1"]
+    customData = {
+        dictionary omni = {
+            dictionary kit = {
+                bool hide_in_stage_window = 1
+                bool no_delete = 1
+            }
+        }
+    }
+    hide_in_stage_window = true
+    kind = "component"
+    no_delete = true
+)
+{
+    float2 clippingRange = (0.01, 10000000)
+    float exposure:fStop = 5
+    float exposure:responsivity = 1.1026709
+    float exposure:time = 0.02
+    float focalLength = 18.147562
+    float focusDistance = 400
+    custom uniform vector3d omni:kit:centerOfInterest = (0, 0, -0.834124210637957)
+    float3 xformOp:rotateXYZ = (61.677048, -0, -132.0974)
+    float3 xformOp:scale = (1, 1, 1)
+    double3 xformOp:translate = (-1.3863898462461017, 1.0042349016843388, 0.8427454444175168)
+    uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:rotateXYZ", "xformOp:scale"]
+}
+
+over "OmniverseKit_Front" (
+    customData = {
+        dictionary omni = {
+            dictionary kit = {
+                bool hide_in_stage_window = 1
+                bool no_delete = 1
+            }
+        }
+    }
+    hide_in_stage_window = true
+    kind = "component"
+    no_delete = true
+)
+{
+    float2 clippingRange = (1, 10000000)
+    float horizontalAperture = 50
+    custom uniform vector3d omni:kit:centerOfInterest = (0, 0, -5)
+    token projection = "orthographic"
+    float verticalAperture = 50
+    float3 xformOp:rotateXYZ = (90, -1.2722219e-14, 90)
+    float3 xformOp:scale = (1, 1, 1)
+    double3 xformOp:translate = (5, 0, 0)
+    uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:rotateXYZ", "xformOp:scale"]
+}
+
+over "OmniverseKit_Right" (
+    customData = {
+        dictionary omni = {
+            dictionary kit = {
+                bool hide_in_stage_window = 1
+                bool no_delete = 1
+            }
+        }
+    }
+    hide_in_stage_window = true
+    kind = "component"
+    no_delete = true
+)
+{
+    float2 clippingRange = (1, 10000000)
+    float horizontalAperture = 50
+    custom uniform vector3d omni:kit:centerOfInterest = (0, 0, -5)
+    token projection = "orthographic"
+    float verticalAperture = 50
+    float3 xformOp:rotateXYZ = (90, 2.8249e-30, 1.2722219e-14)
+    float3 xformOp:scale = (1, 1, 1)
+    double3 xformOp:translate = (0, -5, 0)
+    uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:rotateXYZ", "xformOp:scale"]
+}
+
+over "OmniverseKit_Top" (
+    customData = {
+        dictionary omni = {
+            dictionary kit = {
+                bool hide_in_stage_window = 1
+                bool no_delete = 1
+            }
+        }
+    }
+    hide_in_stage_window = true
+    kind = "component"
+    no_delete = true
+)
+{
+    float2 clippingRange = (1, 10000000)
+    float horizontalAperture = 50
+    custom uniform vector3d omni:kit:centerOfInterest = (0, 0, -5)
+    token projection = "orthographic"
+    float verticalAperture = 50
+    float3 xformOp:rotateXYZ = (-1.2722219e-14, -7.016709e-15, -90)
+    float3 xformOp:scale = (1, 1, 1)
+    double3 xformOp:translate = (0, 0, 5)
+    uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:rotateXYZ", "xformOp:scale"]
+}
+
+def PhysicsScene "PhysicsScene" (
+    prepend apiSchemas = ["PhysxSceneAPI", "NewtonSceneAPI"]
+)
+{
+    uniform token physxScene:broadphaseType = "GPU"
+    bool physxScene:enableExternalForcesEveryIteration = 0
+    bool physxScene:enableGPUDynamics = 1
+    bool physxScene:enableStabilization = 0
+    uniform uint physxScene:maxPositionIterationCount = 255
+    uniform uint physxScene:maxVelocityIterationCount = 255
+    uniform uint physxScene:minPositionIterationCount = 1
+    uniform uint physxScene:minVelocityIterationCount = 0
+    bool physxScene:solveArticulationContactLast = 0
+    uint physxScene:timeStepsPerSecond = 360
+}
+
+def "FlatGrid" (
+    prepend references = @https://omniverse-content-staging.s3-us-west-2.amazonaws.com/Assets/Isaac/6.0/Isaac/Environments/Grid/default_environment.usd@
+)
+{
+    quatf xformOp:orient = (1, 0, 0, 0)
+    float3 xformOp:scale = (1, 1, 1)
+    double3 xformOp:translate = (0, 0, -0.5947144867551781)
+    uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient", "xformOp:scale"]
+
+    over "GroundPlane"
+    {
+        quatf xformOp:orient = (1, 0, 0, 0)
+        float3 xformOp:scale = (1, 1, 1)
+        double3 xformOp:translate = (0, 0, 0)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient", "xformOp:scale"]
+    }
+}
+
+def Xform "momo_openrob" (
+    prepend references = @./payloads/base.usda@
+    variants = {
+        string Physics = "physx"
+    }
+    append variantSets = "Physics"
+)
+{
+    string[] isaac:changelog (
+        displayName = "Changelog"
+    )
+    string isaac:description (
+        displayName = "Description"
+    )
+    token isaac:license (
+        displayName = "License"
+    )
+    string isaac:nameOverride (
+        displayName = "Name Override"
+    )
+    string isaac:namespace (
+        displayName = "Namespace"
+    )
+    rel isaac:physics:robotJoints (
+        displayName = "Robot Joints"
+    )
+    rel isaac:physics:robotLinks (
+        displayName = "Robot Links"
+    )
+    token isaac:robotType (
+        displayName = "Robot Type"
+    )
+    string isaac:source (
+        displayName = "Source"
+    )
+    string isaac:version (
+        displayName = "Version"
+    )
+
+    over "Physics"
+    {
+        over "root_joint" (
+            active = false
+        )
+        {
+            bool[] isaac:actuator (
+                displayName = "Actuator"
+            )
+            string isaac:NameOverride (
+                displayName = "Joint Name Override"
+            )
+            token[] isaac:physics:DofOffsetOpOrder (
+                displayName = "Dof Offset Op Order"
+            )
+        }
+
+        over "revolute_1_3" (
+            delete apiSchemas = ["PhysxJointAxisAPI:angular"]
+            prepend apiSchemas = ["PhysxLimitAPI:angular"]
+        )
+        {
+            float drive:angular:physics:damping = 1
+            float drive:angular:physics:maxForce = inf
+            float drive:angular:physics:stiffness = 0
+            float drive:angular:physics:targetVelocity = 0
+            uniform token drive:angular:physics:type = "force"
+            bool[] isaac:actuator (
+                displayName = "Actuator"
+            )
+            string isaac:NameOverride (
+                displayName = "Joint Name Override"
+            )
+            token[] isaac:physics:DofOffsetOpOrder (
+                displayName = "Dof Offset Op Order"
+            )
+            float physxJoint:jointFriction = 0.05
+            float physxLimit:angular:damping = 1
+            float physxLimit:angular:stiffness = 0
+            float state:angular:physics:position = 0
+            float state:angular:physics:velocity = 0
+        }
+
+        over "revolute_2_2" (
+            delete apiSchemas = ["PhysxJointAxisAPI:angular"]
+            prepend apiSchemas = ["PhysxLimitAPI:angular"]
+        )
+        {
+            float drive:angular:physics:damping = 1
+            float drive:angular:physics:maxForce = inf
+            float drive:angular:physics:stiffness = 0
+            float drive:angular:physics:targetVelocity = 0
+            uniform token drive:angular:physics:type = "force"
+            bool[] isaac:actuator (
+                displayName = "Actuator"
+            )
+            string isaac:NameOverride (
+                displayName = "Joint Name Override"
+            )
+            token[] isaac:physics:DofOffsetOpOrder (
+                displayName = "Dof Offset Op Order"
+            )
+            float physxJoint:jointFriction = 0.05
+            float physxLimit:angular:damping = 1
+            float physxLimit:angular:stiffness = 0
+            float state:angular:physics:position = 0
+            float state:angular:physics:velocity = 0
+        }
+
+        over "revolute_3_2" (
+            delete apiSchemas = ["PhysxJointAxisAPI:angular"]
+            prepend apiSchemas = ["PhysxLimitAPI:angular"]
+        )
+        {
+            float drive:angular:physics:damping = 1
+            float drive:angular:physics:maxForce = inf
+            float drive:angular:physics:stiffness = 0
+            float drive:angular:physics:targetVelocity = 0
+            uniform token drive:angular:physics:type = "force"
+            bool[] isaac:actuator (
+                displayName = "Actuator"
+            )
+            string isaac:NameOverride (
+                displayName = "Joint Name Override"
+            )
+            token[] isaac:physics:DofOffsetOpOrder (
+                displayName = "Dof Offset Op Order"
+            )
+            float physxJoint:jointFriction = 0.05
+            float physxLimit:angular:damping = 1
+            float physxLimit:angular:stiffness = 0
+            float state:angular:physics:position = 0
+            float state:angular:physics:velocity = 0
+        }
+
+        over "revolute_4" (
+            delete apiSchemas = ["PhysxJointAxisAPI:angular"]
+            prepend apiSchemas = ["PhysxLimitAPI:angular"]
+        )
+        {
+            float drive:angular:physics:damping = 1
+            float drive:angular:physics:maxForce = inf
+            float drive:angular:physics:stiffness = 0
+            float drive:angular:physics:targetVelocity = 0
+            uniform token drive:angular:physics:type = "force"
+            bool[] isaac:actuator (
+                displayName = "Actuator"
+            )
+            string isaac:NameOverride (
+                displayName = "Joint Name Override"
+            )
+            token[] isaac:physics:DofOffsetOpOrder (
+                displayName = "Dof Offset Op Order"
+            )
+            float physxJoint:jointFriction = 0.05
+            float physxLimit:angular:damping = 1
+            float physxLimit:angular:stiffness = 0
+            float state:angular:physics:position = 0
+            float state:angular:physics:velocity = 0
+        }
+
+        over "revolute_10_3" (
+            active = false
+            delete apiSchemas = ["PhysicsDriveAPI:angular", "PhysicsJointStateAPI:angular", "PhysxJointAxisAPI:angular"]
+            prepend apiSchemas = ["PhysxLimitAPI:angular", "PhysicsJointStateAPI:angular"]
+        )
+        {
+            bool[] isaac:actuator (
+                displayName = "Actuator"
+            )
+            string isaac:NameOverride (
+                displayName = "Joint Name Override"
+            )
+            token[] isaac:physics:DofOffsetOpOrder (
+                displayName = "Dof Offset Op Order"
+            )
+            float physxJoint:jointFriction = 0
+            float physxJoint:maxJointVelocity = 1000000
+            float physxLimit:angular:bounceThreshold = 0
+            float physxLimit:angular:damping = 0
+            float physxLimit:angular:stiffness = 0
+            float state:angular:physics:position = 0
+            float state:angular:physics:velocity = 0
+        }
+
+        over "revolute_11_3" (
+            active = false
+            delete apiSchemas = ["PhysicsDriveAPI:angular", "PhysicsJointStateAPI:angular", "PhysxJointAxisAPI:angular"]
+            prepend apiSchemas = ["PhysxLimitAPI:angular", "PhysicsJointStateAPI:angular"]
+        )
+        {
+            bool[] isaac:actuator (
+                displayName = "Actuator"
+            )
+            string isaac:NameOverride (
+                displayName = "Joint Name Override"
+            )
+            token[] isaac:physics:DofOffsetOpOrder (
+                displayName = "Dof Offset Op Order"
+            )
+            float physxJoint:jointFriction = 0
+            float physxJoint:maxJointVelocity = 1000000
+            float physxLimit:angular:bounceThreshold = 0
+            float physxLimit:angular:damping = 0
+            float physxLimit:angular:stiffness = 0
+            float state:angular:physics:position = 0
+            float state:angular:physics:velocity = 0
+        }
+
+        over "revolute_12_3" (
+            active = false
+            delete apiSchemas = ["PhysicsDriveAPI:angular", "PhysicsJointStateAPI:angular", "PhysxJointAxisAPI:angular"]
+            prepend apiSchemas = ["PhysxLimitAPI:angular", "PhysicsJointStateAPI:angular"]
+        )
+        {
+            bool[] isaac:actuator (
+                displayName = "Actuator"
+            )
+            string isaac:NameOverride (
+                displayName = "Joint Name Override"
+            )
+            token[] isaac:physics:DofOffsetOpOrder (
+                displayName = "Dof Offset Op Order"
+            )
+            float physxJoint:jointFriction = 0
+            float physxJoint:maxJointVelocity = 1000000
+            float physxLimit:angular:bounceThreshold = 0
+            float physxLimit:angular:damping = 0
+            float physxLimit:angular:stiffness = 0
+            float state:angular:physics:position = 0
+            float state:angular:physics:velocity = 0
+        }
+
+        over "revolute_1_4" (
+            active = false
+            delete apiSchemas = ["PhysicsDriveAPI:angular", "PhysicsJointStateAPI:angular", "PhysxJointAxisAPI:angular"]
+            prepend apiSchemas = ["PhysxLimitAPI:angular", "PhysicsJointStateAPI:angular"]
+        )
+        {
+            bool[] isaac:actuator (
+                displayName = "Actuator"
+            )
+            string isaac:NameOverride (
+                displayName = "Joint Name Override"
+            )
+            token[] isaac:physics:DofOffsetOpOrder (
+                displayName = "Dof Offset Op Order"
+            )
+            float physxJoint:jointFriction = 0
+            float physxJoint:maxJointVelocity = 1000000
+            float physxLimit:angular:bounceThreshold = 0
+            float physxLimit:angular:damping = 0
+            float physxLimit:angular:stiffness = 0
+            float state:angular:physics:position = 0
+            float state:angular:physics:velocity = 0
+        }
+
+        over "revolute_2_4" (
+            active = false
+            delete apiSchemas = ["PhysicsDriveAPI:angular", "PhysicsJointStateAPI:angular", "PhysxJointAxisAPI:angular"]
+            prepend apiSchemas = ["PhysxLimitAPI:angular", "PhysicsJointStateAPI:angular"]
+        )
+        {
+            bool[] isaac:actuator (
+                displayName = "Actuator"
+            )
+            string isaac:NameOverride (
+                displayName = "Joint Name Override"
+            )
+            token[] isaac:physics:DofOffsetOpOrder (
+                displayName = "Dof Offset Op Order"
+            )
+            float physxJoint:jointFriction = 0
+            float physxJoint:maxJointVelocity = 1000000
+            float physxLimit:angular:bounceThreshold = 0
+            float physxLimit:angular:damping = 0
+            float physxLimit:angular:stiffness = 0
+            float state:angular:physics:position = 0
+            float state:angular:physics:velocity = 0
+        }
+
+        over "revolute_3_4" (
+            active = false
+            delete apiSchemas = ["PhysicsDriveAPI:angular", "PhysicsJointStateAPI:angular", "PhysxJointAxisAPI:angular"]
+            prepend apiSchemas = ["PhysxLimitAPI:angular", "PhysicsJointStateAPI:angular"]
+        )
+        {
+            bool[] isaac:actuator (
+                displayName = "Actuator"
+            )
+            string isaac:NameOverride (
+                displayName = "Joint Name Override"
+            )
+            token[] isaac:physics:DofOffsetOpOrder (
+                displayName = "Dof Offset Op Order"
+            )
+            float physxJoint:jointFriction = 0
+            float physxJoint:maxJointVelocity = 1000000
+            float physxLimit:angular:bounceThreshold = 0
+            float physxLimit:angular:damping = 0
+            float physxLimit:angular:stiffness = 0
+            float state:angular:physics:position = 0
+            float state:angular:physics:velocity = 0
+        }
+
+        over "revolute_4_4" (
+            active = false
+            delete apiSchemas = ["PhysicsDriveAPI:angular", "PhysicsJointStateAPI:angular", "PhysxJointAxisAPI:angular"]
+            prepend apiSchemas = ["PhysxLimitAPI:angular", "PhysicsJointStateAPI:angular"]
+        )
+        {
+            bool[] isaac:actuator (
+                displayName = "Actuator"
+            )
+            string isaac:NameOverride (
+                displayName = "Joint Name Override"
+            )
+            token[] isaac:physics:DofOffsetOpOrder (
+                displayName = "Dof Offset Op Order"
+            )
+            float physxJoint:jointFriction = 0
+            float physxJoint:maxJointVelocity = 1000000
+            float physxLimit:angular:bounceThreshold = 0
+            float physxLimit:angular:damping = 0
+            float physxLimit:angular:stiffness = 0
+            float state:angular:physics:position = 0
+            float state:angular:physics:velocity = 0
+        }
+
+        over "revolute_5_3" (
+            active = false
+            delete apiSchemas = ["PhysicsDriveAPI:angular", "PhysicsJointStateAPI:angular", "PhysxJointAxisAPI:angular"]
+            prepend apiSchemas = ["PhysxLimitAPI:angular", "PhysicsJointStateAPI:angular"]
+        )
+        {
+            bool[] isaac:actuator (
+                displayName = "Actuator"
+            )
+            string isaac:NameOverride (
+                displayName = "Joint Name Override"
+            )
+            token[] isaac:physics:DofOffsetOpOrder (
+                displayName = "Dof Offset Op Order"
+            )
+            float physxJoint:jointFriction = 0
+            float physxJoint:maxJointVelocity = 1000000
+            float physxLimit:angular:bounceThreshold = 0
+            float physxLimit:angular:damping = 0
+            float physxLimit:angular:stiffness = 0
+            float state:angular:physics:position = 0
+            float state:angular:physics:velocity = 0
+        }
+
+        over "revolute_6_3" (
+            active = false
+            delete apiSchemas = ["PhysicsDriveAPI:angular", "PhysicsJointStateAPI:angular", "PhysxJointAxisAPI:angular"]
+            prepend apiSchemas = ["PhysxLimitAPI:angular", "PhysicsJointStateAPI:angular"]
+        )
+        {
+            bool[] isaac:actuator (
+                displayName = "Actuator"
+            )
+            string isaac:NameOverride (
+                displayName = "Joint Name Override"
+            )
+            token[] isaac:physics:DofOffsetOpOrder (
+                displayName = "Dof Offset Op Order"
+            )
+            float physxJoint:jointFriction = 0
+            float physxJoint:maxJointVelocity = 1000000
+            float physxLimit:angular:bounceThreshold = 0
+            float physxLimit:angular:damping = 0
+            float physxLimit:angular:stiffness = 0
+            float state:angular:physics:position = 0
+            float state:angular:physics:velocity = 0
+        }
+
+        over "revolute_7_3" (
+            active = false
+            delete apiSchemas = ["PhysicsDriveAPI:angular", "PhysicsJointStateAPI:angular", "PhysxJointAxisAPI:angular"]
+            prepend apiSchemas = ["PhysxLimitAPI:angular", "PhysicsJointStateAPI:angular"]
+        )
+        {
+            bool[] isaac:actuator (
+                displayName = "Actuator"
+            )
+            string isaac:NameOverride (
+                displayName = "Joint Name Override"
+            )
+            token[] isaac:physics:DofOffsetOpOrder (
+                displayName = "Dof Offset Op Order"
+            )
+            float physxJoint:jointFriction = 0
+            float physxJoint:maxJointVelocity = 1000000
+            float physxLimit:angular:bounceThreshold = 0
+            float physxLimit:angular:damping = 0
+            float physxLimit:angular:stiffness = 0
+            float state:angular:physics:position = 0
+            float state:angular:physics:velocity = 0
+        }
+
+        over "revolute_8_3" (
+            active = false
+            delete apiSchemas = ["PhysicsDriveAPI:angular", "PhysicsJointStateAPI:angular", "PhysxJointAxisAPI:angular"]
+            prepend apiSchemas = ["PhysxLimitAPI:angular", "PhysicsJointStateAPI:angular"]
+        )
+        {
+            bool[] isaac:actuator (
+                displayName = "Actuator"
+            )
+            string isaac:NameOverride (
+                displayName = "Joint Name Override"
+            )
+            token[] isaac:physics:DofOffsetOpOrder (
+                displayName = "Dof Offset Op Order"
+            )
+            float physxJoint:jointFriction = 0
+            float physxJoint:maxJointVelocity = 1000000
+            float physxLimit:angular:bounceThreshold = 0
+            float physxLimit:angular:damping = 0
+            float physxLimit:angular:stiffness = 0
+            float state:angular:physics:position = 0
+            float state:angular:physics:velocity = 0
+        }
+
+        over "revolute_9_3" (
+            active = false
+            delete apiSchemas = ["PhysicsDriveAPI:angular", "PhysicsJointStateAPI:angular", "PhysxJointAxisAPI:angular"]
+            prepend apiSchemas = ["PhysxLimitAPI:angular", "PhysicsJointStateAPI:angular"]
+        )
+        {
+            bool[] isaac:actuator (
+                displayName = "Actuator"
+            )
+            string isaac:NameOverride (
+                displayName = "Joint Name Override"
+            )
+            token[] isaac:physics:DofOffsetOpOrder (
+                displayName = "Dof Offset Op Order"
+            )
+            float physxJoint:jointFriction = 0
+            float physxJoint:maxJointVelocity = 1000000
+            float physxLimit:angular:bounceThreshold = 0
+            float physxLimit:angular:damping = 0
+            float physxLimit:angular:stiffness = 0
+            float state:angular:physics:position = 0
+            float state:angular:physics:velocity = 0
+        }
+
+        over "revolute_10_2" (
+            active = false
+            delete apiSchemas = ["PhysicsDriveAPI:angular", "PhysicsJointStateAPI:angular", "PhysxJointAxisAPI:angular"]
+            prepend apiSchemas = ["PhysxLimitAPI:angular", "PhysicsJointStateAPI:angular"]
+        )
+        {
+            bool[] isaac:actuator (
+                displayName = "Actuator"
+            )
+            string isaac:NameOverride (
+                displayName = "Joint Name Override"
+            )
+            token[] isaac:physics:DofOffsetOpOrder (
+                displayName = "Dof Offset Op Order"
+            )
+            float physxJoint:jointFriction = 0
+            float physxJoint:maxJointVelocity = 1000000
+            float physxLimit:angular:bounceThreshold = 0
+            float physxLimit:angular:damping = 0
+            float physxLimit:angular:stiffness = 0
+            float state:angular:physics:position = 0
+            float state:angular:physics:velocity = 0
+        }
+
+        over "revolute_11_2" (
+            active = false
+            delete apiSchemas = ["PhysicsDriveAPI:angular", "PhysicsJointStateAPI:angular", "PhysxJointAxisAPI:angular"]
+            prepend apiSchemas = ["PhysxLimitAPI:angular", "PhysicsJointStateAPI:angular"]
+        )
+        {
+            bool[] isaac:actuator (
+                displayName = "Actuator"
+            )
+            string isaac:NameOverride (
+                displayName = "Joint Name Override"
+            )
+            token[] isaac:physics:DofOffsetOpOrder (
+                displayName = "Dof Offset Op Order"
+            )
+            float physxJoint:jointFriction = 0
+            float physxJoint:maxJointVelocity = 1000000
+            float physxLimit:angular:bounceThreshold = 0
+            float physxLimit:angular:damping = 0
+            float physxLimit:angular:stiffness = 0
+            float state:angular:physics:position = 0
+            float state:angular:physics:velocity = 0
+        }
+
+        over "revolute_12_2" (
+            active = false
+            delete apiSchemas = ["PhysicsDriveAPI:angular", "PhysicsJointStateAPI:angular", "PhysxJointAxisAPI:angular"]
+            prepend apiSchemas = ["PhysxLimitAPI:angular", "PhysicsJointStateAPI:angular"]
+        )
+        {
+            bool[] isaac:actuator (
+                displayName = "Actuator"
+            )
+            string isaac:NameOverride (
+                displayName = "Joint Name Override"
+            )
+            token[] isaac:physics:DofOffsetOpOrder (
+                displayName = "Dof Offset Op Order"
+            )
+            float physxJoint:jointFriction = 0
+            float physxJoint:maxJointVelocity = 1000000
+            float physxLimit:angular:bounceThreshold = 0
+            float physxLimit:angular:damping = 0
+            float physxLimit:angular:stiffness = 0
+            float state:angular:physics:position = 0
+            float state:angular:physics:velocity = 0
+        }
+
+        over "revolute_1_2" (
+            active = false
+            delete apiSchemas = ["PhysicsDriveAPI:angular", "PhysicsJointStateAPI:angular", "PhysxJointAxisAPI:angular"]
+            prepend apiSchemas = ["PhysxLimitAPI:angular", "PhysicsJointStateAPI:angular"]
+        )
+        {
+            bool[] isaac:actuator (
+                displayName = "Actuator"
+            )
+            string isaac:NameOverride (
+                displayName = "Joint Name Override"
+            )
+            token[] isaac:physics:DofOffsetOpOrder (
+                displayName = "Dof Offset Op Order"
+            )
+            float physxJoint:jointFriction = 0
+            float physxJoint:maxJointVelocity = 1000000
+            float physxLimit:angular:bounceThreshold = 0
+            float physxLimit:angular:damping = 0
+            float physxLimit:angular:stiffness = 0
+            float state:angular:physics:position = 0
+            float state:angular:physics:velocity = 0
+        }
+
+        over "revolute_2_3" (
+            active = false
+            delete apiSchemas = ["PhysicsDriveAPI:angular", "PhysicsJointStateAPI:angular", "PhysxJointAxisAPI:angular"]
+            prepend apiSchemas = ["PhysxLimitAPI:angular", "PhysicsJointStateAPI:angular"]
+        )
+        {
+            bool[] isaac:actuator (
+                displayName = "Actuator"
+            )
+            string isaac:NameOverride (
+                displayName = "Joint Name Override"
+            )
+            token[] isaac:physics:DofOffsetOpOrder (
+                displayName = "Dof Offset Op Order"
+            )
+            float physxJoint:jointFriction = 0
+            float physxJoint:maxJointVelocity = 1000000
+            float physxLimit:angular:bounceThreshold = 0
+            float physxLimit:angular:damping = 0
+            float physxLimit:angular:stiffness = 0
+            float state:angular:physics:position = 0
+            float state:angular:physics:velocity = 0
+        }
+
+        over "revolute_3_3" (
+            active = false
+            delete apiSchemas = ["PhysicsDriveAPI:angular", "PhysicsJointStateAPI:angular", "PhysxJointAxisAPI:angular"]
+            prepend apiSchemas = ["PhysxLimitAPI:angular", "PhysicsJointStateAPI:angular"]
+        )
+        {
+            bool[] isaac:actuator (
+                displayName = "Actuator"
+            )
+            string isaac:NameOverride (
+                displayName = "Joint Name Override"
+            )
+            token[] isaac:physics:DofOffsetOpOrder (
+                displayName = "Dof Offset Op Order"
+            )
+            float physxJoint:jointFriction = 0
+            float physxJoint:maxJointVelocity = 1000000
+            float physxLimit:angular:bounceThreshold = 0
+            float physxLimit:angular:damping = 0
+            float physxLimit:angular:stiffness = 0
+            float state:angular:physics:position = 0
+            float state:angular:physics:velocity = 0
+        }
+
+        over "revolute_4_3" (
+            active = false
+            delete apiSchemas = ["PhysicsDriveAPI:angular", "PhysicsJointStateAPI:angular", "PhysxJointAxisAPI:angular"]
+            prepend apiSchemas = ["PhysxLimitAPI:angular", "PhysicsJointStateAPI:angular"]
+        )
+        {
+            bool[] isaac:actuator (
+                displayName = "Actuator"
+            )
+            string isaac:NameOverride (
+                displayName = "Joint Name Override"
+            )
+            token[] isaac:physics:DofOffsetOpOrder (
+                displayName = "Dof Offset Op Order"
+            )
+            float physxJoint:jointFriction = 0
+            float physxJoint:maxJointVelocity = 1000000
+            float physxLimit:angular:bounceThreshold = 0
+            float physxLimit:angular:damping = 0
+            float physxLimit:angular:stiffness = 0
+            float state:angular:physics:position = 0
+            float state:angular:physics:velocity = 0
+        }
+
+        over "revolute_5_2" (
+            active = false
+            delete apiSchemas = ["PhysicsDriveAPI:angular", "PhysicsJointStateAPI:angular", "PhysxJointAxisAPI:angular"]
+            prepend apiSchemas = ["PhysxLimitAPI:angular", "PhysicsJointStateAPI:angular"]
+        )
+        {
+            bool[] isaac:actuator (
+                displayName = "Actuator"
+            )
+            string isaac:NameOverride (
+                displayName = "Joint Name Override"
+            )
+            token[] isaac:physics:DofOffsetOpOrder (
+                displayName = "Dof Offset Op Order"
+            )
+            float physxJoint:jointFriction = 0
+            float physxJoint:maxJointVelocity = 1000000
+            float physxLimit:angular:bounceThreshold = 0
+            float physxLimit:angular:damping = 0
+            float physxLimit:angular:stiffness = 0
+            float state:angular:physics:position = 0
+            float state:angular:physics:velocity = 0
+        }
+
+        over "revolute_6_2" (
+            active = false
+            delete apiSchemas = ["PhysicsDriveAPI:angular", "PhysicsJointStateAPI:angular", "PhysxJointAxisAPI:angular"]
+            prepend apiSchemas = ["PhysxLimitAPI:angular", "PhysicsJointStateAPI:angular"]
+        )
+        {
+            bool[] isaac:actuator (
+                displayName = "Actuator"
+            )
+            string isaac:NameOverride (
+                displayName = "Joint Name Override"
+            )
+            token[] isaac:physics:DofOffsetOpOrder (
+                displayName = "Dof Offset Op Order"
+            )
+            float physxJoint:jointFriction = 0
+            float physxJoint:maxJointVelocity = 1000000
+            float physxLimit:angular:bounceThreshold = 0
+            float physxLimit:angular:damping = 0
+            float physxLimit:angular:stiffness = 0
+            float state:angular:physics:position = 0
+            float state:angular:physics:velocity = 0
+        }
+
+        over "revolute_7_2" (
+            active = false
+            delete apiSchemas = ["PhysicsDriveAPI:angular", "PhysicsJointStateAPI:angular", "PhysxJointAxisAPI:angular"]
+            prepend apiSchemas = ["PhysxLimitAPI:angular", "PhysicsJointStateAPI:angular"]
+        )
+        {
+            bool[] isaac:actuator (
+                displayName = "Actuator"
+            )
+            string isaac:NameOverride (
+                displayName = "Joint Name Override"
+            )
+            token[] isaac:physics:DofOffsetOpOrder (
+                displayName = "Dof Offset Op Order"
+            )
+            float physxJoint:jointFriction = 0
+            float physxJoint:maxJointVelocity = 1000000
+            float physxLimit:angular:bounceThreshold = 0
+            float physxLimit:angular:damping = 0
+            float physxLimit:angular:stiffness = 0
+            float state:angular:physics:position = 0
+            float state:angular:physics:velocity = 0
+        }
+
+        over "revolute_8_2" (
+            active = false
+            delete apiSchemas = ["PhysicsDriveAPI:angular", "PhysicsJointStateAPI:angular", "PhysxJointAxisAPI:angular"]
+            prepend apiSchemas = ["PhysxLimitAPI:angular", "PhysicsJointStateAPI:angular"]
+        )
+        {
+            bool[] isaac:actuator (
+                displayName = "Actuator"
+            )
+            string isaac:NameOverride (
+                displayName = "Joint Name Override"
+            )
+            token[] isaac:physics:DofOffsetOpOrder (
+                displayName = "Dof Offset Op Order"
+            )
+            float physxJoint:jointFriction = 0
+            float physxJoint:maxJointVelocity = 1000000
+            float physxLimit:angular:bounceThreshold = 0
+            float physxLimit:angular:damping = 0
+            float physxLimit:angular:stiffness = 0
+            float state:angular:physics:position = 0
+            float state:angular:physics:velocity = 0
+        }
+
+        over "revolute_9_2" (
+            active = false
+            delete apiSchemas = ["PhysicsDriveAPI:angular", "PhysicsJointStateAPI:angular", "PhysxJointAxisAPI:angular"]
+            prepend apiSchemas = ["PhysxLimitAPI:angular", "PhysicsJointStateAPI:angular"]
+        )
+        {
+            bool[] isaac:actuator (
+                displayName = "Actuator"
+            )
+            string isaac:NameOverride (
+                displayName = "Joint Name Override"
+            )
+            token[] isaac:physics:DofOffsetOpOrder (
+                displayName = "Dof Offset Op Order"
+            )
+            float physxJoint:jointFriction = 0
+            float physxJoint:maxJointVelocity = 1000000
+            float physxLimit:angular:bounceThreshold = 0
+            float physxLimit:angular:damping = 0
+            float physxLimit:angular:stiffness = 0
+            float state:angular:physics:position = 0
+            float state:angular:physics:velocity = 0
+        }
+
+        over "revolute_10_1" (
+            active = false
+            delete apiSchemas = ["PhysicsDriveAPI:angular", "PhysicsJointStateAPI:angular", "PhysxJointAxisAPI:angular"]
+            prepend apiSchemas = ["PhysxLimitAPI:angular", "PhysicsJointStateAPI:angular"]
+        )
+        {
+            bool[] isaac:actuator (
+                displayName = "Actuator"
+            )
+            string isaac:NameOverride (
+                displayName = "Joint Name Override"
+            )
+            token[] isaac:physics:DofOffsetOpOrder (
+                displayName = "Dof Offset Op Order"
+            )
+            float physxJoint:jointFriction = 0
+            float physxJoint:maxJointVelocity = 1000000
+            float physxLimit:angular:bounceThreshold = 0
+            float physxLimit:angular:damping = 0
+            float physxLimit:angular:stiffness = 0
+            float state:angular:physics:position = 0
+            float state:angular:physics:velocity = 0
+        }
+
+        over "revolute_11_1" (
+            active = false
+            delete apiSchemas = ["PhysicsDriveAPI:angular", "PhysicsJointStateAPI:angular", "PhysxJointAxisAPI:angular"]
+            prepend apiSchemas = ["PhysxLimitAPI:angular", "PhysicsJointStateAPI:angular"]
+        )
+        {
+            bool[] isaac:actuator (
+                displayName = "Actuator"
+            )
+            string isaac:NameOverride (
+                displayName = "Joint Name Override"
+            )
+            token[] isaac:physics:DofOffsetOpOrder (
+                displayName = "Dof Offset Op Order"
+            )
+            float physxJoint:jointFriction = 0
+            float physxJoint:maxJointVelocity = 1000000
+            float physxLimit:angular:bounceThreshold = 0
+            float physxLimit:angular:damping = 0
+            float physxLimit:angular:stiffness = 0
+            float state:angular:physics:position = 0
+            float state:angular:physics:velocity = 0
+        }
+
+        over "revolute_12_1" (
+            active = false
+            delete apiSchemas = ["PhysicsDriveAPI:angular", "PhysicsJointStateAPI:angular", "PhysxJointAxisAPI:angular"]
+            prepend apiSchemas = ["PhysxLimitAPI:angular", "PhysicsJointStateAPI:angular"]
+        )
+        {
+            bool[] isaac:actuator (
+                displayName = "Actuator"
+            )
+            string isaac:NameOverride (
+                displayName = "Joint Name Override"
+            )
+            token[] isaac:physics:DofOffsetOpOrder (
+                displayName = "Dof Offset Op Order"
+            )
+            float physxJoint:jointFriction = 0
+            float physxJoint:maxJointVelocity = 1000000
+            float physxLimit:angular:bounceThreshold = 0
+            float physxLimit:angular:damping = 0
+            float physxLimit:angular:stiffness = 0
+            float state:angular:physics:position = 0
+            float state:angular:physics:velocity = 0
+        }
+
+        over "revolute_1_1" (
+            active = false
+            delete apiSchemas = ["PhysicsDriveAPI:angular", "PhysicsJointStateAPI:angular", "PhysxJointAxisAPI:angular"]
+            prepend apiSchemas = ["PhysxLimitAPI:angular", "PhysicsJointStateAPI:angular"]
+        )
+        {
+            bool[] isaac:actuator (
+                displayName = "Actuator"
+            )
+            string isaac:NameOverride (
+                displayName = "Joint Name Override"
+            )
+            token[] isaac:physics:DofOffsetOpOrder (
+                displayName = "Dof Offset Op Order"
+            )
+            float physxJoint:jointFriction = 0
+            float physxJoint:maxJointVelocity = 1000000
+            float physxLimit:angular:bounceThreshold = 0
+            float physxLimit:angular:damping = 0
+            float physxLimit:angular:stiffness = 0
+            float state:angular:physics:position = 0
+            float state:angular:physics:velocity = 0
+        }
+
+        over "revolute_2_1" (
+            active = false
+            delete apiSchemas = ["PhysicsDriveAPI:angular", "PhysicsJointStateAPI:angular", "PhysxJointAxisAPI:angular"]
+            prepend apiSchemas = ["PhysxLimitAPI:angular", "PhysicsJointStateAPI:angular"]
+        )
+        {
+            bool[] isaac:actuator (
+                displayName = "Actuator"
+            )
+            string isaac:NameOverride (
+                displayName = "Joint Name Override"
+            )
+            token[] isaac:physics:DofOffsetOpOrder (
+                displayName = "Dof Offset Op Order"
+            )
+            float physxJoint:jointFriction = 0
+            float physxJoint:maxJointVelocity = 1000000
+            float physxLimit:angular:bounceThreshold = 0
+            float physxLimit:angular:damping = 0
+            float physxLimit:angular:stiffness = 0
+            float state:angular:physics:position = 0
+            float state:angular:physics:velocity = 0
+        }
+
+        over "revolute_3_1" (
+            active = false
+            delete apiSchemas = ["PhysicsDriveAPI:angular", "PhysicsJointStateAPI:angular", "PhysxJointAxisAPI:angular"]
+            prepend apiSchemas = ["PhysxLimitAPI:angular", "PhysicsJointStateAPI:angular"]
+        )
+        {
+            bool[] isaac:actuator (
+                displayName = "Actuator"
+            )
+            string isaac:NameOverride (
+                displayName = "Joint Name Override"
+            )
+            token[] isaac:physics:DofOffsetOpOrder (
+                displayName = "Dof Offset Op Order"
+            )
+            float physxJoint:jointFriction = 0
+            float physxJoint:maxJointVelocity = 1000000
+            float physxLimit:angular:bounceThreshold = 0
+            float physxLimit:angular:damping = 0
+            float physxLimit:angular:stiffness = 0
+            float state:angular:physics:position = 0
+            float state:angular:physics:velocity = 0
+        }
+
+        over "revolute_4_2" (
+            active = false
+            delete apiSchemas = ["PhysicsDriveAPI:angular", "PhysicsJointStateAPI:angular", "PhysxJointAxisAPI:angular"]
+            prepend apiSchemas = ["PhysxLimitAPI:angular", "PhysicsJointStateAPI:angular"]
+        )
+        {
+            bool[] isaac:actuator (
+                displayName = "Actuator"
+            )
+            string isaac:NameOverride (
+                displayName = "Joint Name Override"
+            )
+            token[] isaac:physics:DofOffsetOpOrder (
+                displayName = "Dof Offset Op Order"
+            )
+            float physxJoint:jointFriction = 0
+            float physxJoint:maxJointVelocity = 1000000
+            float physxLimit:angular:bounceThreshold = 0
+            float physxLimit:angular:damping = 0
+            float physxLimit:angular:stiffness = 0
+            float state:angular:physics:position = 0
+            float state:angular:physics:velocity = 0
+        }
+
+        over "revolute_5_1" (
+            active = false
+            delete apiSchemas = ["PhysicsDriveAPI:angular", "PhysicsJointStateAPI:angular", "PhysxJointAxisAPI:angular"]
+            prepend apiSchemas = ["PhysxLimitAPI:angular", "PhysicsJointStateAPI:angular"]
+        )
+        {
+            bool[] isaac:actuator (
+                displayName = "Actuator"
+            )
+            string isaac:NameOverride (
+                displayName = "Joint Name Override"
+            )
+            token[] isaac:physics:DofOffsetOpOrder (
+                displayName = "Dof Offset Op Order"
+            )
+            float physxJoint:jointFriction = 0
+            float physxJoint:maxJointVelocity = 1000000
+            float physxLimit:angular:bounceThreshold = 0
+            float physxLimit:angular:damping = 0
+            float physxLimit:angular:stiffness = 0
+            float state:angular:physics:position = 0
+            float state:angular:physics:velocity = 0
+        }
+
+        over "revolute_6_1" (
+            active = false
+            delete apiSchemas = ["PhysicsDriveAPI:angular", "PhysicsJointStateAPI:angular", "PhysxJointAxisAPI:angular"]
+            prepend apiSchemas = ["PhysxLimitAPI:angular", "PhysicsJointStateAPI:angular"]
+        )
+        {
+            bool[] isaac:actuator (
+                displayName = "Actuator"
+            )
+            string isaac:NameOverride (
+                displayName = "Joint Name Override"
+            )
+            token[] isaac:physics:DofOffsetOpOrder (
+                displayName = "Dof Offset Op Order"
+            )
+            float physxJoint:jointFriction = 0
+            float physxJoint:maxJointVelocity = 1000000
+            float physxLimit:angular:bounceThreshold = 0
+            float physxLimit:angular:damping = 0
+            float physxLimit:angular:stiffness = 0
+            float state:angular:physics:position = 0
+            float state:angular:physics:velocity = 0
+        }
+
+        over "revolute_7_1" (
+            active = false
+            delete apiSchemas = ["PhysicsDriveAPI:angular", "PhysicsJointStateAPI:angular", "PhysxJointAxisAPI:angular"]
+            prepend apiSchemas = ["PhysxLimitAPI:angular", "PhysicsJointStateAPI:angular"]
+        )
+        {
+            bool[] isaac:actuator (
+                displayName = "Actuator"
+            )
+            string isaac:NameOverride (
+                displayName = "Joint Name Override"
+            )
+            token[] isaac:physics:DofOffsetOpOrder (
+                displayName = "Dof Offset Op Order"
+            )
+            float physxJoint:jointFriction = 0
+            float physxJoint:maxJointVelocity = 1000000
+            float physxLimit:angular:bounceThreshold = 0
+            float physxLimit:angular:damping = 0
+            float physxLimit:angular:stiffness = 0
+            float state:angular:physics:position = 0
+            float state:angular:physics:velocity = 0
+        }
+
+        over "revolute_8_1" (
+            active = false
+            delete apiSchemas = ["PhysicsDriveAPI:angular", "PhysicsJointStateAPI:angular", "PhysxJointAxisAPI:angular"]
+            prepend apiSchemas = ["PhysxLimitAPI:angular", "PhysicsJointStateAPI:angular"]
+        )
+        {
+            bool[] isaac:actuator (
+                displayName = "Actuator"
+            )
+            string isaac:NameOverride (
+                displayName = "Joint Name Override"
+            )
+            token[] isaac:physics:DofOffsetOpOrder (
+                displayName = "Dof Offset Op Order"
+            )
+            float physxJoint:jointFriction = 0
+            float physxJoint:maxJointVelocity = 1000000
+            float physxLimit:angular:bounceThreshold = 0
+            float physxLimit:angular:damping = 0
+            float physxLimit:angular:stiffness = 0
+            float state:angular:physics:position = 0
+            float state:angular:physics:velocity = 0
+        }
+
+        over "revolute_9_1" (
+            active = false
+            delete apiSchemas = ["PhysicsDriveAPI:angular", "PhysicsJointStateAPI:angular", "PhysxJointAxisAPI:angular"]
+            prepend apiSchemas = ["PhysxLimitAPI:angular", "PhysicsJointStateAPI:angular"]
+        )
+        {
+            bool[] isaac:actuator (
+                displayName = "Actuator"
+            )
+            string isaac:NameOverride (
+                displayName = "Joint Name Override"
+            )
+            token[] isaac:physics:DofOffsetOpOrder (
+                displayName = "Dof Offset Op Order"
+            )
+            float physxJoint:jointFriction = 0
+            float physxJoint:maxJointVelocity = 1000000
+            float physxLimit:angular:bounceThreshold = 0
+            float physxLimit:angular:damping = 0
+            float physxLimit:angular:stiffness = 0
+            float state:angular:physics:position = 0
+            float state:angular:physics:velocity = 0
+        }
+
+        over "revolute_1" (
+            active = false
+            delete apiSchemas = ["PhysicsDriveAPI:angular", "PhysicsJointStateAPI:angular", "PhysxJointAxisAPI:angular"]
+            prepend apiSchemas = ["PhysxLimitAPI:angular", "PhysicsJointStateAPI:angular"]
+        )
+        {
+            bool[] isaac:actuator (
+                displayName = "Actuator"
+            )
+            string isaac:NameOverride (
+                displayName = "Joint Name Override"
+            )
+            token[] isaac:physics:DofOffsetOpOrder (
+                displayName = "Dof Offset Op Order"
+            )
+            float physxJoint:jointFriction = 0
+            float physxJoint:maxJointVelocity = 1000000
+            float physxLimit:angular:bounceThreshold = 0
+            float physxLimit:angular:damping = 0
+            float physxLimit:angular:stiffness = 0
+            float state:angular:physics:position = 0
+            float state:angular:physics:velocity = 0
+        }
+
+        over "revolute_10" (
+            active = false
+            delete apiSchemas = ["PhysicsDriveAPI:angular", "PhysicsJointStateAPI:angular", "PhysxJointAxisAPI:angular"]
+            prepend apiSchemas = ["PhysxLimitAPI:angular", "PhysicsJointStateAPI:angular"]
+        )
+        {
+            bool[] isaac:actuator (
+                displayName = "Actuator"
+            )
+            string isaac:NameOverride (
+                displayName = "Joint Name Override"
+            )
+            token[] isaac:physics:DofOffsetOpOrder (
+                displayName = "Dof Offset Op Order"
+            )
+            float physxJoint:jointFriction = 0
+            float physxJoint:maxJointVelocity = 1000000
+            float physxLimit:angular:bounceThreshold = 0
+            float physxLimit:angular:damping = 0
+            float physxLimit:angular:stiffness = 0
+            float state:angular:physics:position = 0
+            float state:angular:physics:velocity = 0
+        }
+
+        over "revolute_11" (
+            active = false
+            delete apiSchemas = ["PhysicsDriveAPI:angular", "PhysicsJointStateAPI:angular", "PhysxJointAxisAPI:angular"]
+            prepend apiSchemas = ["PhysxLimitAPI:angular", "PhysicsJointStateAPI:angular"]
+        )
+        {
+            bool[] isaac:actuator (
+                displayName = "Actuator"
+            )
+            string isaac:NameOverride (
+                displayName = "Joint Name Override"
+            )
+            token[] isaac:physics:DofOffsetOpOrder (
+                displayName = "Dof Offset Op Order"
+            )
+            float physxJoint:jointFriction = 0
+            float physxJoint:maxJointVelocity = 1000000
+            float physxLimit:angular:bounceThreshold = 0
+            float physxLimit:angular:damping = 0
+            float physxLimit:angular:stiffness = 0
+            float state:angular:physics:position = 0
+            float state:angular:physics:velocity = 0
+        }
+
+        over "revolute_12" (
+            active = false
+            delete apiSchemas = ["PhysicsDriveAPI:angular", "PhysicsJointStateAPI:angular", "PhysxJointAxisAPI:angular"]
+            prepend apiSchemas = ["PhysxLimitAPI:angular", "PhysicsJointStateAPI:angular"]
+        )
+        {
+            bool[] isaac:actuator (
+                displayName = "Actuator"
+            )
+            string isaac:NameOverride (
+                displayName = "Joint Name Override"
+            )
+            token[] isaac:physics:DofOffsetOpOrder (
+                displayName = "Dof Offset Op Order"
+            )
+            float physxJoint:jointFriction = 0
+            float physxJoint:maxJointVelocity = 1000000
+            float physxLimit:angular:bounceThreshold = 0
+            float physxLimit:angular:damping = 0
+            float physxLimit:angular:stiffness = 0
+            float state:angular:physics:position = 0
+            float state:angular:physics:velocity = 0
+        }
+
+        over "revolute_2" (
+            active = false
+            delete apiSchemas = ["PhysicsDriveAPI:angular", "PhysicsJointStateAPI:angular", "PhysxJointAxisAPI:angular"]
+            prepend apiSchemas = ["PhysxLimitAPI:angular", "PhysicsJointStateAPI:angular"]
+        )
+        {
+            bool[] isaac:actuator (
+                displayName = "Actuator"
+            )
+            string isaac:NameOverride (
+                displayName = "Joint Name Override"
+            )
+            token[] isaac:physics:DofOffsetOpOrder (
+                displayName = "Dof Offset Op Order"
+            )
+            float physxJoint:jointFriction = 0
+            float physxJoint:maxJointVelocity = 1000000
+            float physxLimit:angular:bounceThreshold = 0
+            float physxLimit:angular:damping = 0
+            float physxLimit:angular:stiffness = 0
+            float state:angular:physics:position = 0
+            float state:angular:physics:velocity = 0
+        }
+
+        over "revolute_3" (
+            active = false
+            delete apiSchemas = ["PhysicsDriveAPI:angular", "PhysicsJointStateAPI:angular", "PhysxJointAxisAPI:angular"]
+            prepend apiSchemas = ["PhysxLimitAPI:angular", "PhysicsJointStateAPI:angular"]
+        )
+        {
+            bool[] isaac:actuator (
+                displayName = "Actuator"
+            )
+            string isaac:NameOverride (
+                displayName = "Joint Name Override"
+            )
+            token[] isaac:physics:DofOffsetOpOrder (
+                displayName = "Dof Offset Op Order"
+            )
+            float physxJoint:jointFriction = 0
+            float physxJoint:maxJointVelocity = 1000000
+            float physxLimit:angular:bounceThreshold = 0
+            float physxLimit:angular:damping = 0
+            float physxLimit:angular:stiffness = 0
+            float state:angular:physics:position = 0
+            float state:angular:physics:velocity = 0
+        }
+
+        over "revolute_4_1" (
+            active = false
+            delete apiSchemas = ["PhysicsDriveAPI:angular", "PhysicsJointStateAPI:angular", "PhysxJointAxisAPI:angular"]
+            prepend apiSchemas = ["PhysxLimitAPI:angular", "PhysicsJointStateAPI:angular"]
+        )
+        {
+            bool[] isaac:actuator (
+                displayName = "Actuator"
+            )
+            string isaac:NameOverride (
+                displayName = "Joint Name Override"
+            )
+            token[] isaac:physics:DofOffsetOpOrder (
+                displayName = "Dof Offset Op Order"
+            )
+            float physxJoint:jointFriction = 0
+            float physxJoint:maxJointVelocity = 1000000
+            float physxLimit:angular:bounceThreshold = 0
+            float physxLimit:angular:damping = 0
+            float physxLimit:angular:stiffness = 0
+            float state:angular:physics:position = 0
+            float state:angular:physics:velocity = 0
+        }
+
+        over "revolute_5" (
+            active = false
+            delete apiSchemas = ["PhysicsDriveAPI:angular", "PhysicsJointStateAPI:angular", "PhysxJointAxisAPI:angular"]
+            prepend apiSchemas = ["PhysxLimitAPI:angular", "PhysicsJointStateAPI:angular"]
+        )
+        {
+            bool[] isaac:actuator (
+                displayName = "Actuator"
+            )
+            string isaac:NameOverride (
+                displayName = "Joint Name Override"
+            )
+            token[] isaac:physics:DofOffsetOpOrder (
+                displayName = "Dof Offset Op Order"
+            )
+            float physxJoint:jointFriction = 0
+            float physxJoint:maxJointVelocity = 1000000
+            float physxLimit:angular:bounceThreshold = 0
+            float physxLimit:angular:damping = 0
+            float physxLimit:angular:stiffness = 0
+            float state:angular:physics:position = 0
+            float state:angular:physics:velocity = 0
+        }
+
+        over "revolute_6" (
+            active = false
+            delete apiSchemas = ["PhysicsDriveAPI:angular", "PhysicsJointStateAPI:angular", "PhysxJointAxisAPI:angular"]
+            prepend apiSchemas = ["PhysxLimitAPI:angular", "PhysicsJointStateAPI:angular"]
+        )
+        {
+            bool[] isaac:actuator (
+                displayName = "Actuator"
+            )
+            string isaac:NameOverride (
+                displayName = "Joint Name Override"
+            )
+            token[] isaac:physics:DofOffsetOpOrder (
+                displayName = "Dof Offset Op Order"
+            )
+            float physxJoint:jointFriction = 0
+            float physxJoint:maxJointVelocity = 1000000
+            float physxLimit:angular:bounceThreshold = 0
+            float physxLimit:angular:damping = 0
+            float physxLimit:angular:stiffness = 0
+            float state:angular:physics:position = 0
+            float state:angular:physics:velocity = 0
+        }
+
+        over "revolute_7" (
+            active = false
+            delete apiSchemas = ["PhysicsDriveAPI:angular", "PhysicsJointStateAPI:angular", "PhysxJointAxisAPI:angular"]
+            prepend apiSchemas = ["PhysxLimitAPI:angular", "PhysicsJointStateAPI:angular"]
+        )
+        {
+            bool[] isaac:actuator (
+                displayName = "Actuator"
+            )
+            string isaac:NameOverride (
+                displayName = "Joint Name Override"
+            )
+            token[] isaac:physics:DofOffsetOpOrder (
+                displayName = "Dof Offset Op Order"
+            )
+            float physxJoint:jointFriction = 0
+            float physxJoint:maxJointVelocity = 1000000
+            float physxLimit:angular:bounceThreshold = 0
+            float physxLimit:angular:damping = 0
+            float physxLimit:angular:stiffness = 0
+            float state:angular:physics:position = 0
+            float state:angular:physics:velocity = 0
+        }
+
+        over "revolute_8" (
+            active = false
+            delete apiSchemas = ["PhysicsDriveAPI:angular", "PhysicsJointStateAPI:angular", "PhysxJointAxisAPI:angular"]
+            prepend apiSchemas = ["PhysxLimitAPI:angular", "PhysicsJointStateAPI:angular"]
+        )
+        {
+            bool[] isaac:actuator (
+                displayName = "Actuator"
+            )
+            string isaac:NameOverride (
+                displayName = "Joint Name Override"
+            )
+            token[] isaac:physics:DofOffsetOpOrder (
+                displayName = "Dof Offset Op Order"
+            )
+            float physxJoint:jointFriction = 0
+            float physxJoint:maxJointVelocity = 1000000
+            float physxLimit:angular:bounceThreshold = 0
+            float physxLimit:angular:damping = 0
+            float physxLimit:angular:stiffness = 0
+            float state:angular:physics:position = 0
+            float state:angular:physics:velocity = 0
+        }
+
+        over "revolute_9" (
+            active = false
+            delete apiSchemas = ["PhysicsDriveAPI:angular", "PhysicsJointStateAPI:angular", "PhysxJointAxisAPI:angular"]
+            prepend apiSchemas = ["PhysxLimitAPI:angular", "PhysicsJointStateAPI:angular"]
+        )
+        {
+            bool[] isaac:actuator (
+                displayName = "Actuator"
+            )
+            string isaac:NameOverride (
+                displayName = "Joint Name Override"
+            )
+            token[] isaac:physics:DofOffsetOpOrder (
+                displayName = "Dof Offset Op Order"
+            )
+            float physxJoint:jointFriction = 0
+            float physxJoint:maxJointVelocity = 1000000
+            float physxLimit:angular:bounceThreshold = 0
+            float physxLimit:angular:damping = 0
+            float physxLimit:angular:stiffness = 0
+            float state:angular:physics:position = 0
+            float state:angular:physics:velocity = 0
+        }
+
+        def PhysicsJoint "D6Joint" (
+            active = false
+            prepend apiSchemas = ["PhysicsLimitAPI:transX", "PhysicsLimitAPI:transY", "PhysicsLimitAPI:transZ", "PhysicsLimitAPI:rotX", "PhysicsLimitAPI:rotY", "PhysicsLimitAPI:rotZ", "PhysicsDriveAPI:transZ", "PhysicsDriveAPI:transX", "PhysicsDriveAPI:transY", "PhysicsDriveAPI:rotZ", "PhysicsDriveAPI:rotX", "PhysicsDriveAPI:rotY"]
+        )
+        {
+            float drive:rotZ:physics:stiffness = 1000
+            float drive:transX:physics:stiffness = 1000
+            float drive:transX:physics:targetPosition = 1
+            float drive:transY:physics:stiffness = 1000
+            float drive:transZ:physics:stiffness = 1000
+            float drive:transZ:physics:targetPosition = 0.1
+            float limit:rotX:physics:high = 0
+            float limit:rotX:physics:low = 0
+            float limit:rotY:physics:high = 0
+            float limit:rotY:physics:low = 0
+            float limit:rotZ:physics:high = inf
+            float limit:rotZ:physics:low = -inf
+            float limit:transX:physics:high = inf
+            float limit:transX:physics:low = -inf
+            float limit:transY:physics:high = inf
+            float limit:transY:physics:low = -inf
+            float limit:transZ:physics:high = 0.1
+            float limit:transZ:physics:low = -0.1
+            rel physics:body1 = </momo_openrob/Geometry/root>
+            float physics:breakForce = 3.4028235e38
+            float physics:breakTorque = 3.4028235e38
+            point3f physics:localPos0 = (0, 0, 0)
+            point3f physics:localPos1 = (0, 0, 0)
+            quatf physics:localRot0 = (1, 0, 0, 0)
+            quatf physics:localRot1 = (1, 0, 0, 0)
+        }
+    }
+
+    over "Geometry"
+    {
+        over "root" (
+            prepend apiSchemas = ["PhysxRigidBodyAPI"]
+        )
+        {
+            string isaac:nameOverride (
+                displayName = "Name Override"
+            )
+            bool physics:kinematicEnabled = 0
+            int physxRigidBody:lockedPosAxis = 0
+            int physxRigidBody:lockedRotAxis = 0
+
+            over "hub_half__fillet141_7" (
+                prepend apiSchemas = ["MaterialBindingAPI"]
+            )
+            {
+                string isaac:nameOverride (
+                    displayName = "Name Override"
+                )
+                rel material:binding = </momo_openrob/WheelMaterial> (
+                    bindMaterialAs = "weakerThanDescendants"
+                )
+
+                over "tn__812_roller_skin__fillet1_40_" (
+                    delete apiSchemas = ["PhysicsRigidBodyAPI", "PhysxRigidBodyAPI"]
+                    prepend apiSchemas = ["MaterialBindingAPI"]
+                    instanceable = false
+                )
+                {
+                    string isaac:nameOverride (
+                        displayName = "Name Override"
+                    )
+                    rel material:binding = None (
+                        bindMaterialAs = "strongerThanDescendants"
+                    )
+
+                    over "_812_roller_skin__Fillet1_1_1" (
+                        prepend apiSchemas = ["PhysxSDFMeshCollisionAPI", "PhysxSphereFillCollisionAPI", "PhysxTriangleMeshCollisionAPI", "PhysxTriangleMeshSimplificationCollisionAPI", "PhysxConvexDecompositionCollisionAPI", "PhysxConvexHullCollisionAPI", "PhysxCollisionAPI"]
+                    )
+                    {
+                        uniform token physics:approximation = "sdf"
+                        float physxCollision:torsionalPatchRadius = 0
+                        uniform bool physxSDFMeshCollision:sdfEnableRemeshing = 0
+                        uniform int physxSDFMeshCollision:sdfResolution = 256
+                    }
+                }
+
+                over "tn__812_roller_skin__fillet1_36_" (
+                    delete apiSchemas = ["PhysicsRigidBodyAPI", "PhysxRigidBodyAPI"]
+                    prepend apiSchemas = ["MaterialBindingAPI"]
+                    instanceable = false
+                )
+                {
+                    rel material:binding = None (
+                        bindMaterialAs = "strongerThanDescendants"
+                    )
+
+                    over "_812_roller_skin__Fillet1_1_1" (
+                        prepend apiSchemas = ["PhysxSDFMeshCollisionAPI", "PhysxSphereFillCollisionAPI", "PhysxTriangleMeshCollisionAPI", "PhysxTriangleMeshSimplificationCollisionAPI", "PhysxConvexDecompositionCollisionAPI", "PhysxConvexHullCollisionAPI", "PhysxCollisionAPI"]
+                    )
+                    {
+                        uniform token physics:approximation = "sdf"
+                        float physxCollision:torsionalPatchRadius = 0
+                        uniform bool physxSDFMeshCollision:sdfEnableRemeshing = 0
+                        uniform int physxSDFMeshCollision:sdfResolution = 256
+                    }
+                }
+
+                over "tn__812_roller_skin__fillet1_37_" (
+                    delete apiSchemas = ["PhysicsRigidBodyAPI", "PhysxRigidBodyAPI"]
+                    prepend apiSchemas = ["MaterialBindingAPI"]
+                    instanceable = false
+                )
+                {
+                    rel material:binding = None (
+                        bindMaterialAs = "strongerThanDescendants"
+                    )
+
+                    over "_812_roller_skin__Fillet1_1_1" (
+                        prepend apiSchemas = ["PhysxSDFMeshCollisionAPI", "PhysxSphereFillCollisionAPI", "PhysxTriangleMeshCollisionAPI", "PhysxTriangleMeshSimplificationCollisionAPI", "PhysxConvexDecompositionCollisionAPI", "PhysxConvexHullCollisionAPI", "PhysxCollisionAPI"]
+                    )
+                    {
+                        uniform token physics:approximation = "sdf"
+                        float physxCollision:torsionalPatchRadius = 0
+                        uniform bool physxSDFMeshCollision:sdfEnableRemeshing = 0
+                        uniform int physxSDFMeshCollision:sdfResolution = 256
+                    }
+                }
+
+                over "tn__812_roller_skin__fillet1_47_" (
+                    delete apiSchemas = ["PhysicsRigidBodyAPI", "PhysxRigidBodyAPI"]
+                    prepend apiSchemas = ["MaterialBindingAPI"]
+                    instanceable = false
+                )
+                {
+                    string isaac:nameOverride (
+                        displayName = "Name Override"
+                    )
+                    rel material:binding = None (
+                        bindMaterialAs = "strongerThanDescendants"
+                    )
+
+                    over "_812_roller_skin__Fillet1_1_1" (
+                        prepend apiSchemas = ["PhysxSDFMeshCollisionAPI", "PhysxSphereFillCollisionAPI", "PhysxTriangleMeshCollisionAPI", "PhysxTriangleMeshSimplificationCollisionAPI", "PhysxConvexDecompositionCollisionAPI", "PhysxConvexHullCollisionAPI", "PhysxCollisionAPI"]
+                    )
+                    {
+                        uniform token physics:approximation = "sdf"
+                        float physxCollision:torsionalPatchRadius = 0
+                        uniform bool physxSDFMeshCollision:sdfEnableRemeshing = 0
+                        uniform int physxSDFMeshCollision:sdfResolution = 256
+                    }
+                }
+
+                over "tn__812_roller_skin__fillet1_45_" (
+                    delete apiSchemas = ["PhysicsRigidBodyAPI", "PhysxRigidBodyAPI"]
+                    prepend apiSchemas = ["MaterialBindingAPI"]
+                    instanceable = false
+                )
+                {
+                    rel material:binding = None (
+                        bindMaterialAs = "strongerThanDescendants"
+                    )
+
+                    over "_812_roller_skin__Fillet1_1_1" (
+                        prepend apiSchemas = ["PhysxSDFMeshCollisionAPI", "PhysxSphereFillCollisionAPI", "PhysxTriangleMeshCollisionAPI", "PhysxTriangleMeshSimplificationCollisionAPI", "PhysxConvexDecompositionCollisionAPI", "PhysxConvexHullCollisionAPI", "PhysxCollisionAPI"]
+                    )
+                    {
+                        uniform token physics:approximation = "sdf"
+                        float physxCollision:torsionalPatchRadius = 0
+                        uniform bool physxSDFMeshCollision:sdfEnableRemeshing = 0
+                        uniform int physxSDFMeshCollision:sdfResolution = 256
+                    }
+                }
+
+                over "tn__812_roller_skin__fillet1_42_" (
+                    delete apiSchemas = ["PhysicsRigidBodyAPI", "PhysxRigidBodyAPI"]
+                    prepend apiSchemas = ["MaterialBindingAPI"]
+                    instanceable = false
+                )
+                {
+                    string isaac:nameOverride (
+                        displayName = "Name Override"
+                    )
+                    rel material:binding = None (
+                        bindMaterialAs = "strongerThanDescendants"
+                    )
+
+                    over "_812_roller_skin__Fillet1_1_1" (
+                        prepend apiSchemas = ["PhysxSDFMeshCollisionAPI", "PhysxSphereFillCollisionAPI", "PhysxTriangleMeshCollisionAPI", "PhysxTriangleMeshSimplificationCollisionAPI", "PhysxConvexDecompositionCollisionAPI", "PhysxConvexHullCollisionAPI", "PhysxCollisionAPI"]
+                    )
+                    {
+                        uniform token physics:approximation = "sdf"
+                        float physxCollision:torsionalPatchRadius = 0
+                        uniform bool physxSDFMeshCollision:sdfEnableRemeshing = 0
+                        uniform int physxSDFMeshCollision:sdfResolution = 256
+                    }
+                }
+
+                over "tn__812_roller_skin__fillet1_46_" (
+                    delete apiSchemas = ["PhysicsRigidBodyAPI", "PhysxRigidBodyAPI"]
+                    prepend apiSchemas = ["MaterialBindingAPI"]
+                    instanceable = false
+                )
+                {
+                    rel material:binding = None (
+                        bindMaterialAs = "strongerThanDescendants"
+                    )
+
+                    over "_812_roller_skin__Fillet1_1_1" (
+                        prepend apiSchemas = ["PhysxSDFMeshCollisionAPI", "PhysxSphereFillCollisionAPI", "PhysxTriangleMeshCollisionAPI", "PhysxTriangleMeshSimplificationCollisionAPI", "PhysxConvexDecompositionCollisionAPI", "PhysxConvexHullCollisionAPI", "PhysxCollisionAPI"]
+                    )
+                    {
+                        uniform token physics:approximation = "sdf"
+                        float physxCollision:torsionalPatchRadius = 0
+                        uniform bool physxSDFMeshCollision:sdfEnableRemeshing = 0
+                        uniform int physxSDFMeshCollision:sdfResolution = 256
+                    }
+                }
+
+                over "tn__812_roller_skin__fillet1_43_" (
+                    delete apiSchemas = ["PhysicsRigidBodyAPI", "PhysxRigidBodyAPI"]
+                    prepend apiSchemas = ["MaterialBindingAPI"]
+                    instanceable = false
+                )
+                {
+                    rel material:binding = None (
+                        bindMaterialAs = "strongerThanDescendants"
+                    )
+
+                    over "_812_roller_skin__Fillet1_1_1" (
+                        prepend apiSchemas = ["PhysxSDFMeshCollisionAPI", "PhysxSphereFillCollisionAPI", "PhysxTriangleMeshCollisionAPI", "PhysxTriangleMeshSimplificationCollisionAPI", "PhysxConvexDecompositionCollisionAPI", "PhysxConvexHullCollisionAPI", "PhysxCollisionAPI"]
+                    )
+                    {
+                        uniform token physics:approximation = "sdf"
+                        float physxCollision:torsionalPatchRadius = 0
+                        uniform bool physxSDFMeshCollision:sdfEnableRemeshing = 0
+                        uniform int physxSDFMeshCollision:sdfResolution = 256
+                    }
+                }
+
+                over "tn__812_roller_skin__fillet1_38_" (
+                    delete apiSchemas = ["PhysicsRigidBodyAPI", "PhysxRigidBodyAPI"]
+                    prepend apiSchemas = ["MaterialBindingAPI"]
+                    instanceable = false
+                )
+                {
+                    string isaac:nameOverride (
+                        displayName = "Name Override"
+                    )
+                    rel material:binding = None (
+                        bindMaterialAs = "strongerThanDescendants"
+                    )
+
+                    over "_812_roller_skin__Fillet1_1_1" (
+                        prepend apiSchemas = ["PhysxSDFMeshCollisionAPI", "PhysxSphereFillCollisionAPI", "PhysxTriangleMeshCollisionAPI", "PhysxTriangleMeshSimplificationCollisionAPI", "PhysxConvexDecompositionCollisionAPI", "PhysxConvexHullCollisionAPI", "PhysxCollisionAPI"]
+                    )
+                    {
+                        uniform token physics:approximation = "sdf"
+                        float physxCollision:torsionalPatchRadius = 0
+                        uniform bool physxSDFMeshCollision:sdfEnableRemeshing = 0
+                        uniform int physxSDFMeshCollision:sdfResolution = 256
+                    }
+                }
+
+                over "tn__812_roller_skin__fillet1_39_" (
+                    delete apiSchemas = ["PhysicsRigidBodyAPI", "PhysxRigidBodyAPI"]
+                    prepend apiSchemas = ["MaterialBindingAPI"]
+                    instanceable = false
+                )
+                {
+                    rel material:binding = None (
+                        bindMaterialAs = "strongerThanDescendants"
+                    )
+
+                    over "_812_roller_skin__Fillet1_1_1" (
+                        prepend apiSchemas = ["PhysxSDFMeshCollisionAPI", "PhysxSphereFillCollisionAPI", "PhysxTriangleMeshCollisionAPI", "PhysxTriangleMeshSimplificationCollisionAPI", "PhysxConvexDecompositionCollisionAPI", "PhysxConvexHullCollisionAPI", "PhysxCollisionAPI"]
+                    )
+                    {
+                        uniform token physics:approximation = "sdf"
+                        float physxCollision:torsionalPatchRadius = 0
+                        uniform bool physxSDFMeshCollision:sdfEnableRemeshing = 0
+                        uniform int physxSDFMeshCollision:sdfResolution = 256
+                    }
+                }
+
+                over "tn__812_roller_skin__fillet1_44_" (
+                    delete apiSchemas = ["PhysicsRigidBodyAPI", "PhysxRigidBodyAPI"]
+                    prepend apiSchemas = ["MaterialBindingAPI"]
+                    instanceable = false
+                )
+                {
+                    rel material:binding = None (
+                        bindMaterialAs = "strongerThanDescendants"
+                    )
+
+                    over "_812_roller_skin__Fillet1_1_1" (
+                        prepend apiSchemas = ["PhysxSDFMeshCollisionAPI", "PhysxSphereFillCollisionAPI", "PhysxTriangleMeshCollisionAPI", "PhysxTriangleMeshSimplificationCollisionAPI", "PhysxConvexDecompositionCollisionAPI", "PhysxConvexHullCollisionAPI", "PhysxCollisionAPI"]
+                    )
+                    {
+                        uniform token physics:approximation = "sdf"
+                        float physxCollision:torsionalPatchRadius = 0
+                        uniform bool physxSDFMeshCollision:sdfEnableRemeshing = 0
+                        uniform int physxSDFMeshCollision:sdfResolution = 256
+                    }
+                }
+
+                over "tn__812_roller_skin__fillet1_41_" (
+                    delete apiSchemas = ["PhysicsRigidBodyAPI", "PhysxRigidBodyAPI"]
+                    prepend apiSchemas = ["MaterialBindingAPI"]
+                    instanceable = false
+                )
+                {
+                    string isaac:nameOverride (
+                        displayName = "Name Override"
+                    )
+                    rel material:binding = None (
+                        bindMaterialAs = "strongerThanDescendants"
+                    )
+
+                    over "_812_roller_skin__Fillet1_1_1" (
+                        prepend apiSchemas = ["PhysxSDFMeshCollisionAPI", "PhysxSphereFillCollisionAPI", "PhysxTriangleMeshCollisionAPI", "PhysxTriangleMeshSimplificationCollisionAPI", "PhysxConvexDecompositionCollisionAPI", "PhysxConvexHullCollisionAPI", "PhysxCollisionAPI"]
+                    )
+                    {
+                        uniform token physics:approximation = "sdf"
+                        float physxCollision:torsionalPatchRadius = 0
+                        uniform bool physxSDFMeshCollision:sdfEnableRemeshing = 0
+                        uniform int physxSDFMeshCollision:sdfResolution = 256
+                    }
+                }
+
+                over "Hub_Half__Fillet141_1" (
+                    prepend apiSchemas = ["MaterialBindingAPI"]
+                )
+                {
+                    rel material:binding = None (
+                        bindMaterialAs = "strongerThanDescendants"
+                    )
+                }
+
+                over "left_ring__Cut_Extrude4" (
+                    prepend apiSchemas = ["MaterialBindingAPI"]
+                )
+                {
+                    rel material:binding = None (
+                        bindMaterialAs = "strongerThanDescendants"
+                    )
+                }
+
+                over "left_ring__Cut_Extrude4_1" (
+                    prepend apiSchemas = ["MaterialBindingAPI"]
+                )
+                {
+                    rel material:binding = None (
+                        bindMaterialAs = "strongerThanDescendants"
+                    )
+                }
+
+                over "Hub_Half__Fillet141_1_1" (
+                    prepend apiSchemas = ["MaterialBindingAPI"]
+                )
+                {
+                    rel material:binding = None (
+                        bindMaterialAs = "strongerThanDescendants"
+                    )
+                }
+            }
+
+            over "hub_half__fillet141_5" (
+                prepend apiSchemas = ["MaterialBindingAPI"]
+            )
+            {
+                string isaac:nameOverride (
+                    displayName = "Name Override"
+                )
+                rel material:binding = </momo_openrob/WheelMaterial> (
+                    bindMaterialAs = "weakerThanDescendants"
+                )
+
+                over "tn__812_roller_skin__fillet1_30_" (
+                    delete apiSchemas = ["PhysicsRigidBodyAPI", "PhysxRigidBodyAPI"]
+                    prepend apiSchemas = ["MaterialBindingAPI"]
+                    instanceable = false
+                )
+                {
+                    string isaac:nameOverride (
+                        displayName = "Name Override"
+                    )
+                    rel material:binding = None (
+                        bindMaterialAs = "strongerThanDescendants"
+                    )
+
+                    over "_812_roller_skin__Fillet1_1" (
+                        prepend apiSchemas = ["PhysxSDFMeshCollisionAPI", "PhysxSphereFillCollisionAPI", "PhysxTriangleMeshCollisionAPI", "PhysxTriangleMeshSimplificationCollisionAPI", "PhysxConvexDecompositionCollisionAPI", "PhysxConvexHullCollisionAPI", "PhysxCollisionAPI"]
+                    )
+                    {
+                        uniform token physics:approximation = "sdf"
+                        float physxCollision:torsionalPatchRadius = 0
+                        uniform bool physxSDFMeshCollision:sdfEnableRemeshing = 0
+                        uniform int physxSDFMeshCollision:sdfResolution = 256
+                    }
+                }
+
+                over "tn__812_roller_skin__fillet1_35_" (
+                    delete apiSchemas = ["PhysicsRigidBodyAPI", "PhysxRigidBodyAPI"]
+                    prepend apiSchemas = ["MaterialBindingAPI"]
+                    instanceable = false
+                )
+                {
+                    rel material:binding = None (
+                        bindMaterialAs = "strongerThanDescendants"
+                    )
+
+                    over "_812_roller_skin__Fillet1_1" (
+                        prepend apiSchemas = ["PhysxSDFMeshCollisionAPI", "PhysxSphereFillCollisionAPI", "PhysxTriangleMeshCollisionAPI", "PhysxTriangleMeshSimplificationCollisionAPI", "PhysxConvexDecompositionCollisionAPI", "PhysxConvexHullCollisionAPI", "PhysxCollisionAPI"]
+                    )
+                    {
+                        uniform token physics:approximation = "sdf"
+                        float physxCollision:torsionalPatchRadius = 0
+                        uniform bool physxSDFMeshCollision:sdfEnableRemeshing = 0
+                        uniform int physxSDFMeshCollision:sdfResolution = 256
+                    }
+                }
+
+                over "tn__812_roller_skin__fillet1_32_" (
+                    delete apiSchemas = ["PhysicsRigidBodyAPI", "PhysxRigidBodyAPI"]
+                    prepend apiSchemas = ["MaterialBindingAPI"]
+                    instanceable = false
+                )
+                {
+                    rel material:binding = None (
+                        bindMaterialAs = "strongerThanDescendants"
+                    )
+
+                    over "_812_roller_skin__Fillet1_1" (
+                        prepend apiSchemas = ["PhysxSDFMeshCollisionAPI", "PhysxSphereFillCollisionAPI", "PhysxTriangleMeshCollisionAPI", "PhysxTriangleMeshSimplificationCollisionAPI", "PhysxConvexDecompositionCollisionAPI", "PhysxConvexHullCollisionAPI", "PhysxCollisionAPI"]
+                    )
+                    {
+                        uniform token physics:approximation = "sdf"
+                        float physxCollision:torsionalPatchRadius = 0
+                        uniform bool physxSDFMeshCollision:sdfEnableRemeshing = 0
+                        uniform int physxSDFMeshCollision:sdfResolution = 256
+                    }
+                }
+
+                over "tn__812_roller_skin__fillet1_27_" (
+                    delete apiSchemas = ["PhysicsRigidBodyAPI", "PhysxRigidBodyAPI"]
+                    prepend apiSchemas = ["MaterialBindingAPI"]
+                    instanceable = false
+                )
+                {
+                    rel material:binding = None (
+                        bindMaterialAs = "strongerThanDescendants"
+                    )
+
+                    over "_812_roller_skin__Fillet1_1" (
+                        prepend apiSchemas = ["PhysxSDFMeshCollisionAPI", "PhysxSphereFillCollisionAPI", "PhysxTriangleMeshCollisionAPI", "PhysxTriangleMeshSimplificationCollisionAPI", "PhysxConvexDecompositionCollisionAPI", "PhysxConvexHullCollisionAPI", "PhysxCollisionAPI"]
+                    )
+                    {
+                        uniform token physics:approximation = "sdf"
+                        float physxCollision:torsionalPatchRadius = 0
+                        uniform bool physxSDFMeshCollision:sdfEnableRemeshing = 0
+                        uniform int physxSDFMeshCollision:sdfResolution = 256
+                    }
+                }
+
+                over "tn__812_roller_skin__fillet1_34_" (
+                    delete apiSchemas = ["PhysicsRigidBodyAPI", "PhysxRigidBodyAPI"]
+                    prepend apiSchemas = ["MaterialBindingAPI"]
+                    instanceable = false
+                )
+                {
+                    rel material:binding = None (
+                        bindMaterialAs = "strongerThanDescendants"
+                    )
+
+                    over "_812_roller_skin__Fillet1_1" (
+                        prepend apiSchemas = ["PhysxSDFMeshCollisionAPI", "PhysxSphereFillCollisionAPI", "PhysxTriangleMeshCollisionAPI", "PhysxTriangleMeshSimplificationCollisionAPI", "PhysxConvexDecompositionCollisionAPI", "PhysxConvexHullCollisionAPI", "PhysxCollisionAPI"]
+                    )
+                    {
+                        uniform token physics:approximation = "sdf"
+                        float physxCollision:torsionalPatchRadius = 0
+                        uniform bool physxSDFMeshCollision:sdfEnableRemeshing = 0
+                        uniform int physxSDFMeshCollision:sdfResolution = 256
+                    }
+                }
+
+                over "tn__812_roller_skin__fillet1_31_" (
+                    delete apiSchemas = ["PhysicsRigidBodyAPI", "PhysxRigidBodyAPI"]
+                    prepend apiSchemas = ["MaterialBindingAPI"]
+                    instanceable = false
+                )
+                {
+                    rel material:binding = None (
+                        bindMaterialAs = "strongerThanDescendants"
+                    )
+
+                    over "_812_roller_skin__Fillet1_1" (
+                        prepend apiSchemas = ["PhysxSDFMeshCollisionAPI", "PhysxSphereFillCollisionAPI", "PhysxTriangleMeshCollisionAPI", "PhysxTriangleMeshSimplificationCollisionAPI", "PhysxConvexDecompositionCollisionAPI", "PhysxConvexHullCollisionAPI", "PhysxCollisionAPI"]
+                    )
+                    {
+                        uniform token physics:approximation = "sdf"
+                        float physxCollision:torsionalPatchRadius = 0
+                        uniform bool physxSDFMeshCollision:sdfEnableRemeshing = 0
+                        uniform int physxSDFMeshCollision:sdfResolution = 256
+                    }
+                }
+
+                over "tn__812_roller_skin__fillet1_33_" (
+                    delete apiSchemas = ["PhysicsRigidBodyAPI", "PhysxRigidBodyAPI"]
+                    prepend apiSchemas = ["MaterialBindingAPI"]
+                    instanceable = false
+                )
+                {
+                    rel material:binding = None (
+                        bindMaterialAs = "strongerThanDescendants"
+                    )
+
+                    over "_812_roller_skin__Fillet1_1" (
+                        prepend apiSchemas = ["PhysxSDFMeshCollisionAPI", "PhysxSphereFillCollisionAPI", "PhysxTriangleMeshCollisionAPI", "PhysxTriangleMeshSimplificationCollisionAPI", "PhysxConvexDecompositionCollisionAPI", "PhysxConvexHullCollisionAPI", "PhysxCollisionAPI"]
+                    )
+                    {
+                        uniform token physics:approximation = "sdf"
+                        float physxCollision:torsionalPatchRadius = 0
+                        uniform bool physxSDFMeshCollision:sdfEnableRemeshing = 0
+                        uniform int physxSDFMeshCollision:sdfResolution = 256
+                    }
+                }
+
+                over "tn__812_roller_skin__fillet1_24_" (
+                    delete apiSchemas = ["PhysicsRigidBodyAPI", "PhysxRigidBodyAPI"]
+                    prepend apiSchemas = ["MaterialBindingAPI"]
+                    instanceable = false
+                )
+                {
+                    string isaac:nameOverride (
+                        displayName = "Name Override"
+                    )
+                    rel material:binding = None (
+                        bindMaterialAs = "strongerThanDescendants"
+                    )
+
+                    over "_812_roller_skin__Fillet1_1" (
+                        prepend apiSchemas = ["PhysxSDFMeshCollisionAPI", "PhysxSphereFillCollisionAPI", "PhysxTriangleMeshCollisionAPI", "PhysxTriangleMeshSimplificationCollisionAPI", "PhysxConvexDecompositionCollisionAPI", "PhysxConvexHullCollisionAPI", "PhysxCollisionAPI"]
+                    )
+                    {
+                        uniform token physics:approximation = "sdf"
+                        float physxCollision:torsionalPatchRadius = 0
+                        uniform bool physxSDFMeshCollision:sdfEnableRemeshing = 0
+                        uniform int physxSDFMeshCollision:sdfResolution = 256
+                    }
+                }
+
+                over "tn__812_roller_skin__fillet1_29_" (
+                    delete apiSchemas = ["PhysicsRigidBodyAPI", "PhysxRigidBodyAPI"]
+                    prepend apiSchemas = ["MaterialBindingAPI"]
+                    instanceable = false
+                )
+                {
+                    string isaac:nameOverride (
+                        displayName = "Name Override"
+                    )
+                    rel material:binding = None (
+                        bindMaterialAs = "strongerThanDescendants"
+                    )
+
+                    over "_812_roller_skin__Fillet1_1" (
+                        prepend apiSchemas = ["PhysxSDFMeshCollisionAPI", "PhysxSphereFillCollisionAPI", "PhysxTriangleMeshCollisionAPI", "PhysxTriangleMeshSimplificationCollisionAPI", "PhysxConvexDecompositionCollisionAPI", "PhysxConvexHullCollisionAPI", "PhysxCollisionAPI"]
+                    )
+                    {
+                        uniform token physics:approximation = "sdf"
+                        float physxCollision:torsionalPatchRadius = 0
+                        uniform bool physxSDFMeshCollision:sdfEnableRemeshing = 0
+                        uniform int physxSDFMeshCollision:sdfResolution = 256
+                    }
+                }
+
+                over "tn__812_roller_skin__fillet1_26_" (
+                    delete apiSchemas = ["PhysicsRigidBodyAPI", "PhysxRigidBodyAPI"]
+                    prepend apiSchemas = ["MaterialBindingAPI"]
+                    instanceable = false
+                )
+                {
+                    rel material:binding = None (
+                        bindMaterialAs = "strongerThanDescendants"
+                    )
+
+                    over "_812_roller_skin__Fillet1_1" (
+                        prepend apiSchemas = ["PhysxSDFMeshCollisionAPI", "PhysxSphereFillCollisionAPI", "PhysxTriangleMeshCollisionAPI", "PhysxTriangleMeshSimplificationCollisionAPI", "PhysxConvexDecompositionCollisionAPI", "PhysxConvexHullCollisionAPI", "PhysxCollisionAPI"]
+                    )
+                    {
+                        uniform token physics:approximation = "sdf"
+                        float physxCollision:torsionalPatchRadius = 0
+                        uniform bool physxSDFMeshCollision:sdfEnableRemeshing = 0
+                        uniform int physxSDFMeshCollision:sdfResolution = 256
+                    }
+                }
+
+                over "tn__812_roller_skin__fillet1_28_" (
+                    delete apiSchemas = ["PhysicsRigidBodyAPI", "PhysxRigidBodyAPI"]
+                    prepend apiSchemas = ["MaterialBindingAPI"]
+                    instanceable = false
+                )
+                {
+                    rel material:binding = None (
+                        bindMaterialAs = "strongerThanDescendants"
+                    )
+
+                    over "_812_roller_skin__Fillet1_1" (
+                        prepend apiSchemas = ["PhysxSDFMeshCollisionAPI", "PhysxSphereFillCollisionAPI", "PhysxTriangleMeshCollisionAPI", "PhysxTriangleMeshSimplificationCollisionAPI", "PhysxConvexDecompositionCollisionAPI", "PhysxConvexHullCollisionAPI", "PhysxCollisionAPI"]
+                    )
+                    {
+                        uniform token physics:approximation = "sdf"
+                        float physxCollision:torsionalPatchRadius = 0
+                        uniform bool physxSDFMeshCollision:sdfEnableRemeshing = 0
+                        uniform int physxSDFMeshCollision:sdfResolution = 256
+                    }
+                }
+
+                over "tn__812_roller_skin__fillet1_25_" (
+                    delete apiSchemas = ["PhysicsRigidBodyAPI", "PhysxRigidBodyAPI"]
+                    prepend apiSchemas = ["MaterialBindingAPI"]
+                    instanceable = false
+                )
+                {
+                    rel material:binding = None (
+                        bindMaterialAs = "strongerThanDescendants"
+                    )
+
+                    over "_812_roller_skin__Fillet1_1" (
+                        prepend apiSchemas = ["PhysxSDFMeshCollisionAPI", "PhysxSphereFillCollisionAPI", "PhysxTriangleMeshCollisionAPI", "PhysxTriangleMeshSimplificationCollisionAPI", "PhysxConvexDecompositionCollisionAPI", "PhysxConvexHullCollisionAPI", "PhysxCollisionAPI"]
+                    )
+                    {
+                        uniform token physics:approximation = "sdf"
+                        float physxCollision:torsionalPatchRadius = 0
+                        uniform bool physxSDFMeshCollision:sdfEnableRemeshing = 0
+                        uniform int physxSDFMeshCollision:sdfResolution = 256
+                    }
+                }
+
+                over "Hub_Half__Fillet141" (
+                    prepend apiSchemas = ["MaterialBindingAPI"]
+                )
+                {
+                    rel material:binding = None (
+                        bindMaterialAs = "strongerThanDescendants"
+                    )
+                }
+
+                over "Hub_Half__Fillet141_1" (
+                    prepend apiSchemas = ["MaterialBindingAPI"]
+                )
+                {
+                    rel material:binding = None (
+                        bindMaterialAs = "strongerThanDescendants"
+                    )
+                }
+
+                over "right_ring__Cut_Extrude4" (
+                    prepend apiSchemas = ["MaterialBindingAPI"]
+                )
+                {
+                    rel material:binding = None (
+                        bindMaterialAs = "strongerThanDescendants"
+                    )
+                }
+
+                over "right_ring__Cut_Extrude4_1" (
+                    prepend apiSchemas = ["MaterialBindingAPI"]
+                )
+                {
+                    rel material:binding = None (
+                        bindMaterialAs = "strongerThanDescendants"
+                    )
+                }
+            }
+
+            over "hub_half__fillet141" (
+                prepend apiSchemas = ["MaterialBindingAPI"]
+            )
+            {
+                string isaac:nameOverride (
+                    displayName = "Name Override"
+                )
+                rel material:binding = </momo_openrob/WheelMaterial> (
+                    bindMaterialAs = "weakerThanDescendants"
+                )
+
+                over "tn__812_roller_skin__fillet1_4_" (
+                    delete apiSchemas = ["PhysicsRigidBodyAPI", "PhysxRigidBodyAPI"]
+                    prepend apiSchemas = ["MaterialBindingAPI"]
+                    instanceable = false
+                )
+                {
+                    rel material:binding = None (
+                        bindMaterialAs = "strongerThanDescendants"
+                    )
+
+                    over "_812_roller_skin__Fillet1_1" (
+                        prepend apiSchemas = ["PhysxSDFMeshCollisionAPI", "PhysxSphereFillCollisionAPI", "PhysxTriangleMeshCollisionAPI", "PhysxTriangleMeshSimplificationCollisionAPI", "PhysxConvexDecompositionCollisionAPI", "PhysxConvexHullCollisionAPI", "PhysxCollisionAPI"]
+                    )
+                    {
+                        uniform token physics:approximation = "sdf"
+                        float physxCollision:torsionalPatchRadius = 0
+                        uniform bool physxSDFMeshCollision:sdfEnableRemeshing = 0
+                        uniform int physxSDFMeshCollision:sdfResolution = 256
+                    }
+                }
+
+                over "tn__812_roller_skin__fillet1_" (
+                    delete apiSchemas = ["PhysicsRigidBodyAPI", "PhysxRigidBodyAPI"]
+                    prepend apiSchemas = ["MaterialBindingAPI"]
+                    instanceable = false
+                )
+                {
+                    rel material:binding = None (
+                        bindMaterialAs = "strongerThanDescendants"
+                    )
+
+                    over "_812_roller_skin__Fillet1_1" (
+                        prepend apiSchemas = ["PhysxSDFMeshCollisionAPI", "PhysxSphereFillCollisionAPI", "PhysxTriangleMeshCollisionAPI", "PhysxTriangleMeshSimplificationCollisionAPI", "PhysxConvexDecompositionCollisionAPI", "PhysxConvexHullCollisionAPI", "PhysxCollisionAPI"]
+                    )
+                    {
+                        uniform token physics:approximation = "sdf"
+                        float physxCollision:torsionalPatchRadius = 0
+                        uniform bool physxSDFMeshCollision:sdfEnableRemeshing = 0
+                        uniform int physxSDFMeshCollision:sdfResolution = 256
+                    }
+                }
+
+                over "tn__812_roller_skin__fillet1_11_" (
+                    delete apiSchemas = ["PhysicsRigidBodyAPI", "PhysxRigidBodyAPI"]
+                    prepend apiSchemas = ["MaterialBindingAPI"]
+                    instanceable = false
+                )
+                {
+                    rel material:binding = None (
+                        bindMaterialAs = "strongerThanDescendants"
+                    )
+
+                    over "_812_roller_skin__Fillet1_1" (
+                        prepend apiSchemas = ["PhysxSDFMeshCollisionAPI", "PhysxSphereFillCollisionAPI", "PhysxTriangleMeshCollisionAPI", "PhysxTriangleMeshSimplificationCollisionAPI", "PhysxConvexDecompositionCollisionAPI", "PhysxConvexHullCollisionAPI", "PhysxCollisionAPI"]
+                    )
+                    {
+                        uniform token physics:approximation = "sdf"
+                        float physxCollision:torsionalPatchRadius = 0
+                        uniform bool physxSDFMeshCollision:sdfEnableRemeshing = 0
+                        uniform int physxSDFMeshCollision:sdfResolution = 256
+                    }
+                }
+
+                over "tn__812_roller_skin__fillet1_6_" (
+                    delete apiSchemas = ["PhysicsRigidBodyAPI", "PhysxRigidBodyAPI"]
+                    prepend apiSchemas = ["MaterialBindingAPI"]
+                    instanceable = false
+                )
+                {
+                    rel material:binding = None (
+                        bindMaterialAs = "strongerThanDescendants"
+                    )
+
+                    over "_812_roller_skin__Fillet1_1" (
+                        prepend apiSchemas = ["PhysxSDFMeshCollisionAPI", "PhysxSphereFillCollisionAPI", "PhysxTriangleMeshCollisionAPI", "PhysxTriangleMeshSimplificationCollisionAPI", "PhysxConvexDecompositionCollisionAPI", "PhysxConvexHullCollisionAPI", "PhysxCollisionAPI"]
+                    )
+                    {
+                        uniform token physics:approximation = "sdf"
+                        float physxCollision:torsionalPatchRadius = 0
+                        uniform bool physxSDFMeshCollision:sdfEnableRemeshing = 0
+                        uniform int physxSDFMeshCollision:sdfResolution = 256
+                    }
+                }
+
+                over "tn__812_roller_skin__fillet1_10_" (
+                    delete apiSchemas = ["PhysicsRigidBodyAPI", "PhysxRigidBodyAPI"]
+                    prepend apiSchemas = ["MaterialBindingAPI"]
+                    instanceable = false
+                )
+                {
+                    rel material:binding = None (
+                        bindMaterialAs = "strongerThanDescendants"
+                    )
+
+                    over "_812_roller_skin__Fillet1_1" (
+                        prepend apiSchemas = ["PhysxSDFMeshCollisionAPI", "PhysxSphereFillCollisionAPI", "PhysxTriangleMeshCollisionAPI", "PhysxTriangleMeshSimplificationCollisionAPI", "PhysxConvexDecompositionCollisionAPI", "PhysxConvexHullCollisionAPI", "PhysxCollisionAPI"]
+                    )
+                    {
+                        uniform token physics:approximation = "sdf"
+                        float physxCollision:torsionalPatchRadius = 0
+                        uniform bool physxSDFMeshCollision:sdfEnableRemeshing = 0
+                        uniform int physxSDFMeshCollision:sdfResolution = 256
+                    }
+                }
+
+                over "tn__812_roller_skin__fillet1_9_" (
+                    delete apiSchemas = ["PhysicsRigidBodyAPI", "PhysxRigidBodyAPI"]
+                    prepend apiSchemas = ["MaterialBindingAPI"]
+                    instanceable = false
+                )
+                {
+                    rel material:binding = None (
+                        bindMaterialAs = "strongerThanDescendants"
+                    )
+
+                    over "_812_roller_skin__Fillet1_1" (
+                        prepend apiSchemas = ["PhysxSDFMeshCollisionAPI", "PhysxSphereFillCollisionAPI", "PhysxTriangleMeshCollisionAPI", "PhysxTriangleMeshSimplificationCollisionAPI", "PhysxConvexDecompositionCollisionAPI", "PhysxConvexHullCollisionAPI", "PhysxCollisionAPI"]
+                    )
+                    {
+                        uniform token physics:approximation = "sdf"
+                        float physxCollision:torsionalPatchRadius = 0
+                        uniform bool physxSDFMeshCollision:sdfEnableRemeshing = 0
+                        uniform int physxSDFMeshCollision:sdfResolution = 256
+                    }
+                }
+
+                over "tn__812_roller_skin__fillet1_3_" (
+                    delete apiSchemas = ["PhysicsRigidBodyAPI", "PhysxRigidBodyAPI"]
+                    prepend apiSchemas = ["MaterialBindingAPI"]
+                    instanceable = false
+                )
+                {
+                    rel material:binding = None (
+                        bindMaterialAs = "strongerThanDescendants"
+                    )
+
+                    over "_812_roller_skin__Fillet1_1" (
+                        prepend apiSchemas = ["PhysxSDFMeshCollisionAPI", "PhysxSphereFillCollisionAPI", "PhysxTriangleMeshCollisionAPI", "PhysxTriangleMeshSimplificationCollisionAPI", "PhysxConvexDecompositionCollisionAPI", "PhysxConvexHullCollisionAPI", "PhysxCollisionAPI"]
+                    )
+                    {
+                        uniform token physics:approximation = "sdf"
+                        float physxCollision:torsionalPatchRadius = 0
+                        uniform bool physxSDFMeshCollision:sdfEnableRemeshing = 0
+                        uniform int physxSDFMeshCollision:sdfResolution = 256
+                    }
+                }
+
+                over "tn__812_roller_skin__fillet1_2_" (
+                    delete apiSchemas = ["PhysicsRigidBodyAPI", "PhysxRigidBodyAPI"]
+                    prepend apiSchemas = ["MaterialBindingAPI"]
+                    instanceable = false
+                )
+                {
+                    rel material:binding = None (
+                        bindMaterialAs = "strongerThanDescendants"
+                    )
+
+                    over "_812_roller_skin__Fillet1_1" (
+                        prepend apiSchemas = ["PhysxSDFMeshCollisionAPI", "PhysxSphereFillCollisionAPI", "PhysxTriangleMeshCollisionAPI", "PhysxTriangleMeshSimplificationCollisionAPI", "PhysxConvexDecompositionCollisionAPI", "PhysxConvexHullCollisionAPI", "PhysxCollisionAPI"]
+                    )
+                    {
+                        uniform token physics:approximation = "sdf"
+                        float physxCollision:torsionalPatchRadius = 0
+                        uniform bool physxSDFMeshCollision:sdfEnableRemeshing = 0
+                        uniform int physxSDFMeshCollision:sdfResolution = 256
+                    }
+                }
+
+                over "tn__812_roller_skin__fillet1_5_" (
+                    delete apiSchemas = ["PhysicsRigidBodyAPI", "PhysxRigidBodyAPI"]
+                    prepend apiSchemas = ["MaterialBindingAPI"]
+                    instanceable = false
+                )
+                {
+                    rel material:binding = None (
+                        bindMaterialAs = "strongerThanDescendants"
+                    )
+
+                    over "_812_roller_skin__Fillet1_1" (
+                        prepend apiSchemas = ["PhysxSDFMeshCollisionAPI", "PhysxSphereFillCollisionAPI", "PhysxTriangleMeshCollisionAPI", "PhysxTriangleMeshSimplificationCollisionAPI", "PhysxConvexDecompositionCollisionAPI", "PhysxConvexHullCollisionAPI", "PhysxCollisionAPI"]
+                    )
+                    {
+                        uniform token physics:approximation = "sdf"
+                        float physxCollision:torsionalPatchRadius = 0
+                        uniform bool physxSDFMeshCollision:sdfEnableRemeshing = 0
+                        uniform int physxSDFMeshCollision:sdfResolution = 256
+                    }
+                }
+
+                over "tn__812_roller_skin__fillet1_8_" (
+                    delete apiSchemas = ["PhysicsRigidBodyAPI", "PhysxRigidBodyAPI"]
+                    prepend apiSchemas = ["MaterialBindingAPI"]
+                    instanceable = false
+                )
+                {
+                    rel material:binding = None (
+                        bindMaterialAs = "strongerThanDescendants"
+                    )
+
+                    over "_812_roller_skin__Fillet1_1" (
+                        prepend apiSchemas = ["PhysxSDFMeshCollisionAPI", "PhysxSphereFillCollisionAPI", "PhysxTriangleMeshCollisionAPI", "PhysxTriangleMeshSimplificationCollisionAPI", "PhysxConvexDecompositionCollisionAPI", "PhysxConvexHullCollisionAPI", "PhysxCollisionAPI"]
+                    )
+                    {
+                        uniform token physics:approximation = "sdf"
+                        float physxCollision:torsionalPatchRadius = 0
+                        uniform bool physxSDFMeshCollision:sdfEnableRemeshing = 0
+                        uniform int physxSDFMeshCollision:sdfResolution = 256
+                    }
+                }
+
+                over "tn__812_roller_skin__fillet1_7_" (
+                    delete apiSchemas = ["PhysicsRigidBodyAPI", "PhysxRigidBodyAPI"]
+                    prepend apiSchemas = ["MaterialBindingAPI"]
+                    instanceable = false
+                )
+                {
+                    rel material:binding = None (
+                        bindMaterialAs = "strongerThanDescendants"
+                    )
+
+                    over "_812_roller_skin__Fillet1_1" (
+                        prepend apiSchemas = ["PhysxSDFMeshCollisionAPI", "PhysxSphereFillCollisionAPI", "PhysxTriangleMeshCollisionAPI", "PhysxTriangleMeshSimplificationCollisionAPI", "PhysxConvexDecompositionCollisionAPI", "PhysxConvexHullCollisionAPI", "PhysxCollisionAPI"]
+                    )
+                    {
+                        uniform token physics:approximation = "sdf"
+                        float physxCollision:torsionalPatchRadius = 0
+                        uniform bool physxSDFMeshCollision:sdfEnableRemeshing = 0
+                        uniform int physxSDFMeshCollision:sdfResolution = 256
+                    }
+                }
+
+                over "tn__812_roller_skin__fillet1_1_" (
+                    delete apiSchemas = ["PhysicsRigidBodyAPI", "PhysxRigidBodyAPI"]
+                    prepend apiSchemas = ["MaterialBindingAPI"]
+                    instanceable = false
+                )
+                {
+                    string isaac:nameOverride (
+                        displayName = "Name Override"
+                    )
+                    rel material:binding = None (
+                        bindMaterialAs = "strongerThanDescendants"
+                    )
+
+                    over "_812_roller_skin__Fillet1_1" (
+                        prepend apiSchemas = ["PhysxSDFMeshCollisionAPI", "PhysxSphereFillCollisionAPI", "PhysxTriangleMeshCollisionAPI", "PhysxTriangleMeshSimplificationCollisionAPI", "PhysxConvexDecompositionCollisionAPI", "PhysxConvexHullCollisionAPI", "PhysxCollisionAPI"]
+                    )
+                    {
+                        uniform token physics:approximation = "sdf"
+                        float physxCollision:torsionalPatchRadius = 0
+                        uniform bool physxSDFMeshCollision:sdfEnableRemeshing = 0
+                        uniform int physxSDFMeshCollision:sdfResolution = 256
+                    }
+                }
+
+                over "Hub_Half__Fillet141" (
+                    prepend apiSchemas = ["MaterialBindingAPI"]
+                )
+                {
+                    rel material:binding = None (
+                        bindMaterialAs = "strongerThanDescendants"
+                    )
+                }
+
+                over "Hub_Half__Fillet141_1" (
+                    prepend apiSchemas = ["MaterialBindingAPI"]
+                )
+                {
+                    rel material:binding = None (
+                        bindMaterialAs = "strongerThanDescendants"
+                    )
+                }
+
+                over "right_ring__Cut_Extrude4" (
+                    prepend apiSchemas = ["MaterialBindingAPI"]
+                )
+                {
+                    rel material:binding = None (
+                        bindMaterialAs = "strongerThanDescendants"
+                    )
+                }
+
+                over "right_ring__Cut_Extrude4_1" (
+                    prepend apiSchemas = ["MaterialBindingAPI"]
+                )
+                {
+                    rel material:binding = None (
+                        bindMaterialAs = "strongerThanDescendants"
+                    )
+                }
+            }
+
+            over "hub_half__fillet141_3" (
+                prepend apiSchemas = ["MaterialBindingAPI"]
+            )
+            {
+                string isaac:nameOverride (
+                    displayName = "Name Override"
+                )
+                rel material:binding = </momo_openrob/WheelMaterial> (
+                    bindMaterialAs = "weakerThanDescendants"
+                )
+
+                over "tn__812_roller_skin__fillet1_23_" (
+                    delete apiSchemas = ["PhysicsRigidBodyAPI", "PhysxRigidBodyAPI"]
+                    prepend apiSchemas = ["MaterialBindingAPI"]
+                    instanceable = false
+                    kind = "group"
+                )
+                {
+                    string isaac:nameOverride (
+                        displayName = "Name Override"
+                    )
+                    rel material:binding = None (
+                        bindMaterialAs = "strongerThanDescendants"
+                    )
+
+                    over "_812_roller_skin__Fillet1_1_1" (
+                        prepend apiSchemas = ["PhysxSDFMeshCollisionAPI", "PhysxSphereFillCollisionAPI", "PhysxTriangleMeshCollisionAPI", "PhysxTriangleMeshSimplificationCollisionAPI", "PhysxConvexDecompositionCollisionAPI", "PhysxConvexHullCollisionAPI", "PhysxCollisionAPI"]
+                    )
+                    {
+                        uniform token physics:approximation = "sdf"
+                        float physxCollision:torsionalPatchRadius = 0
+                        uniform bool physxSDFMeshCollision:sdfEnableRemeshing = 0
+                        uniform int physxSDFMeshCollision:sdfResolution = 256
+                    }
+                }
+
+                over "tn__812_roller_skin__fillet1_22_" (
+                    delete apiSchemas = ["PhysicsRigidBodyAPI", "PhysxRigidBodyAPI"]
+                    prepend apiSchemas = ["MaterialBindingAPI"]
+                    instanceable = false
+                    kind = "group"
+                )
+                {
+                    rel material:binding = None (
+                        bindMaterialAs = "strongerThanDescendants"
+                    )
+
+                    over "_812_roller_skin__Fillet1_1_1" (
+                        prepend apiSchemas = ["PhysxSDFMeshCollisionAPI", "PhysxSphereFillCollisionAPI", "PhysxTriangleMeshCollisionAPI", "PhysxTriangleMeshSimplificationCollisionAPI", "PhysxConvexDecompositionCollisionAPI", "PhysxConvexHullCollisionAPI", "PhysxCollisionAPI"]
+                    )
+                    {
+                        uniform token physics:approximation = "sdf"
+                        float physxCollision:torsionalPatchRadius = 0
+                        uniform bool physxSDFMeshCollision:sdfEnableRemeshing = 0
+                        uniform int physxSDFMeshCollision:sdfResolution = 256
+                    }
+                }
+
+                over "tn__812_roller_skin__fillet1_13_" (
+                    delete apiSchemas = ["PhysicsRigidBodyAPI", "PhysxRigidBodyAPI"]
+                    prepend apiSchemas = ["MaterialBindingAPI"]
+                    instanceable = false
+                    kind = "group"
+                )
+                {
+                    string isaac:nameOverride (
+                        displayName = "Name Override"
+                    )
+                    rel material:binding = None (
+                        bindMaterialAs = "strongerThanDescendants"
+                    )
+
+                    over "_812_roller_skin__Fillet1_1_1" (
+                        prepend apiSchemas = ["PhysxSDFMeshCollisionAPI", "PhysxSphereFillCollisionAPI", "PhysxTriangleMeshCollisionAPI", "PhysxTriangleMeshSimplificationCollisionAPI", "PhysxConvexDecompositionCollisionAPI", "PhysxConvexHullCollisionAPI", "PhysxCollisionAPI"]
+                    )
+                    {
+                        uniform token physics:approximation = "sdf"
+                        float physxCollision:torsionalPatchRadius = 0
+                        uniform bool physxSDFMeshCollision:sdfEnableRemeshing = 0
+                        uniform int physxSDFMeshCollision:sdfResolution = 256
+                    }
+                }
+
+                over "tn__812_roller_skin__fillet1_21_" (
+                    delete apiSchemas = ["PhysicsRigidBodyAPI", "PhysxRigidBodyAPI"]
+                    prepend apiSchemas = ["MaterialBindingAPI"]
+                    instanceable = false
+                    kind = "group"
+                )
+                {
+                    string isaac:nameOverride (
+                        displayName = "Name Override"
+                    )
+                    rel material:binding = None (
+                        bindMaterialAs = "strongerThanDescendants"
+                    )
+
+                    over "_812_roller_skin__Fillet1_1_1" (
+                        prepend apiSchemas = ["PhysxSDFMeshCollisionAPI", "PhysxSphereFillCollisionAPI", "PhysxTriangleMeshCollisionAPI", "PhysxTriangleMeshSimplificationCollisionAPI", "PhysxConvexDecompositionCollisionAPI", "PhysxConvexHullCollisionAPI", "PhysxCollisionAPI"]
+                    )
+                    {
+                        uniform token physics:approximation = "sdf"
+                        float physxCollision:torsionalPatchRadius = 0
+                        uniform bool physxSDFMeshCollision:sdfEnableRemeshing = 0
+                        uniform int physxSDFMeshCollision:sdfResolution = 256
+                    }
+                }
+
+                over "tn__812_roller_skin__fillet1_12_" (
+                    delete apiSchemas = ["PhysicsRigidBodyAPI", "PhysxRigidBodyAPI"]
+                    prepend apiSchemas = ["MaterialBindingAPI"]
+                    instanceable = false
+                    kind = "group"
+                )
+                {
+                    string isaac:nameOverride (
+                        displayName = "Name Override"
+                    )
+                    rel material:binding = None (
+                        bindMaterialAs = "strongerThanDescendants"
+                    )
+
+                    over "_812_roller_skin__Fillet1_1_1" (
+                        prepend apiSchemas = ["PhysxSDFMeshCollisionAPI", "PhysxSphereFillCollisionAPI", "PhysxTriangleMeshCollisionAPI", "PhysxTriangleMeshSimplificationCollisionAPI", "PhysxConvexDecompositionCollisionAPI", "PhysxConvexHullCollisionAPI", "PhysxCollisionAPI"]
+                    )
+                    {
+                        uniform token physics:approximation = "sdf"
+                        float physxCollision:torsionalPatchRadius = 0
+                        uniform bool physxSDFMeshCollision:sdfEnableRemeshing = 0
+                        uniform int physxSDFMeshCollision:sdfResolution = 256
+                    }
+                }
+
+                over "tn__812_roller_skin__fillet1_20_" (
+                    delete apiSchemas = ["PhysicsRigidBodyAPI", "PhysxRigidBodyAPI"]
+                    prepend apiSchemas = ["MaterialBindingAPI"]
+                    instanceable = false
+                    kind = "group"
+                )
+                {
+                    rel material:binding = None (
+                        bindMaterialAs = "strongerThanDescendants"
+                    )
+
+                    over "_812_roller_skin__Fillet1_1_1" (
+                        prepend apiSchemas = ["PhysxSDFMeshCollisionAPI", "PhysxSphereFillCollisionAPI", "PhysxTriangleMeshCollisionAPI", "PhysxTriangleMeshSimplificationCollisionAPI", "PhysxConvexDecompositionCollisionAPI", "PhysxConvexHullCollisionAPI", "PhysxCollisionAPI"]
+                    )
+                    {
+                        uniform token physics:approximation = "sdf"
+                        float physxCollision:torsionalPatchRadius = 0
+                        uniform bool physxSDFMeshCollision:sdfEnableRemeshing = 0
+                        uniform int physxSDFMeshCollision:sdfResolution = 256
+                    }
+                }
+
+                over "tn__812_roller_skin__fillet1_19_" (
+                    delete apiSchemas = ["PhysicsRigidBodyAPI", "PhysxRigidBodyAPI"]
+                    prepend apiSchemas = ["MaterialBindingAPI"]
+                    instanceable = false
+                    kind = "group"
+                )
+                {
+                    string isaac:nameOverride (
+                        displayName = "Name Override"
+                    )
+                    rel material:binding = None (
+                        bindMaterialAs = "strongerThanDescendants"
+                    )
+
+                    over "_812_roller_skin__Fillet1_1_1" (
+                        prepend apiSchemas = ["PhysxSDFMeshCollisionAPI", "PhysxSphereFillCollisionAPI", "PhysxTriangleMeshCollisionAPI", "PhysxTriangleMeshSimplificationCollisionAPI", "PhysxConvexDecompositionCollisionAPI", "PhysxConvexHullCollisionAPI", "PhysxCollisionAPI"]
+                    )
+                    {
+                        uniform token physics:approximation = "sdf"
+                        float physxCollision:torsionalPatchRadius = 0
+                        uniform bool physxSDFMeshCollision:sdfEnableRemeshing = 0
+                        uniform int physxSDFMeshCollision:sdfResolution = 256
+                    }
+                }
+
+                over "tn__812_roller_skin__fillet1_17_" (
+                    delete apiSchemas = ["PhysicsRigidBodyAPI", "PhysxRigidBodyAPI"]
+                    prepend apiSchemas = ["MaterialBindingAPI"]
+                    instanceable = false
+                    kind = "group"
+                )
+                {
+                    string isaac:nameOverride (
+                        displayName = "Name Override"
+                    )
+                    rel material:binding = None (
+                        bindMaterialAs = "strongerThanDescendants"
+                    )
+
+                    over "_812_roller_skin__Fillet1_1_1" (
+                        prepend apiSchemas = ["PhysxSDFMeshCollisionAPI", "PhysxSphereFillCollisionAPI", "PhysxTriangleMeshCollisionAPI", "PhysxTriangleMeshSimplificationCollisionAPI", "PhysxConvexDecompositionCollisionAPI", "PhysxConvexHullCollisionAPI", "PhysxCollisionAPI"]
+                    )
+                    {
+                        uniform token physics:approximation = "sdf"
+                        float physxCollision:torsionalPatchRadius = 0
+                        uniform bool physxSDFMeshCollision:sdfEnableRemeshing = 0
+                        uniform int physxSDFMeshCollision:sdfResolution = 256
+                    }
+                }
+
+                over "tn__812_roller_skin__fillet1_15_" (
+                    delete apiSchemas = ["PhysicsRigidBodyAPI", "PhysxRigidBodyAPI"]
+                    prepend apiSchemas = ["MaterialBindingAPI"]
+                    instanceable = false
+                    kind = "group"
+                )
+                {
+                    rel material:binding = None (
+                        bindMaterialAs = "strongerThanDescendants"
+                    )
+
+                    over "_812_roller_skin__Fillet1_1_1" (
+                        prepend apiSchemas = ["PhysxSDFMeshCollisionAPI", "PhysxSphereFillCollisionAPI", "PhysxTriangleMeshCollisionAPI", "PhysxTriangleMeshSimplificationCollisionAPI", "PhysxConvexDecompositionCollisionAPI", "PhysxConvexHullCollisionAPI", "PhysxCollisionAPI"]
+                    )
+                    {
+                        uniform token physics:approximation = "sdf"
+                        float physxCollision:torsionalPatchRadius = 0
+                        uniform bool physxSDFMeshCollision:sdfEnableRemeshing = 0
+                        uniform int physxSDFMeshCollision:sdfResolution = 256
+                    }
+                }
+
+                over "tn__812_roller_skin__fillet1_16_" (
+                    delete apiSchemas = ["PhysicsRigidBodyAPI", "PhysxRigidBodyAPI"]
+                    prepend apiSchemas = ["MaterialBindingAPI"]
+                    instanceable = false
+                    kind = "group"
+                )
+                {
+                    rel material:binding = None (
+                        bindMaterialAs = "strongerThanDescendants"
+                    )
+
+                    over "_812_roller_skin__Fillet1_1_1" (
+                        prepend apiSchemas = ["PhysxSDFMeshCollisionAPI", "PhysxSphereFillCollisionAPI", "PhysxTriangleMeshCollisionAPI", "PhysxTriangleMeshSimplificationCollisionAPI", "PhysxConvexDecompositionCollisionAPI", "PhysxConvexHullCollisionAPI", "PhysxCollisionAPI"]
+                    )
+                    {
+                        uniform token physics:approximation = "sdf"
+                        float physxCollision:torsionalPatchRadius = 0
+                        uniform bool physxSDFMeshCollision:sdfEnableRemeshing = 0
+                        uniform int physxSDFMeshCollision:sdfResolution = 256
+                    }
+                }
+
+                over "tn__812_roller_skin__fillet1_14_" (
+                    delete apiSchemas = ["PhysicsRigidBodyAPI", "PhysxRigidBodyAPI"]
+                    prepend apiSchemas = ["MaterialBindingAPI"]
+                    instanceable = false
+                    kind = "group"
+                )
+                {
+                    rel material:binding = None (
+                        bindMaterialAs = "strongerThanDescendants"
+                    )
+
+                    over "_812_roller_skin__Fillet1_1_1" (
+                        prepend apiSchemas = ["PhysxSDFMeshCollisionAPI", "PhysxSphereFillCollisionAPI", "PhysxTriangleMeshCollisionAPI", "PhysxTriangleMeshSimplificationCollisionAPI", "PhysxConvexDecompositionCollisionAPI", "PhysxConvexHullCollisionAPI", "PhysxCollisionAPI"]
+                    )
+                    {
+                        uniform token physics:approximation = "sdf"
+                        float physxCollision:torsionalPatchRadius = 0
+                        uniform bool physxSDFMeshCollision:sdfEnableRemeshing = 0
+                        uniform int physxSDFMeshCollision:sdfResolution = 256
+                    }
+                }
+
+                over "tn__812_roller_skin__fillet1_18_" (
+                    delete apiSchemas = ["PhysicsRigidBodyAPI", "PhysxRigidBodyAPI"]
+                    prepend apiSchemas = ["MaterialBindingAPI"]
+                    instanceable = false
+                    kind = "group"
+                )
+                {
+                    string isaac:nameOverride (
+                        displayName = "Name Override"
+                    )
+                    rel material:binding = None (
+                        bindMaterialAs = "strongerThanDescendants"
+                    )
+
+                    over "_812_roller_skin__Fillet1_1_1" (
+                        prepend apiSchemas = ["PhysxSDFMeshCollisionAPI", "PhysxSphereFillCollisionAPI", "PhysxTriangleMeshCollisionAPI", "PhysxTriangleMeshSimplificationCollisionAPI", "PhysxConvexDecompositionCollisionAPI", "PhysxConvexHullCollisionAPI", "PhysxCollisionAPI"]
+                    )
+                    {
+                        uniform token physics:approximation = "sdf"
+                        float physxCollision:torsionalPatchRadius = 0
+                        uniform bool physxSDFMeshCollision:sdfEnableRemeshing = 0
+                        uniform int physxSDFMeshCollision:sdfResolution = 256
+                    }
+                }
+
+                over "Hub_Half__Fillet141_1" (
+                    prepend apiSchemas = ["MaterialBindingAPI"]
+                )
+                {
+                    rel material:binding = None (
+                        bindMaterialAs = "strongerThanDescendants"
+                    )
+                }
+
+                over "left_ring__Cut_Extrude4" (
+                    prepend apiSchemas = ["MaterialBindingAPI"]
+                )
+                {
+                    rel material:binding = None (
+                        bindMaterialAs = "strongerThanDescendants"
+                    )
+                }
+
+                over "Hub_Half__Fillet141_1_1" (
+                    prepend apiSchemas = ["MaterialBindingAPI"]
+                )
+                {
+                    rel material:binding = None (
+                        bindMaterialAs = "strongerThanDescendants"
+                    )
+                }
+
+                over "left_ring__Cut_Extrude4_1" (
+                    prepend apiSchemas = ["MaterialBindingAPI"]
+                )
+                {
+                    rel material:binding = None (
+                        bindMaterialAs = "strongerThanDescendants"
+                    )
+                }
+            }
+
+            over "Part_1" (
+                prepend apiSchemas = ["MaterialBindingAPI"]
+            )
+            {
+                rel material:binding = </momo_openrob/PhysicsMaterial> (
+                    bindMaterialAs = "weakerThanDescendants"
+                )
+            }
+        }
+    }
+
+    def Material "RollerMaterial" (
+        prepend apiSchemas = ["PhysicsMaterialAPI", "PhysxMaterialAPI", "MaterialBindingAPI"]
+    )
+    {
+        float physics:density = 0
+        float physics:dynamicFriction = 0
+        float physics:restitution = 0
+        float physics:staticFriction = 0
+        bool physxMaterial:compliantContactAccelerationSpring = 0
+        float physxMaterial:compliantContactDamping = 0
+        uniform token physxMaterial:frictionCombineMode = "average"
+    }
+
+    def Material "PhysicsMaterial" (
+        prepend apiSchemas = ["PhysicsMaterialAPI"]
+    )
+    {
+        float physics:density = 0
+    }
+
+    def Scope "Looks"
+    {
+    }
+
+    def Material "WheelMaterial" (
+        prepend apiSchemas = ["PhysicsMaterialAPI", "PhysxMaterialAPI"]
+    )
+    {
+        float physics:dynamicFriction = 0.05
+        custom float physics:dynamicFriction0 = 0.05
+        float physics:staticFriction = 0.1
+        custom float physics:staticFriction0 = 0.1
+        uniform token physxMaterial:dampingCombineMode = "average"
+        uniform token physxMaterial:frictionCombineMode = "average"
+        uniform token physxMaterial:restitutionCombineMode = "average"
+        uniform token ui:nodegraph:node:expansionState = ""
+    }
+    variantSet "Physics" = {
+        "mujoco" (
+            prepend payload = @./payloads/Physics/mujoco.usda@
+        ) {
+
+        }
+        "none" {
+
+        }
+        "physics" (
+            prepend payload = @./payloads/Physics/physics.usda@
+        ) {
+
+        }
+        "physx" (
+            prepend payload = @./payloads/Physics/physx.usda@
+        ) {
+
+        }
+    }
+}
+

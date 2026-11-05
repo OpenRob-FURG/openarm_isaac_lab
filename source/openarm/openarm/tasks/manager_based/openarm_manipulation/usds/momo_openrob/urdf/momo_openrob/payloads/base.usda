@@ -1,0 +1,857 @@
+#usda 1.0
+(
+    customLayerData = {
+        string creator = "URDF USD Converter v0.1.0"
+    }
+    defaultPrim = "momo_openrob"
+    doc = """Generated from Composed Stage of root layer /tmp/tmph5wdy2iy/momo_openrob.usdc
+
+
+Generated from Composed Stage of root layer /workspaces/openarm_isaac_lab/source/openarm/openarm/tasks/manager_based/openarm_manipulation/usds/momo_openrob/urdf/usdex/momo_openrob.usdc
+
+
+Generated from Composed Stage of root layer /workspaces/openarm_isaac_lab/source/openarm/openarm/tasks/manager_based/openarm_manipulation/usds/momo_openrob/urdf/temp/momo_openrob.usd
+
+
+Generated from Composed Stage of root layer /workspaces/openarm_isaac_lab/source/openarm/openarm/tasks/manager_based/openarm_manipulation/usds/momo_openrob/urdf/momo_openrob/payloads/base.usd
+"""
+    kilogramsPerUnit = 1
+    metersPerUnit = 1
+    subLayers = [
+        @./robot.usda@
+    ]
+    upAxis = "Z"
+)
+
+def Xform "momo_openrob" (
+    prepend apiSchemas = ["GeomModelAPI"]
+    assetInfo = {
+        string name = "momo_openrob"
+    }
+    kind = "component"
+)
+{
+    float3[] extentsHint = [(-0.29940054, -0.4395, -0.47112715), (0.2994003, 0.3105, 9.059906e-9)]
+
+    def Scope "Materials"
+    {
+    }
+
+    def Scope "Geometry"
+    {
+        def Xform "root"
+        {
+            def Xform "Part_1" (
+                instanceable = true
+                prepend references = @./instances.usda@</Instances/Part_1_1>
+            )
+            {
+                quatd xformOp:orient = (1, 0, 0, 0)
+                double3 xformOp:scale = (1, 1, 1)
+                double3 xformOp:translate = (-5.92925e-17, -0.0645, -0.2655)
+                uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient", "xformOp:scale"]
+            }
+
+            def Xform "hub_half__fillet141_7"
+            {
+                quatf xformOp:orient = (0.9237825, -0.38291755, -7.1588685e-18, -1.7270658e-17)
+                float3 xformOp:scale = (1, 1, 1)
+                double3 xformOp:translate = (0.2105, -0.2995, -0.335)
+                uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient", "xformOp:scale"]
+
+                def Xform "Hub_Half__Fillet141_1" (
+                    instanceable = true
+                    prepend references = @./instances.usda@</Instances/Hub_Half__Fillet141_1_1>
+                )
+                {
+                    quatd xformOp:orient = (1, 0, 0, 0)
+                    double3 xformOp:scale = (1, 1, 1)
+                    double3 xformOp:translate = (0.00877062, 0, 0)
+                    uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient", "xformOp:scale"]
+                }
+
+                def Xform "left_ring__Cut_Extrude4" (
+                    instanceable = true
+                    prepend references = @./instances.usda@</Instances/left_ring__Cut_Extrude4_1>
+                )
+                {
+                    quatd xformOp:orient = (0.7071054578, 0, -0.7071080804, 0)
+                    double3 xformOp:scale = (1, 1, 1)
+                    double3 xformOp:translate = (0.00718312, -6.93889e-18, 0)
+                    uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient", "xformOp:scale"]
+                }
+
+                def Xform "left_ring__Cut_Extrude4_1" (
+                    displayName = "left_ring__Cut_Extrude4"
+                    instanceable = true
+                    prepend references = @./instances.usda@</Instances/left_ring__Cut_Extrude4_1>
+                )
+                {
+                    quatd xformOp:orient = (0.6830122471, -0.1830118597, 0.683013618, -0.1830118597)
+                    double3 xformOp:scale = (1, 1, 1)
+                    double3 xformOp:translate = (0.0817169, -6.93889e-18, 0)
+                    uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient", "xformOp:scale"]
+                }
+
+                def Xform "Hub_Half__Fillet141_1_1" (
+                    displayName = "Hub_Half__Fillet141_1"
+                    instanceable = true
+                    prepend references = @./instances.usda@</Instances/Hub_Half__Fillet141_1_1>
+                )
+                {
+                    quatd xformOp:orient = (3.434022631e-7, 0.000001281584787, 0.9659253359, 0.2588209212)
+                    double3 xformOp:scale = (1, 1, 1)
+                    double3 xformOp:translate = (0.0801294, 2.06404e-17, 4.84266e-17)
+                    uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient", "xformOp:scale"]
+                }
+
+                def Xform "tn__812_roller_skin__fillet1_40_" (
+                    displayName = "812_roller_skin__fillet1_40"
+                    instanceable = true
+                    prepend references = @./instances.usda@</Instances/_812_roller_skin__Fillet1_1_1>
+                )
+                {
+                    quatd xformOp:orient = (0.6490136385, -0.6575216694, -0.2688301819, -0.2723543364)
+                    double3 xformOp:scale = (1, 1, 1)
+                    double3 xformOp:translate = (0.04355184703, 0.08572499935, -0.0008987615311)
+                    uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient", "xformOp:scale"]
+                }
+
+                def Xform "tn__812_roller_skin__fillet1_36_" (
+                    displayName = "812_roller_skin__fillet1_36"
+                    instanceable = true
+                    prepend references = @./instances.usda@</Instances/_812_roller_skin__Fillet1_1_1>
+                )
+                {
+                    quatd xformOp:orient = (0.7970780134, -0.4671402056, -0.1891794236, -0.3326526936)
+                    double3 xformOp:scale = (1, 1, 1)
+                    double3 xformOp:translate = (0.04355183837, 0.07468941846, 0.04208417599)
+                    uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient", "xformOp:scale"]
+                }
+
+                def Xform "tn__812_roller_skin__fillet1_37_" (
+                    displayName = "812_roller_skin__fillet1_37"
+                    instanceable = true
+                    prepend references = @./instances.usda@</Instances/_812_roller_skin__Fillet1_1_1>
+                )
+                {
+                    quatd xformOp:orient = (0.8908231258, -0.2449238957, -0.09663647653, -0.3702807518)
+                    double3 xformOp:scale = (1, 1, 1)
+                    double3 xformOp:translate = (0.04355185495, 0.04364083375, 0.07379066527)
+                    uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient", "xformOp:scale"]
+                }
+
+                def Xform "tn__812_roller_skin__fillet1_47_" (
+                    displayName = "812_roller_skin__fillet1_47"
+                    instanceable = true
+                    prepend references = @./instances.usda@</Instances/_812_roller_skin__Fillet1_1_1>
+                )
+                {
+                    quatd xformOp:orient = (0.9238599539, -0.006016400652, 0.002492074393, -0.3826752907)
+                    double3 xformOp:scale = (1, 1, 1)
+                    double3 xformOp:translate = (0.04355184429, 0.000898758786, 0.08572500001)
+                    uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient", "xformOp:scale"]
+                }
+
+                def Xform "tn__812_roller_skin__fillet1_45_" (
+                    displayName = "812_roller_skin__fillet1_45"
+                    instanceable = true
+                    prepend references = @./instances.usda@</Instances/_812_roller_skin__Fillet1_1_1>
+                )
+                {
+                    quatd xformOp:orient = (0.8939374685, 0.2333009387, 0.1014508752, -0.3689907781)
+                    double3 xformOp:scale = (1, 1, 1)
+                    double3 xformOp:translate = (0.0435518527, -0.04208416795, 0.07468943318)
+                    uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient", "xformOp:scale"]
+                }
+
+                def Xform "tn__812_roller_skin__fillet1_42_" (
+                    displayName = "812_roller_skin__fillet1_42"
+                    instanceable = true
+                    prepend references = @./instances.usda@</Instances/_812_roller_skin__Fillet1_1_1>
+                )
+                {
+                    quatd xformOp:orient = (0.8030942678, 0.4567197403, 0.1934957265, -0.3301606875)
+                    double3 xformOp:scale = (1, 1, 1)
+                    double3 xformOp:translate = (0.04242933786, -0.07322938186, 0.0446129236)
+                    uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient", "xformOp:scale"]
+                }
+
+                def Xform "tn__812_roller_skin__fillet1_46_" (
+                    displayName = "812_roller_skin__fillet1_46"
+                    instanceable = true
+                    prepend references = @./instances.usda@</Instances/_812_roller_skin__Fillet1_1_1>
+                )
+                {
+                    quatd xformOp:orient = (0.6575225592, 0.6490127387, 0.2723546898, -0.2688298201)
+                    double3 xformOp:scale = (1, 1, 1)
+                    double3 xformOp:translate = (0.04355184718, -0.08572500061, 0.0008987616796)
+                    uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient", "xformOp:scale"]
+                }
+
+                def Xform "tn__812_roller_skin__fillet1_43_" (
+                    displayName = "812_roller_skin__fillet1_43"
+                    instanceable = true
+                    prepend references = @./instances.usda@</Instances/_812_roller_skin__Fillet1_1_1>
+                )
+                {
+                    quatd xformOp:orient = (0.4671408534, 0.7970776416, 0.3326528311, -0.1891791489)
+                    double3 xformOp:scale = (1, 1, 1)
+                    double3 xformOp:translate = (0.04242933929, -0.07525061907, -0.04111207529)
+                    uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient", "xformOp:scale"]
+                }
+
+                def Xform "tn__812_roller_skin__fillet1_38_" (
+                    displayName = "812_roller_skin__fillet1_38"
+                    instanceable = true
+                    prepend references = @./instances.usda@</Instances/_812_roller_skin__Fillet1_1_1>
+                )
+                {
+                    quatd xformOp:orient = (0.2449246496, 0.8908229019, 0.3702808679, -0.09663618513)
+                    double3 xformOp:scale = (1, 1, 1)
+                    double3 xformOp:translate = (0.04242935277, -0.04461293235, -0.07322936721)
+                    uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient", "xformOp:scale"]
+                }
+
+                def Xform "tn__812_roller_skin__fillet1_39_" (
+                    displayName = "812_roller_skin__fillet1_39"
+                    instanceable = true
+                    prepend references = @./instances.usda@</Instances/_812_roller_skin__Fillet1_1_1>
+                )
+                {
+                    quatd xformOp:orient = (0.006015639286, 0.9238599801, 0.3826752414, 0.002491758974)
+                    double3 xformOp:scale = (1, 1, 1)
+                    double3 xformOp:translate = (0.04355184718, -0.0008987616822, -0.08572499999)
+                    uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient", "xformOp:scale"]
+                }
+
+                def Xform "tn__812_roller_skin__fillet1_44_" (
+                    displayName = "812_roller_skin__fillet1_44"
+                    instanceable = true
+                    prepend references = @./instances.usda@</Instances/_812_roller_skin__Fillet1_1_1>
+                )
+                {
+                    quatd xformOp:orient = (0.2333012372, -0.8939373942, -0.3689908026, -0.1014507545)
+                    double3 xformOp:scale = (1, 1, 1)
+                    double3 xformOp:translate = (0.04340378495, 0.04195593666, -0.0747634672)
+                    uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient", "xformOp:scale"]
+                }
+
+                def Xform "tn__812_roller_skin__fillet1_41_" (
+                    displayName = "812_roller_skin__fillet1_41"
+                    instanceable = true
+                    prepend references = @./instances.usda@</Instances/_812_roller_skin__Fillet1_1_1>
+                )
+                {
+                    quatd xformOp:orient = (0.4567195773, -0.8030943683, -0.3301606399, -0.1934957757)
+                    double3 xformOp:scale = (1, 1, 1)
+                    double3 xformOp:translate = (0.04355183878, 0.07379068216, -0.04364082483)
+                    uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient", "xformOp:scale"]
+                }
+            }
+
+            def Xform "hub_half__fillet141_5"
+            {
+                quatf xformOp:orient = (0.83226526, -0.5543776, -1.665533e-17, -2.5003989e-17)
+                float3 xformOp:scale = (1, 1, 1)
+                double3 xformOp:translate = (0.2105, 0.1615, -0.335)
+                uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient", "xformOp:scale"]
+
+                def Xform "Hub_Half__Fillet141" (
+                    instanceable = true
+                    prepend references = @./instances.usda@</Instances/Hub_Half__Fillet141_1>
+                )
+                {
+                    quatd xformOp:orient = (1, 0, 0, 0)
+                    double3 xformOp:scale = (1, 1, 1)
+                    double3 xformOp:translate = (0.00877062, 0, 0)
+                    uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient", "xformOp:scale"]
+                }
+
+                def Xform "Hub_Half__Fillet141_1" (
+                    displayName = "Hub_Half__Fillet141"
+                    instanceable = true
+                    prepend references = @./instances.usda@</Instances/Hub_Half__Fillet141_1>
+                )
+                {
+                    quatd xformOp:orient = (3.434022631e-7, 0.000001281584787, -0.9659253359, -0.2588209212)
+                    double3 xformOp:scale = (1, 1, 1)
+                    double3 xformOp:translate = (0.0801294, -3.44169e-15, 7.73687e-16)
+                    uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient", "xformOp:scale"]
+                }
+
+                def Xform "right_ring__Cut_Extrude4" (
+                    instanceable = true
+                    prepend references = @./instances.usda@</Instances/right_ring__Cut_Extrude4_1>
+                )
+                {
+                    quatd xformOp:orient = (0.6830122471, 0.1830118597, -0.683013618, -0.1830118597)
+                    double3 xformOp:scale = (1, 1, 1)
+                    double3 xformOp:translate = (0.0817169, -3.44169e-15, 8.01442e-16)
+                    uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient", "xformOp:scale"]
+                }
+
+                def Xform "right_ring__Cut_Extrude4_1" (
+                    displayName = "right_ring__Cut_Extrude4"
+                    instanceable = true
+                    prepend references = @./instances.usda@</Instances/right_ring__Cut_Extrude4_1>
+                )
+                {
+                    quatd xformOp:orient = (0.7071054578, 0, 0.7071080804, 0)
+                    double3 xformOp:scale = (1, 1, 1)
+                    double3 xformOp:translate = (0.00718312, -5.89472e-17, 2.6776e-17)
+                    uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient", "xformOp:scale"]
+                }
+
+                def Xform "tn__812_roller_skin__fillet1_30_" (
+                    displayName = "812_roller_skin__fillet1_30"
+                    instanceable = true
+                    prepend references = @./instances.usda@</Instances/_812_roller_skin__Fillet1_1>
+                )
+                {
+                    quatd xformOp:orient = (0.5548037887, 0.738746416, 0.1500989967, 0.3520181531)
+                    double3 xformOp:scale = (1, 1, 1)
+                    double3 xformOp:translate = (0.04534814837, -0.04208416819, 0.07468943145)
+                    uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient", "xformOp:scale"]
+                }
+
+                def Xform "tn__812_roller_skin__fillet1_35_" (
+                    displayName = "812_roller_skin__fillet1_35"
+                    instanceable = true
+                    prepend references = @./instances.usda@</Instances/_812_roller_skin__Fillet1_1>
+                )
+                {
+                    quatd xformOp:orient = (0.7271018624, 0.569979236, 0.236093083, 0.3011753781)
+                    double3 xformOp:scale = (1, 1, 1)
+                    double3 xformOp:translate = (0.04534815304, 0.0008987614627, 0.08572500062)
+                    uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient", "xformOp:scale"]
+                }
+
+                def Xform "tn__812_roller_skin__fillet1_32_" (
+                    displayName = "812_roller_skin__fillet1_32"
+                    instanceable = true
+                    prepend references = @./instances.usda@</Instances/_812_roller_skin__Fillet1_1>
+                )
+                {
+                    quatd xformOp:orient = (0.849848032, 0.3623698039, 0.3059982047, 0.2298076291)
+                    double3 xformOp:scale = (1, 1, 1)
+                    double3 xformOp:translate = (0.04552775054, 0.04379637655, 0.07370086379)
+                    uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient", "xformOp:scale"]
+                }
+
+                def Xform "tn__812_roller_skin__fillet1_27_" (
+                    displayName = "812_roller_skin__fillet1_27"
+                    instanceable = true
+                    prepend references = @./instances.usda@</Instances/_812_roller_skin__Fillet1_1>
+                )
+                {
+                    quatd xformOp:orient = (0.914678216, 0.1300656076, 0.3550504218, 0.1427791892)
+                    double3 xformOp:scale = (1, 1, 1)
+                    double3 xformOp:translate = (0.04534816384, 0.07468941628, 0.04208417729)
+                    uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient", "xformOp:scale"]
+                }
+
+                def Xform "tn__812_roller_skin__fillet1_34_" (
+                    displayName = "812_roller_skin__fillet1_34"
+                    instanceable = true
+                    prepend references = @./instances.usda@</Instances/_812_roller_skin__Fillet1_1>
+                )
+                {
+                    quatd xformOp:orient = (0.9171748757, -0.111102284, 0.3799061513, 0.04602006121)
+                    double3 xformOp:scale = (1, 1, 1)
+                    double3 xformOp:translate = (0.04534815139, 0.08572499979, -0.0008987631127)
+                    uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient", "xformOp:scale"]
+                }
+
+                def Xform "tn__812_roller_skin__fillet1_31_" (
+                    displayName = "812_roller_skin__fillet1_31"
+                    instanceable = true
+                    prepend references = @./instances.usda@</Instances/_812_roller_skin__Fillet1_1>
+                )
+                {
+                    quatd xformOp:orient = (0.8571673036, -0.3446991717, 0.3788722429, -0.05387502498)
+                    double3 xformOp:scale = (1, 1, 1)
+                    double3 xformOp:translate = (0.04534816353, 0.07379068337, -0.04364082286)
+                    uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient", "xformOp:scale"]
+                }
+
+                def Xform "tn__812_roller_skin__fillet1_33_" (
+                    displayName = "812_roller_skin__fillet1_33"
+                    instanceable = true
+                    prepend references = @./instances.usda@</Instances/_812_roller_skin__Fillet1_1>
+                )
+                {
+                    quatd xformOp:orient = (0.7387443781, -0.5548065184, 0.3520186765, -0.1500977096)
+                    double3 xformOp:scale = (1, 1, 1)
+                    double3 xformOp:translate = (0.04534814705, 0.04208416779, -0.07468943339)
+                    uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient", "xformOp:scale"]
+                }
+
+                def Xform "tn__812_roller_skin__fillet1_24_" (
+                    displayName = "812_roller_skin__fillet1_24"
+                    instanceable = true
+                    prepend references = @./instances.usda@</Instances/_812_roller_skin__Fillet1_1>
+                )
+                {
+                    quatd xformOp:orient = (0.5699802041, -0.7271011001, 0.3011750631, -0.2360934954)
+                    double3 xformOp:scale = (1, 1, 1)
+                    double3 xformOp:translate = (0.0453481534, -0.0008987610961, -0.0857250012)
+                    uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient", "xformOp:scale"]
+                }
+
+                def Xform "tn__812_roller_skin__fillet1_29_" (
+                    displayName = "812_roller_skin__fillet1_29"
+                    instanceable = true
+                    prepend references = @./instances.usda@</Instances/_812_roller_skin__Fillet1_1>
+                )
+                {
+                    quatd xformOp:orient = (0.3623696864, -0.8498480663, 0.2298076978, -0.305998197)
+                    double3 xformOp:scale = (1, 1, 1)
+                    double3 xformOp:translate = (0.04647064732, -0.044612932, -0.07322936676)
+                    uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient", "xformOp:scale"]
+                }
+
+                def Xform "tn__812_roller_skin__fillet1_26_" (
+                    displayName = "812_roller_skin__fillet1_26"
+                    instanceable = true
+                    prepend references = @./instances.usda@</Instances/_812_roller_skin__Fillet1_1>
+                )
+                {
+                    quatd xformOp:orient = (0.1300654262, -0.9146782633, 0.1427792291, -0.3550503504)
+                    double3 xformOp:scale = (1, 1, 1)
+                    double3 xformOp:translate = (0.04534816095, -0.07468941852, -0.04208417524)
+                    uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient", "xformOp:scale"]
+                }
+
+                def Xform "tn__812_roller_skin__fillet1_28_" (
+                    displayName = "812_roller_skin__fillet1_28"
+                    instanceable = true
+                    prepend references = @./instances.usda@</Instances/_812_roller_skin__Fillet1_1>
+                )
+                {
+                    quatd xformOp:orient = (0.1111007556, 0.9171750462, -0.04601942706, 0.3799062635)
+                    double3 xformOp:scale = (1, 1, 1)
+                    double3 xformOp:translate = (0.04647065337, -0.08572500021, 0.002021261132)
+                    uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient", "xformOp:scale"]
+                }
+
+                def Xform "tn__812_roller_skin__fillet1_25_" (
+                    displayName = "812_roller_skin__fillet1_25"
+                    instanceable = true
+                    prepend references = @./instances.usda@</Instances/_812_roller_skin__Fillet1_1>
+                )
+                {
+                    quatd xformOp:orient = (0.3446977139, 0.8571679014, 0.05387565505, 0.3788721271)
+                    double3 xformOp:scale = (1, 1, 1)
+                    double3 xformOp:translate = (0.04534816207, -0.0737906819, 0.0436408237)
+                    uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient", "xformOp:scale"]
+                }
+            }
+
+            def Xform "hub_half__fillet141"
+            {
+                quatf xformOp:orient = (-4.2468352e-7, 0.0000012569919, 0.9473897, -0.32008228)
+                float3 xformOp:scale = (1, 1, 1)
+                double3 xformOp:translate = (-0.2105, -0.2995, -0.335)
+                uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient", "xformOp:scale"]
+
+                def Xform "Hub_Half__Fillet141" (
+                    instanceable = true
+                    prepend references = @./instances.usda@</Instances/Hub_Half__Fillet141_1>
+                )
+                {
+                    quatd xformOp:orient = (1, 0, 0, 0)
+                    double3 xformOp:scale = (1, 1, 1)
+                    double3 xformOp:translate = (0.00877062, 0, 0)
+                    uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient", "xformOp:scale"]
+                }
+
+                def Xform "Hub_Half__Fillet141_1" (
+                    displayName = "Hub_Half__Fillet141"
+                    instanceable = true
+                    prepend references = @./instances.usda@</Instances/Hub_Half__Fillet141_1>
+                )
+                {
+                    quatd xformOp:orient = (3.434022631e-7, 0.000001281584787, -0.9659253359, -0.2588209212)
+                    double3 xformOp:scale = (1, 1, 1)
+                    double3 xformOp:translate = (0.0801294, 2.47719e-15, 2.38698e-15)
+                    uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient", "xformOp:scale"]
+                }
+
+                def Xform "right_ring__Cut_Extrude4" (
+                    instanceable = true
+                    prepend references = @./instances.usda@</Instances/right_ring__Cut_Extrude4_1>
+                )
+                {
+                    quatd xformOp:orient = (0.7071054578, 0, 0.7071080804, 0)
+                    double3 xformOp:scale = (1, 1, 1)
+                    double3 xformOp:translate = (0.00718312, -1.49767e-17, -1.33539e-17)
+                    uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient", "xformOp:scale"]
+                }
+
+                def Xform "right_ring__Cut_Extrude4_1" (
+                    displayName = "right_ring__Cut_Extrude4"
+                    instanceable = true
+                    prepend references = @./instances.usda@</Instances/right_ring__Cut_Extrude4_1>
+                )
+                {
+                    quatd xformOp:orient = (0.6830122471, 0.1830118597, -0.683013618, -0.1830118597)
+                    double3 xformOp:scale = (1, 1, 1)
+                    double3 xformOp:translate = (0.0817169, 2.52731e-15, 2.33466e-15)
+                    uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient", "xformOp:scale"]
+                }
+
+                def Xform "tn__812_roller_skin__fillet1_4_" (
+                    displayName = "812_roller_skin__fillet1_4"
+                    instanceable = true
+                    prepend references = @./instances.usda@</Instances/_812_roller_skin__Fillet1_1>
+                )
+                {
+                    quatd xformOp:orient = (0.2360948175, -0.3011767607, -0.7271003821, 0.5699796753)
+                    double3 xformOp:scale = (1, 1, 1)
+                    double3 xformOp:translate = (0.04355172529, 0.0008986397893, -0.08572499998)
+                    uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient", "xformOp:scale"]
+                }
+
+                def Xform "tn__812_roller_skin__fillet1_" (
+                    displayName = "812_roller_skin__fillet1"
+                    instanceable = true
+                    prepend references = @./instances.usda@</Instances/_812_roller_skin__Fillet1_1>
+                )
+                {
+                    quatd xformOp:orient = (0.3059979677, -0.2298071245, -0.8498482143, 0.3623698965)
+                    double3 xformOp:scale = (1, 1, 1)
+                    double3 xformOp:translate = (0.04355188243, 0.04364086677, -0.07379066749)
+                    uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient", "xformOp:scale"]
+                }
+
+                def Xform "tn__812_roller_skin__fillet1_11_" (
+                    displayName = "812_roller_skin__fillet1_11"
+                    instanceable = true
+                    prepend references = @./instances.usda@</Instances/_812_roller_skin__Fillet1_1>
+                )
+                {
+                    quatd xformOp:orient = (0.3550500274, -0.1427767874, -0.9146786342, 0.13006638)
+                    double3 xformOp:scale = (1, 1, 1)
+                    double3 xformOp:translate = (0.04337230174, 0.07477935895, -0.04192863394)
+                    uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient", "xformOp:scale"]
+                }
+
+                def Xform "tn__812_roller_skin__fillet1_6_" (
+                    displayName = "812_roller_skin__fillet1_6"
+                    instanceable = true
+                    prepend references = @./instances.usda@</Instances/_812_roller_skin__Fillet1_1>
+                )
+                {
+                    quatd xformOp:orient = (0.3799064159, -0.0460182126, -0.9171751055, -0.1111002479)
+                    double3 xformOp:scale = (1, 1, 1)
+                    double3 xformOp:translate = (0.04355184633, 0.08572506909, 0.0008987608321)
+                    uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient", "xformOp:scale"]
+                }
+
+                def Xform "tn__812_roller_skin__fillet1_10_" (
+                    displayName = "812_roller_skin__fillet1_10"
+                    instanceable = true
+                    prepend references = @./instances.usda@</Instances/_812_roller_skin__Fillet1_1>
+                )
+                {
+                    quatd xformOp:orient = (0.3788712025, 0.05387336538, -0.8571680427, -0.3446987367)
+                    double3 xformOp:scale = (1, 1, 1)
+                    double3 xformOp:translate = (0.04355190771, 0.07379054297, 0.04364082406)
+                    uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient", "xformOp:scale"]
+                }
+
+                def Xform "tn__812_roller_skin__fillet1_9_" (
+                    displayName = "812_roller_skin__fillet1_9"
+                    instanceable = true
+                    prepend references = @./instances.usda@</Instances/_812_roller_skin__Fillet1_1>
+                )
+                {
+                    quatd xformOp:orient = (0.3520177603, 0.1500985027, -0.7387465243, -0.5548040274)
+                    double3 xformOp:scale = (1, 1, 1)
+                    double3 xformOp:translate = (0.04355188292, 0.04208413264, 0.07468943247)
+                    uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient", "xformOp:scale"]
+                }
+
+                def Xform "tn__812_roller_skin__fillet1_3_" (
+                    displayName = "812_roller_skin__fillet1_3"
+                    instanceable = true
+                    prepend references = @./instances.usda@</Instances/_812_roller_skin__Fillet1_1>
+                )
+                {
+                    quatd xformOp:orient = (0.3011770546, 0.2360944147, -0.5699787128, -0.7271011457)
+                    double3 xformOp:scale = (1, 1, 1)
+                    double3 xformOp:translate = (0.04355172626, -0.0008986407569, 0.0857250007)
+                    uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient", "xformOp:scale"]
+                }
+
+                def Xform "tn__812_roller_skin__fillet1_2_" (
+                    displayName = "812_roller_skin__fillet1_2"
+                    instanceable = true
+                    prepend references = @./instances.usda@</Instances/_812_roller_skin__Fillet1_1>
+                )
+                {
+                    quatd xformOp:orient = (0.2298070788, 0.305997998, -0.3623700446, -0.8498481526)
+                    double3 xformOp:scale = (1, 1, 1)
+                    double3 xformOp:translate = (0.04355188261, -0.04364086652, 0.07379066671)
+                    uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient", "xformOp:scale"]
+                }
+
+                def Xform "tn__812_roller_skin__fillet1_5_" (
+                    displayName = "812_roller_skin__fillet1_5"
+                    instanceable = true
+                    prepend references = @./instances.usda@</Instances/_812_roller_skin__Fillet1_1>
+                )
+                {
+                    quatd xformOp:orient = (0.1427767277, 0.3550500231, -0.1300665422, -0.9146786221)
+                    double3 xformOp:scale = (1, 1, 1)
+                    double3 xformOp:translate = (0.04242940879, -0.07525075723, 0.0411120748)
+                    uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient", "xformOp:scale"]
+                }
+
+                def Xform "tn__812_roller_skin__fillet1_8_" (
+                    displayName = "812_roller_skin__fillet1_8"
+                    instanceable = true
+                    prepend references = @./instances.usda@</Instances/_812_roller_skin__Fillet1_1>
+                )
+                {
+                    quatd xformOp:orient = (0.04601884633, 0.3799063228, 0.1111017827, -0.9171749264)
+                    double3 xformOp:scale = (1, 1, 1)
+                    double3 xformOp:translate = (0.04355184725, -0.08572506907, -0.0008987617478)
+                    uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient", "xformOp:scale"]
+                }
+
+                def Xform "tn__812_roller_skin__fillet1_7_" (
+                    displayName = "812_roller_skin__fillet1_7"
+                    instanceable = true
+                    prepend references = @./instances.usda@</Instances/_812_roller_skin__Fillet1_1>
+                )
+                {
+                    quatd xformOp:orient = (0.05387273058, -0.3788712884, -0.3447001545, 0.8571674745)
+                    double3 xformOp:scale = (1, 1, 1)
+                    double3 xformOp:translate = (0.04242940795, -0.07322924238, -0.044612924)
+                    uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient", "xformOp:scale"]
+                }
+
+                def Xform "tn__812_roller_skin__fillet1_1_" (
+                    displayName = "812_roller_skin__fillet1_1"
+                    instanceable = true
+                    prepend references = @./instances.usda@</Instances/_812_roller_skin__Fillet1_1>
+                )
+                {
+                    quatd xformOp:orient = (0.1500972062, -0.3520183163, -0.5548067528, 0.7387444759)
+                    double3 xformOp:scale = (1, 1, 1)
+                    double3 xformOp:translate = (0.04355188275, -0.04208413284, -0.07468943248)
+                    uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient", "xformOp:scale"]
+                }
+            }
+
+            def Xform "hub_half__fillet141_3"
+            {
+                quatf xformOp:orient = (-7.376271e-7, 0.0000011028558, 0.831218, -0.5559466)
+                float3 xformOp:scale = (1, 1, 1)
+                double3 xformOp:translate = (-0.2105, 0.1615, -0.335)
+                uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient", "xformOp:scale"]
+
+                def Xform "Hub_Half__Fillet141_1" (
+                    instanceable = true
+                    prepend references = @./instances.usda@</Instances/Hub_Half__Fillet141_1_1>
+                )
+                {
+                    quatd xformOp:orient = (1, 0, 0, 0)
+                    double3 xformOp:scale = (1, 1, 1)
+                    double3 xformOp:translate = (0.00877062, 0, 0)
+                    uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient", "xformOp:scale"]
+                }
+
+                def Xform "left_ring__Cut_Extrude4" (
+                    instanceable = true
+                    prepend references = @./instances.usda@</Instances/left_ring__Cut_Extrude4_1>
+                )
+                {
+                    quatd xformOp:orient = (0.6830122471, -0.1830118597, 0.683013618, -0.1830118597)
+                    double3 xformOp:scale = (1, 1, 1)
+                    double3 xformOp:translate = (0.0817169, 0, 3.46945e-18)
+                    uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient", "xformOp:scale"]
+                }
+
+                def Xform "Hub_Half__Fillet141_1_1" (
+                    displayName = "Hub_Half__Fillet141_1"
+                    instanceable = true
+                    prepend references = @./instances.usda@</Instances/Hub_Half__Fillet141_1_1>
+                )
+                {
+                    quatd xformOp:orient = (3.434022631e-7, 0.000001281584787, -0.9659253359, -0.2588209212)
+                    double3 xformOp:scale = (1, 1, 1)
+                    double3 xformOp:translate = (0.0801294, 4.78978e-17, -2.39336e-17)
+                    uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient", "xformOp:scale"]
+                }
+
+                def Xform "left_ring__Cut_Extrude4_1" (
+                    displayName = "left_ring__Cut_Extrude4"
+                    instanceable = true
+                    prepend references = @./instances.usda@</Instances/left_ring__Cut_Extrude4_1>
+                )
+                {
+                    quatd xformOp:orient = (0.7071054578, 0, -0.7071080804, 0)
+                    double3 xformOp:scale = (1, 1, 1)
+                    double3 xformOp:translate = (0.00718312, 0, 3.46945e-18)
+                    uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient", "xformOp:scale"]
+                }
+
+                def Xform "tn__812_roller_skin__fillet1_23_" (
+                    displayName = "812_roller_skin__fillet1_23"
+                    instanceable = true
+                    prepend references = @./instances.usda@</Instances/_812_roller_skin__Fillet1_1_1>
+                )
+                {
+                    quatd xformOp:orient = (0.9238599539, -0.006016400652, 0.002492074393, -0.3826752907)
+                    double3 xformOp:scale = (1, 1, 1)
+                    double3 xformOp:translate = (0.04355184429, 0.000898758786, 0.08572500001)
+                    uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient", "xformOp:scale"]
+                }
+
+                def Xform "tn__812_roller_skin__fillet1_22_" (
+                    displayName = "812_roller_skin__fillet1_22"
+                    instanceable = true
+                    prepend references = @./instances.usda@</Instances/_812_roller_skin__Fillet1_1_1>
+                )
+                {
+                    quatd xformOp:orient = (0.6490136385, -0.6575216694, -0.2688301819, -0.2723543364)
+                    double3 xformOp:scale = (1, 1, 1)
+                    double3 xformOp:translate = (0.04355184703, 0.08572499935, -0.0008987615311)
+                    uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient", "xformOp:scale"]
+                }
+
+                def Xform "tn__812_roller_skin__fillet1_13_" (
+                    displayName = "812_roller_skin__fillet1_13"
+                    instanceable = true
+                    prepend references = @./instances.usda@</Instances/_812_roller_skin__Fillet1_1_1>
+                )
+                {
+                    quatd xformOp:orient = (0.7970780134, -0.4671402056, -0.1891794236, -0.3326526936)
+                    double3 xformOp:scale = (1, 1, 1)
+                    double3 xformOp:translate = (0.04355183837, 0.07468941846, 0.04208417599)
+                    uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient", "xformOp:scale"]
+                }
+
+                def Xform "tn__812_roller_skin__fillet1_21_" (
+                    displayName = "812_roller_skin__fillet1_21"
+                    instanceable = true
+                    prepend references = @./instances.usda@</Instances/_812_roller_skin__Fillet1_1_1>
+                )
+                {
+                    quatd xformOp:orient = (0.8908231258, -0.2449238957, -0.09663647653, -0.3702807518)
+                    double3 xformOp:scale = (1, 1, 1)
+                    double3 xformOp:translate = (0.04355185495, 0.04364083375, 0.07379066527)
+                    uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient", "xformOp:scale"]
+                }
+
+                def Xform "tn__812_roller_skin__fillet1_12_" (
+                    displayName = "812_roller_skin__fillet1_12"
+                    instanceable = true
+                    prepend references = @./instances.usda@</Instances/_812_roller_skin__Fillet1_1_1>
+                )
+                {
+                    quatd xformOp:orient = (0.8939374685, 0.2333009387, 0.1014508752, -0.3689907781)
+                    double3 xformOp:scale = (1, 1, 1)
+                    double3 xformOp:translate = (0.0435518527, -0.04208416795, 0.07468943318)
+                    uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient", "xformOp:scale"]
+                }
+
+                def Xform "tn__812_roller_skin__fillet1_20_" (
+                    displayName = "812_roller_skin__fillet1_20"
+                    instanceable = true
+                    prepend references = @./instances.usda@</Instances/_812_roller_skin__Fillet1_1_1>
+                )
+                {
+                    quatd xformOp:orient = (0.8030942678, 0.4567197403, 0.1934957265, -0.3301606875)
+                    double3 xformOp:scale = (1, 1, 1)
+                    double3 xformOp:translate = (0.04242933786, -0.07322938186, 0.0446129236)
+                    uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient", "xformOp:scale"]
+                }
+
+                def Xform "tn__812_roller_skin__fillet1_19_" (
+                    displayName = "812_roller_skin__fillet1_19"
+                    instanceable = true
+                    prepend references = @./instances.usda@</Instances/_812_roller_skin__Fillet1_1_1>
+                )
+                {
+                    quatd xformOp:orient = (0.6575225592, 0.6490127387, 0.2723546898, -0.2688298201)
+                    double3 xformOp:scale = (1, 1, 1)
+                    double3 xformOp:translate = (0.04355184718, -0.08572500061, 0.0008987616796)
+                    uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient", "xformOp:scale"]
+                }
+
+                def Xform "tn__812_roller_skin__fillet1_17_" (
+                    displayName = "812_roller_skin__fillet1_17"
+                    instanceable = true
+                    prepend references = @./instances.usda@</Instances/_812_roller_skin__Fillet1_1_1>
+                )
+                {
+                    quatd xformOp:orient = (0.4671408534, 0.7970776416, 0.3326528311, -0.1891791489)
+                    double3 xformOp:scale = (1, 1, 1)
+                    double3 xformOp:translate = (0.04242933929, -0.07525061907, -0.04111207529)
+                    uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient", "xformOp:scale"]
+                }
+
+                def Xform "tn__812_roller_skin__fillet1_15_" (
+                    displayName = "812_roller_skin__fillet1_15"
+                    instanceable = true
+                    prepend references = @./instances.usda@</Instances/_812_roller_skin__Fillet1_1_1>
+                )
+                {
+                    quatd xformOp:orient = (0.2449246496, 0.8908229019, 0.3702808679, -0.09663618513)
+                    double3 xformOp:scale = (1, 1, 1)
+                    double3 xformOp:translate = (0.04242935277, -0.04461293235, -0.07322936721)
+                    uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient", "xformOp:scale"]
+                }
+
+                def Xform "tn__812_roller_skin__fillet1_16_" (
+                    displayName = "812_roller_skin__fillet1_16"
+                    instanceable = true
+                    prepend references = @./instances.usda@</Instances/_812_roller_skin__Fillet1_1_1>
+                )
+                {
+                    quatd xformOp:orient = (0.006015639286, 0.9238599801, 0.3826752414, 0.002491758974)
+                    double3 xformOp:scale = (1, 1, 1)
+                    double3 xformOp:translate = (0.04355184718, -0.0008987616822, -0.08572499999)
+                    uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient", "xformOp:scale"]
+                }
+
+                def Xform "tn__812_roller_skin__fillet1_14_" (
+                    displayName = "812_roller_skin__fillet1_14"
+                    instanceable = true
+                    prepend references = @./instances.usda@</Instances/_812_roller_skin__Fillet1_1_1>
+                )
+                {
+                    quatd xformOp:orient = (0.2333012372, -0.8939373942, -0.3689908026, -0.1014507545)
+                    double3 xformOp:scale = (1, 1, 1)
+                    double3 xformOp:translate = (0.04340378495, 0.04195593666, -0.0747634672)
+                    uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient", "xformOp:scale"]
+                }
+
+                def Xform "tn__812_roller_skin__fillet1_18_" (
+                    displayName = "812_roller_skin__fillet1_18"
+                    instanceable = true
+                    prepend references = @./instances.usda@</Instances/_812_roller_skin__Fillet1_1_1>
+                )
+                {
+                    quatd xformOp:orient = (0.4567195773, -0.8030943683, -0.3301606399, -0.1934957757)
+                    double3 xformOp:scale = (1, 1, 1)
+                    double3 xformOp:translate = (0.04355183878, 0.07379068216, -0.04364082483)
+                    uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient", "xformOp:scale"]
+                }
+            }
+        }
+    }
+
+    def Scope "Physics"
+    {
+    }
+
+    def Scope "VisualMaterials"
+    {
+    }
+}
+

@@ -1,0 +1,697 @@
+#usda 1.0
+(
+    customLayerData = {
+        string creator = "URDF USD Converter v0.1.0"
+    }
+    defaultPrim = "momo_openrob"
+    doc = """Generated from Composed Stage of root layer /tmp/tmplddu1gkj/momo_openrob.usdc
+
+
+Generated from Composed Stage of root layer /workspaces/openarm_isaac_lab/source/openarm/openarm/tasks/manager_based/openarm_manipulation/usds/momo_openrob/urdf/usdex/momo_openrob.usdc
+
+
+Generated from Composed Stage of root layer /workspaces/openarm_isaac_lab/source/openarm/openarm/tasks/manager_based/openarm_manipulation/usds/momo_openrob/urdf/temp/momo_openrob.usd
+
+
+Generated from Composed Stage of root layer /workspaces/openarm_isaac_lab/source/openarm/openarm/tasks/manager_based/openarm_manipulation/usds/momo_openrob/urdf/momo_openrob/payloads/base.usd
+"""
+    kilogramsPerUnit = 1
+    metersPerUnit = 1
+    subLayers = [
+        @./physics.usda@
+    ]
+    upAxis = "Z"
+)
+
+over "momo_openrob"
+{
+    over "Geometry"
+    {
+        over "root" (
+            delete apiSchemas = ["NewtonArticulationRootAPI"]
+            prepend apiSchemas = ["PhysxArticulationAPI"]
+        )
+        {
+            bool physxArticulation:enabledSelfCollisions = 0
+
+            over "hub_half__fillet141_7"
+            {
+                over "tn__812_roller_skin__fillet1_40_"
+                {
+                }
+
+                over "tn__812_roller_skin__fillet1_36_"
+                {
+                }
+
+                over "tn__812_roller_skin__fillet1_37_"
+                {
+                }
+
+                over "tn__812_roller_skin__fillet1_47_"
+                {
+                }
+
+                over "tn__812_roller_skin__fillet1_45_"
+                {
+                }
+
+                over "tn__812_roller_skin__fillet1_42_"
+                {
+                }
+
+                over "tn__812_roller_skin__fillet1_46_"
+                {
+                }
+
+                over "tn__812_roller_skin__fillet1_43_"
+                {
+                }
+
+                over "tn__812_roller_skin__fillet1_38_"
+                {
+                }
+
+                over "tn__812_roller_skin__fillet1_39_"
+                {
+                }
+
+                over "tn__812_roller_skin__fillet1_44_"
+                {
+                }
+
+                over "tn__812_roller_skin__fillet1_41_"
+                {
+                }
+
+                over "Hub_Half__Fillet141_1"
+                {
+                }
+
+                over "left_ring__Cut_Extrude4"
+                {
+                }
+
+                over "left_ring__Cut_Extrude4_1"
+                {
+                }
+
+                over "Hub_Half__Fillet141_1_1"
+                {
+                }
+            }
+
+            over "hub_half__fillet141_5"
+            {
+                over "tn__812_roller_skin__fillet1_30_"
+                {
+                }
+
+                over "tn__812_roller_skin__fillet1_35_"
+                {
+                }
+
+                over "tn__812_roller_skin__fillet1_32_"
+                {
+                }
+
+                over "tn__812_roller_skin__fillet1_27_"
+                {
+                }
+
+                over "tn__812_roller_skin__fillet1_34_"
+                {
+                }
+
+                over "tn__812_roller_skin__fillet1_31_"
+                {
+                }
+
+                over "tn__812_roller_skin__fillet1_33_"
+                {
+                }
+
+                over "tn__812_roller_skin__fillet1_24_"
+                {
+                }
+
+                over "tn__812_roller_skin__fillet1_29_"
+                {
+                }
+
+                over "tn__812_roller_skin__fillet1_26_"
+                {
+                }
+
+                over "tn__812_roller_skin__fillet1_28_"
+                {
+                }
+
+                over "tn__812_roller_skin__fillet1_25_"
+                {
+                }
+
+                over "Hub_Half__Fillet141"
+                {
+                }
+
+                over "Hub_Half__Fillet141_1"
+                {
+                }
+
+                over "right_ring__Cut_Extrude4"
+                {
+                }
+
+                over "right_ring__Cut_Extrude4_1"
+                {
+                }
+            }
+
+            over "hub_half__fillet141"
+            {
+                over "tn__812_roller_skin__fillet1_4_"
+                {
+                }
+
+                over "tn__812_roller_skin__fillet1_"
+                {
+                }
+
+                over "tn__812_roller_skin__fillet1_11_"
+                {
+                }
+
+                over "tn__812_roller_skin__fillet1_6_"
+                {
+                }
+
+                over "tn__812_roller_skin__fillet1_10_"
+                {
+                }
+
+                over "tn__812_roller_skin__fillet1_9_"
+                {
+                }
+
+                over "tn__812_roller_skin__fillet1_3_"
+                {
+                }
+
+                over "tn__812_roller_skin__fillet1_2_"
+                {
+                }
+
+                over "tn__812_roller_skin__fillet1_5_"
+                {
+                }
+
+                over "tn__812_roller_skin__fillet1_8_"
+                {
+                }
+
+                over "tn__812_roller_skin__fillet1_7_"
+                {
+                }
+
+                over "tn__812_roller_skin__fillet1_1_"
+                {
+                }
+
+                over "Hub_Half__Fillet141"
+                {
+                }
+
+                over "Hub_Half__Fillet141_1"
+                {
+                }
+
+                over "right_ring__Cut_Extrude4"
+                {
+                }
+
+                over "right_ring__Cut_Extrude4_1"
+                {
+                }
+            }
+
+            over "hub_half__fillet141_3"
+            {
+                over "tn__812_roller_skin__fillet1_23_"
+                {
+                }
+
+                over "tn__812_roller_skin__fillet1_22_"
+                {
+                }
+
+                over "tn__812_roller_skin__fillet1_13_"
+                {
+                }
+
+                over "tn__812_roller_skin__fillet1_21_"
+                {
+                }
+
+                over "tn__812_roller_skin__fillet1_12_"
+                {
+                }
+
+                over "tn__812_roller_skin__fillet1_20_"
+                {
+                }
+
+                over "tn__812_roller_skin__fillet1_19_"
+                {
+                }
+
+                over "tn__812_roller_skin__fillet1_17_"
+                {
+                }
+
+                over "tn__812_roller_skin__fillet1_15_"
+                {
+                }
+
+                over "tn__812_roller_skin__fillet1_16_"
+                {
+                }
+
+                over "tn__812_roller_skin__fillet1_14_"
+                {
+                }
+
+                over "tn__812_roller_skin__fillet1_18_"
+                {
+                }
+
+                over "Hub_Half__Fillet141_1"
+                {
+                }
+
+                over "left_ring__Cut_Extrude4"
+                {
+                }
+
+                over "Hub_Half__Fillet141_1_1"
+                {
+                }
+
+                over "left_ring__Cut_Extrude4_1"
+                {
+                }
+            }
+
+            over "Part_1"
+            {
+            }
+        }
+    }
+
+    over "Physics"
+    {
+        over "revolute_1" (
+            prepend apiSchemas = ["PhysxJointAPI"]
+        )
+        {
+        }
+
+        over "revolute_10" (
+            prepend apiSchemas = ["PhysxJointAPI"]
+        )
+        {
+        }
+
+        over "revolute_10_1" (
+            prepend apiSchemas = ["PhysxJointAPI"]
+        )
+        {
+        }
+
+        over "revolute_10_2" (
+            prepend apiSchemas = ["PhysxJointAPI"]
+        )
+        {
+        }
+
+        over "revolute_10_3" (
+            prepend apiSchemas = ["PhysxJointAPI"]
+        )
+        {
+        }
+
+        over "revolute_11" (
+            prepend apiSchemas = ["PhysxJointAPI"]
+        )
+        {
+        }
+
+        over "revolute_11_1" (
+            prepend apiSchemas = ["PhysxJointAPI"]
+        )
+        {
+        }
+
+        over "revolute_11_2" (
+            prepend apiSchemas = ["PhysxJointAPI"]
+        )
+        {
+        }
+
+        over "revolute_11_3" (
+            prepend apiSchemas = ["PhysxJointAPI"]
+        )
+        {
+        }
+
+        over "revolute_12" (
+            prepend apiSchemas = ["PhysxJointAPI"]
+        )
+        {
+        }
+
+        over "revolute_12_1" (
+            prepend apiSchemas = ["PhysxJointAPI"]
+        )
+        {
+        }
+
+        over "revolute_12_2" (
+            prepend apiSchemas = ["PhysxJointAPI"]
+        )
+        {
+        }
+
+        over "revolute_12_3" (
+            prepend apiSchemas = ["PhysxJointAPI"]
+        )
+        {
+        }
+
+        over "revolute_1_1" (
+            prepend apiSchemas = ["PhysxJointAPI"]
+        )
+        {
+        }
+
+        over "revolute_1_2" (
+            prepend apiSchemas = ["PhysxJointAPI"]
+        )
+        {
+        }
+
+        over "revolute_1_3" (
+            prepend apiSchemas = ["PhysxJointAPI"]
+        )
+        {
+        }
+
+        over "revolute_1_4" (
+            prepend apiSchemas = ["PhysxJointAPI"]
+        )
+        {
+        }
+
+        over "revolute_2" (
+            prepend apiSchemas = ["PhysxJointAPI"]
+        )
+        {
+        }
+
+        over "revolute_2_1" (
+            prepend apiSchemas = ["PhysxJointAPI"]
+        )
+        {
+        }
+
+        over "revolute_2_2" (
+            prepend apiSchemas = ["PhysxJointAPI"]
+        )
+        {
+        }
+
+        over "revolute_2_3" (
+            prepend apiSchemas = ["PhysxJointAPI"]
+        )
+        {
+        }
+
+        over "revolute_2_4" (
+            prepend apiSchemas = ["PhysxJointAPI"]
+        )
+        {
+        }
+
+        over "revolute_3" (
+            prepend apiSchemas = ["PhysxJointAPI"]
+        )
+        {
+        }
+
+        over "revolute_3_1" (
+            prepend apiSchemas = ["PhysxJointAPI"]
+        )
+        {
+        }
+
+        over "revolute_3_2" (
+            prepend apiSchemas = ["PhysxJointAPI"]
+        )
+        {
+        }
+
+        over "revolute_3_3" (
+            prepend apiSchemas = ["PhysxJointAPI"]
+        )
+        {
+        }
+
+        over "revolute_3_4" (
+            prepend apiSchemas = ["PhysxJointAPI"]
+        )
+        {
+        }
+
+        over "revolute_4" (
+            prepend apiSchemas = ["PhysxJointAPI"]
+        )
+        {
+        }
+
+        over "revolute_4_1" (
+            prepend apiSchemas = ["PhysxJointAPI"]
+        )
+        {
+        }
+
+        over "revolute_4_2" (
+            prepend apiSchemas = ["PhysxJointAPI"]
+        )
+        {
+        }
+
+        over "revolute_4_3" (
+            prepend apiSchemas = ["PhysxJointAPI"]
+        )
+        {
+        }
+
+        over "revolute_4_4" (
+            prepend apiSchemas = ["PhysxJointAPI"]
+        )
+        {
+        }
+
+        over "revolute_5" (
+            prepend apiSchemas = ["PhysxJointAPI"]
+        )
+        {
+        }
+
+        over "revolute_5_1" (
+            prepend apiSchemas = ["PhysxJointAPI"]
+        )
+        {
+        }
+
+        over "revolute_5_2" (
+            prepend apiSchemas = ["PhysxJointAPI"]
+        )
+        {
+        }
+
+        over "revolute_5_3" (
+            prepend apiSchemas = ["PhysxJointAPI"]
+        )
+        {
+        }
+
+        over "revolute_6" (
+            prepend apiSchemas = ["PhysxJointAPI"]
+        )
+        {
+        }
+
+        over "revolute_6_1" (
+            prepend apiSchemas = ["PhysxJointAPI"]
+        )
+        {
+        }
+
+        over "revolute_6_2" (
+            prepend apiSchemas = ["PhysxJointAPI"]
+        )
+        {
+        }
+
+        over "revolute_6_3" (
+            prepend apiSchemas = ["PhysxJointAPI"]
+        )
+        {
+        }
+
+        over "revolute_7" (
+            prepend apiSchemas = ["PhysxJointAPI"]
+        )
+        {
+        }
+
+        over "revolute_7_1" (
+            prepend apiSchemas = ["PhysxJointAPI"]
+        )
+        {
+        }
+
+        over "revolute_7_2" (
+            prepend apiSchemas = ["PhysxJointAPI"]
+        )
+        {
+        }
+
+        over "revolute_7_3" (
+            prepend apiSchemas = ["PhysxJointAPI"]
+        )
+        {
+        }
+
+        over "revolute_8" (
+            prepend apiSchemas = ["PhysxJointAPI"]
+        )
+        {
+        }
+
+        over "revolute_8_1" (
+            prepend apiSchemas = ["PhysxJointAPI"]
+        )
+        {
+        }
+
+        over "revolute_8_2" (
+            prepend apiSchemas = ["PhysxJointAPI"]
+        )
+        {
+        }
+
+        over "revolute_8_3" (
+            prepend apiSchemas = ["PhysxJointAPI"]
+        )
+        {
+        }
+
+        over "revolute_9" (
+            prepend apiSchemas = ["PhysxJointAPI"]
+        )
+        {
+        }
+
+        over "revolute_9_1" (
+            prepend apiSchemas = ["PhysxJointAPI"]
+        )
+        {
+        }
+
+        over "revolute_9_2" (
+            prepend apiSchemas = ["PhysxJointAPI"]
+        )
+        {
+        }
+
+        over "revolute_9_3" (
+            prepend apiSchemas = ["PhysxJointAPI"]
+        )
+        {
+        }
+
+        over "root_joint"
+        {
+        }
+    }
+
+    over "Materials"
+    {
+    }
+
+    over "VisualMaterials"
+    {
+    }
+}
+
+over "Render"
+{
+    over "OmniverseKit"
+    {
+        over "HydraTextures"
+        {
+            over "omni_kit_widget_viewport_ViewportTexture_0"
+            {
+            }
+        }
+    }
+
+    over "OmniverseGlobalRenderSettings"
+    {
+    }
+
+    over "Vars"
+    {
+        over "LdrColor"
+        {
+        }
+    }
+}
+
+over "PhysicsScene"
+{
+}
+
+over "FlatGrid"
+{
+    over "Looks"
+    {
+        over "theGrid"
+        {
+            over "Shader"
+            {
+            }
+        }
+    }
+
+    over "GroundPlane"
+    {
+        over "CollisionPlane"
+        {
+        }
+    }
+
+    over "SphereLight"
+    {
+    }
+
+    over "Environment"
+    {
+        over "Geometry"
+        {
+        }
+    }
+}
+
